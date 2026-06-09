@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bhoomi FarmFresh Organics</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --crimson: #C0392B;
+    --deep-red: #8B1A1A;
+    --forest: #2D6A2D;
+    --leaf: #3D8B3D;
+    --gold: #D4AC0D;
+    --gold-light: #F0C820;
+    --cream: #FDF6E3;
+    --warm-white: #FFFDF7;
+    --text-dark: #1A1A1A;
+    --text-mid: #3D3D2F;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--warm-white);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(20, 10, 5, 0.92);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 2rem;
+    border-bottom: 2px solid var(--gold);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.6rem;
+    text-decoration: none;
+  }
+
+  .nav-logo-img {
+    height: 52px;
+    width: 52px;
+    object-fit: contain;
+    display: block;
+  }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a { color: var(--cream); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 400; transition: color 0.2s; cursor: pointer; }
+  .nav-links a:hover { color: var(--gold-light); }
+  .nav-cta {
+    background: var(--gold); color: #1A0A00;
+    padding: 0.45rem 1.1rem; border-radius: 2px;
+    font-weight: 700; font-size: 0.8rem; text-decoration: none;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { width: 24px; height: 2px; background: var(--cream); border-radius: 2px; transition: 0.3s; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(212,172,13,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(45,106,45,0.25) 0%, transparent 50%),
+      linear-gradient(160deg, #1A0800 0%, #5C1010 40%, #8B1A1A 70%, #2D1A00 100%);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 7rem 1.5rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 15% 25%, rgba(212,172,13,0.07) 0%, transparent 40%),
+      radial-gradient(circle at 85% 75%, rgba(45,106,45,0.12) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  /* leaf decorations */
+  .leaf-decor {
+    position: absolute; opacity: 0.12; pointer-events: none;
+    font-size: 7rem; color: var(--gold);
+    user-select: none;
+  }
+  .leaf-decor.tl { top: 8%; left: -2%; transform: rotate(-30deg); font-size: 9rem; }
+  .leaf-decor.tr { top: 5%; right: -1%; transform: rotate(30deg) scaleX(-1); font-size: 9rem; }
+  .leaf-decor.bl { bottom: 10%; left: 2%; transform: rotate(20deg); font-size: 6rem; }
+  .leaf-decor.br { bottom: 8%; right: 2%; transform: rotate(-20deg) scaleX(-1); font-size: 6rem; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(212,172,13,0.15);
+    border: 1px solid rgba(212,172,13,0.4);
+    color: var(--gold-light);
+    padding: 0.35rem 1rem; border-radius: 30px;
+    font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 1.4rem;
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero-badge::before { content: '🌿'; }
+  .hero-content { max-width: 760px; position: relative; z-index: 1; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 7vw, 5.2rem);
+    font-weight: 900; line-height: 1.05;
+    color: var(--cream);
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  .hero h1 em { font-style: normal; color: var(--gold-light); }
+  .hero p {
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    color: rgba(253,246,227,0.8);
+    max-width: 560px; margin: 1.4rem auto 2.2rem;
+    line-height: 1.7; font-weight: 300;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .hero-pills {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .pill {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--cream);
+    padding: 0.4rem 1rem; border-radius: 30px;
+    font-size: 0.82rem; letter-spacing: 0.04em;
+  }
+  .hero-btns {
+    display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .btn-primary {
+    background: var(--gold); color: #1A0A00;
+    padding: 0.85rem 2.2rem; border-radius: 3px;
+    font-weight: 700; font-size: 0.95rem; text-decoration: none;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-outline {
+    border: 2px solid var(--cream); color: var(--cream);
+    padding: 0.85rem 2rem; border-radius: 3px;
+    font-weight: 400; font-size: 0.95rem; text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-outline:hover { background: var(--cream); color: var(--deep-red); transform: translateY(-2px); }
+
+  /* ─── MARQUEE ─── */
+  .marquee-wrap {
+    background: var(--forest);
+    border-top: 2px solid var(--gold);
+    border-bottom: 2px solid var(--gold);
+    padding: 0.75rem 0; overflow: hidden;
+  }
+  .marquee-inner {
+    display: flex; gap: 3rem;
+    animation: marquee 22s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-inner span {
+    color: var(--cream); font-size: 0.82rem; letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 400;
+  }
+  .marquee-inner span::before { content: '✦ '; color: var(--gold-light); }
+  @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 5rem 1.5rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--leaf); font-weight: 700; margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    font-weight: 700; line-height: 1.15; color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+  .section-title em { font-style: normal; color: var(--crimson); }
+  .section-sub { font-size: 1rem; color: var(--text-mid); line-height: 1.7; max-width: 580px; font-weight: 300; }
+
+  /* ─── WHY US ─── */
+  #why { background: var(--cream); }
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem; align-items: center;
+    margin-top: 3rem;
+  }
+  .why-text p { font-size: 1rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; font-weight: 300; }
+  .why-cards { display: flex; flex-direction: column; gap: 1rem; }
+  .why-card {
+    background: white;
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    padding: 1.2rem 1.5rem;
+    display: flex; align-items: flex-start; gap: 1rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .why-card:hover { transform: translateX(4px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .why-card .icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .why-card h4 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--forest); margin-bottom: 0.25rem; }
+  .why-card p { font-size: 0.88rem; color: var(--text-mid); line-height: 1.5; margin: 0; }
+
+  /* ─── PRODUCTS ─── */
+  #products { background: var(--warm-white); }
+  .tabs {
+    display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2.5rem 0 2rem;
+  }
+  .tab {
+    padding: 0.5rem 1.2rem; border-radius: 30px;
+    border: 2px solid #ddd; background: white;
+    font-size: 0.82rem; letter-spacing: 0.04em; cursor: pointer;
+    font-family: 'Lato', sans-serif; font-weight: 700;
+    color: var(--text-mid); transition: all 0.2s;
+  }
+  .tab:hover { border-color: var(--leaf); color: var(--leaf); }
+  .tab.active { background: var(--forest); border-color: var(--forest); color: white; }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.2rem;
+  }
+  .product-card {
+    background: white;
+    border: 1px solid #EDE8DC;
+    border-radius: 6px; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+  .card-header {
+    background: linear-gradient(135deg, var(--forest), #1A4A1A);
+    padding: 1.3rem 1.2rem 1rem;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .card-icon { width: 44px; height: 44px; flex-shrink: 0; }
+  .card-price {
+    background: var(--gold);
+    color: #1A0A00;
+    font-weight: 700; font-size: 0.9rem;
+    padding: 0.25rem 0.6rem; border-radius: 3px;
+    white-space: nowrap;
+  }
+  .card-body { padding: 1rem 1.2rem 1.2rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .card-name { font-family: 'Playfair Display', serif; font-size: 0.98rem; font-weight: 700; color: var(--text-dark); line-height: 1.3; margin-bottom: 0.3rem; }
+  .card-meta { font-size: 0.76rem; color: #888; letter-spacing: 0.03em; }
+  .card-tag {
+    display: inline-block; margin-top: 0.6rem;
+    background: #F0FAF0; color: var(--forest);
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 3px;
+  }
+  .product-section { display: block; }
+  .product-section.hidden { display: none; }
+
+  /* ─── EVENTS ─── */
+  #events {
+    background: linear-gradient(150deg, #0E2E0E 0%, #1A4A1A 50%, #0E2E0E 100%);
+    color: var(--cream);
+  }
+  #events .section-label { color: var(--gold); }
+  #events .section-title { color: var(--cream); }
+  #events .section-sub { color: rgba(253,246,227,0.75); }
+  .event-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(212,172,13,0.3);
+    border-radius: 6px; padding: 2rem 2.5rem;
+    display: flex; align-items: center; gap: 2.5rem;
+    margin-top: 2.5rem;
+    max-width: 680px;
+  }
+  .event-date-box {
+    background: var(--gold);
+    color: #1A0A00;
+    width: 72px; height: 72px; border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .event-date-box .day { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; line-height: 1; }
+  .event-date-box .month { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .event-info h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--cream); }
+  .event-info p { font-size: 0.9rem; color: rgba(253,246,227,0.75); line-height: 1.6; }
+  .event-info .event-loc { margin-top: 0.6rem; color: var(--gold-light); font-weight: 700; font-size: 0.88rem; }
+
+  /* ─── CONTACT ─── */
+  #contact { background: var(--cream); }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 3rem; margin-top: 3rem; align-items: start;
+  }
+  .contact-info { }
+  .contact-info p { font-size: 1rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 1.5rem; font-weight: 300; }
+  .contact-item {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .contact-icon {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--forest); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .contact-item-text { font-size: 0.9rem; color: var(--text-mid); }
+  .contact-item-text strong { display: block; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--leaf); margin-bottom: 0.1rem; }
+  .contact-item-text a { color: var(--text-dark); text-decoration: none; font-weight: 700; }
+  .contact-item-text a:hover { color: var(--crimson); }
+
+  .order-box {
+    background: linear-gradient(135deg, var(--deep-red), var(--crimson));
+    border-radius: 8px; padding: 2.5rem;
+    color: white; text-align: center;
+  }
+  .order-box h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .order-box p { font-size: 0.95rem; opacity: 0.85; line-height: 1.6; margin-bottom: 1.8rem; }
+  .order-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900; color: var(--gold-light);
+    letter-spacing: 0.05em; display: block; margin-bottom: 1.5rem;
+  }
+  .order-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+  .order-btn {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    padding: 0.9rem; border-radius: 4px;
+    font-weight: 700; font-size: 0.95rem; text-decoration: none;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .order-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+  .order-btn.call { background: white; color: var(--crimson); }
+  .order-btn.whatsapp { background: #25D366; color: white; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #0A0A0A;
+    color: rgba(253,246,227,0.6);
+    text-align: center; padding: 2rem 1.5rem;
+    border-top: 2px solid var(--gold);
+    font-size: 0.82rem; letter-spacing: 0.03em;
+  }
+  footer strong { color: var(--gold); }
+
+  /* ─── KEYFRAMES ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 768px) {
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: fixed; top: 60px; left: 0; right: 0;
+      background: rgba(10,5,2,0.97);
+      padding: 2rem; gap: 1.5rem;
+      border-bottom: 2px solid var(--gold);
+    }
+    .why-grid { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .event-card { flex-direction: column; text-align: center; }
+    .leaf-decor { display: none; }
+  }
+  @media (max-width: 480px) {
+    .products-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 340px) {
+    .products-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ─── CART BUTTON ─── */
+  .cart-btn {
+    background: rgba(212,172,13,0.15);
+    border: 1.5px solid var(--gold);
+    color: var(--cream);
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex; align-items: center; gap: 0.4rem;
+    transition: background 0.2s;
+  }
+  .cart-btn:hover { background: rgba(212,172,13,0.3); }
+  .cart-count {
+    background: var(--crimson);
+    color: white;
+    font-size: 0.7rem; font-weight: 700;
+    min-width: 18px; height: 18px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 3px;
+  }
+
+  /* ─── ADD TO CART BUTTON on product card ─── */
+  .add-to-cart {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    background: var(--forest);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .add-to-cart:hover { background: var(--leaf); transform: translateY(-1px); }
+  .add-to-cart.added { background: var(--gold); color: #1A0A00; }
+
+  /* ─── CART DRAWER ─── */
+  .cart-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(2px);
+  }
+  .cart-overlay.open { display: block; }
+  .cart-drawer {
+    position: fixed; top: 0; right: -420px; bottom: 0;
+    width: 100%; max-width: 420px;
+    background: var(--warm-white);
+    z-index: 201;
+    display: flex; flex-direction: column;
+    transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.25);
+  }
+  .cart-drawer.open { right: 0; }
+  .cart-header {
+    background: linear-gradient(135deg, #1A0800, #5C1010);
+    border-bottom: 2px solid var(--gold);
+    padding: 1.2rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .cart-header h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--cream); font-size: 1.3rem; font-weight: 700;
+  }
+  .cart-header h2 span { color: var(--gold-light); font-size: 0.9rem; margin-left: 0.5rem; }
+  .cart-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--cream); font-size: 1.5rem; line-height: 1;
+    padding: 0.25rem; transition: color 0.2s;
+  }
+  .cart-close:hover { color: var(--gold-light); }
+  .cart-items {
+    flex: 1; overflow-y: auto; padding: 1rem 1.5rem;
+    scrollbar-width: thin;
+  }
+  .cart-empty {
+    text-align: center; padding: 3rem 1rem;
+    color: #999;
+  }
+  .cart-empty .empty-icon { font-size: 3.5rem; margin-bottom: 0.75rem; display: block; }
+  .cart-empty p { font-size: 0.95rem; line-height: 1.5; }
+  .cart-item {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #EDE8DC;
+  }
+  .cart-item:last-child { border-bottom: none; }
+  .cart-item-emoji {
+    flex-shrink: 0;
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--forest), #1A4A1A);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 6px;
+  }
+  .cart-item-emoji svg { width: 100%; height: 100%; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem; font-weight: 700; color: var(--text-dark);
+    line-height: 1.3; margin-bottom: 0.2rem;
+  }
+  .cart-item-sub { font-size: 0.75rem; color: #888; }
+  .cart-item-controls {
+    display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;
+  }
+  .qty-btn {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1.5px solid var(--forest);
+    background: white; color: var(--forest);
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1;
+  }
+  .qty-btn:hover { background: var(--forest); color: white; }
+  .qty-val {
+    font-weight: 700; font-size: 0.9rem;
+    min-width: 20px; text-align: center;
+  }
+  .cart-item-price {
+    font-weight: 700; font-size: 0.95rem;
+    color: var(--crimson); flex-shrink: 0;
+    padding-top: 0.1rem;
+  }
+  .cart-remove {
+    background: none; border: none; cursor: pointer;
+    color: #ccc; font-size: 1rem; padding: 0;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .cart-remove:hover { color: var(--crimson); }
+
+  /* Cart footer */
+  .cart-footer {
+    border-top: 2px solid #EDE8DC;
+    padding: 1.25rem 1.5rem;
+    background: white;
+    flex-shrink: 0;
+  }
+  .cart-subtotal {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  .cart-subtotal span { font-size: 0.85rem; color: #666; }
+  .cart-subtotal strong { font-size: 1.1rem; color: var(--text-dark); }
+  .cart-note {
+    font-size: 0.75rem; color: #888; line-height: 1.4;
+    margin-bottom: 1rem; text-align: center;
+    background: #F9F5EC; padding: 0.5rem; border-radius: 4px;
+  }
+  .cart-actions { display: flex; flex-direction: column; gap: 0.6rem; }
+  .cart-whatsapp {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    padding: 0.85rem; border-radius: 4px;
+    background: #25D366; color: white;
+    font-weight: 700; font-size: 0.9rem;
+    text-decoration: none; border: none; cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .cart-whatsapp:hover { opacity: 0.9; transform: translateY(-1px); }
+  .cart-call {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    padding: 0.75rem; border-radius: 4px;
+    background: white; color: var(--crimson);
+    border: 2px solid var(--crimson);
+    font-weight: 700; font-size: 0.9rem;
+    text-decoration: none; cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    transition: background 0.2s, color 0.2s;
+  }
+  .cart-call:hover { background: var(--crimson); color: white; }
+  .cart-clear {
+    background: none; border: none; cursor: pointer;
+    color: #aaa; font-size: 0.78rem; text-align: center;
+    font-family: 'Lato', sans-serif;
+    transition: color 0.15s;
+    padding: 0.25rem;
+  }
+  .cart-clear:hover { color: var(--crimson); }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo" onclick="scrollTo({top:0,behavior:'smooth'})" style="cursor:pointer;">
+    <img src="data:image/png;base64,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" alt="Bhoomi FarmFresh Organics" class="nav-logo-img" />
+  </span>
+  <ul class="nav-links" id="navLinks">
+    <li><a onclick="return scrollToSection('why')">Why Us</a></li>
+    <li><a onclick="return scrollToSection('products')">Products</a></li>
+    <li><a onclick="return scrollToSection('events')">Events</a></li>
+    <li><a onclick="return scrollToSection('contact')">Contact</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <button class="cart-btn" onclick="toggleCart()" title="View Cart">
+      🛒 <span id="cartCount" class="cart-count">0</span>
+    </button>
+    <a href="tel:9722158262" class="nav-cta">📞 Order Now</a>
+  </div>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="leaf-decor tl">🌿</div>
+  <div class="leaf-decor tr">🌿</div>
+  <div class="leaf-decor bl">🌿</div>
+  <div class="leaf-decor br">🌿</div>
+  <div class="hero-content">
+    <div class="hero-badge">New - First Shipment Now Available</div>
+    <h1>Pure. <em>Traditional.</em><br>Chemical-Free.</h1>
+    <p>Bringing you the finest natural products sourced from trusted distributors in Tamil Nadu - from wholesome millets to herbal wellness, the way nature intended.</p>
+    <div class="hero-pills">
+      <span class="pill">🌾 Millet Snacks</span>
+      <span class="pill">🌿 Herbal Powders</span>
+      <span class="pill">🍵 Dip Teas</span>
+      <span class="pill">🧴 Natural Soaps</span>
+    </div>
+    <div class="hero-btns">
+      <a onclick="return scrollToSection('products')" class="btn-primary" style="cursor:pointer;">Browse Products</a>
+      <a onclick="return scrollToSection('contact')" class="btn-outline" style="cursor:pointer;">Place an Order</a>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner">
+    <span>100% Natural</span>
+    <span>No Preservatives</span>
+    <span>Tamil Nadu Sourced</span>
+    <span>Traditional Recipes</span>
+    <span>Chemical-Free</span>
+    <span>Farmer-Sourced</span>
+    <span>Limited Stock Available</span>
+    <span>100% Natural</span>
+    <span>No Preservatives</span>
+    <span>Tamil Nadu Sourced</span>
+    <span>Traditional Recipes</span>
+    <span>Chemical-Free</span>
+    <span>Farmer-Sourced</span>
+    <span>Limited Stock Available</span>
+  </div>
+</div>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-inner">
+    <div class="section-label">Our Promise</div>
+    <h2 class="section-title">Why <em>Bhoomi?</em></h2>
+    <p class="section-sub">We're a small, passionate venture committed to reviving the wisdom of traditional Tamil food and wellness - one honest product at a time.</p>
+    <div class="why-grid">
+      <div class="why-text">
+        <p>At Bhoomi FarmFresh Organics, we believe that true wellness begins with clean, traditional foods. Our mission is to reconnect communities with nature's purity through thoughtfully selected organic products.</p>
+        <p>We partner with trusted distributors from the southern regions of Tamil Nadu who specialize in authentic, chemical-free goods rooted in age-old traditions. Every item we offer is chosen with care to support a healthier lifestyle and preserve the wisdom of our food heritage.</p>
+        <p>We're starting small - this first batch is our way of understanding the community's needs before we grow. Your support directly shapes what we bring next.</p>
+      </div>
+      <div class="why-cards">
+        <div class="why-card">
+          <div class="icon">🌱</div>
+          <div>
+            <h4>100% Natural & Farmer-Sourced</h4>
+            <p>Every product traces back to real farms and trusted growers in Tamil Nadu, not factory lines.</p>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="icon">🚫</div>
+          <div>
+            <h4>No Preservatives, No Chemicals</h4>
+            <p>Clean ingredients, nothing hidden. What you see on the label is everything that's in the product.</p>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="icon">🏺</div>
+          <div>
+            <h4>Reviving Forgotten Traditions</h4>
+            <p>From Mappillai Samba rice to Pirandai powder - we bring back what grandmothers knew best.</p>
+          </div>
+        </div>
+        <div class="why-card">
+          <div class="icon">🤝</div>
+          <div>
+            <h4>Community-First Approach</h4>
+            <p>Small batches, real relationships. Your feedback determines what we bring in the next shipment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="section-inner">
+    <div class="section-label">First Shipment</div>
+    <h2 class="section-title">Our <em>Products</em></h2>
+    <p class="section-sub">Limited stock, sourced fresh from Tamil Nadu. Browse by category and call or WhatsApp to reserve yours.</p>
+
+    <div class="tabs">
+      <button class="tab active" onclick="filterTab(this, 'all')">All</button>
+      <button class="tab" onclick="filterTab(this, 'snacks')">🌾 Snacks & Biscuits</button>
+      <button class="tab" onclick="filterTab(this, 'teas')">🍵 Teas & Malts</button>
+      <button class="tab" onclick="filterTab(this, 'wellness')">🌿 Herbal Wellness</button>
+      <button class="tab" onclick="filterTab(this, 'grains')">🍚 Grains & Mixes</button>
+      <button class="tab" onclick="filterTab(this, 'beauty')">🧴 Soaps & Shampoos</button>
+    </div>
+
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+  <div class="section-inner">
+    <div class="section-label">Come Find Us</div>
+    <h2 class="section-title">Upcoming Stall</h2>
+    <p class="section-sub">See, smell, and sample the products in person. Come by our stall and pick up what you need.</p>
+    <div class="event-card">
+      <div class="event-date-box">
+        <span class="day">SAT</span>
+        <span class="month">This Week</span>
+      </div>
+      <div class="event-info">
+        <h3>Bhoomi Pop-Up Stall</h3>
+        <p>Come by, browse the full range in person, ask questions, and bring home your favourites. Perfect chance to explore the products before they're gone.</p>
+        <div class="event-loc">📍 MTS Temple</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label">Get in Touch</div>
+    <h2 class="section-title">Place Your <em>Order</em></h2>
+    <p class="section-sub">Available for in-person pickup. Call or WhatsApp us to reserve your items before stock runs out.</p>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p>We're a small operation, so every order matters to us. Reach out directly and we'll make sure you get exactly what you need, whether it's a single item or a full basket.</p>
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-item-text">
+            <strong>Call / WhatsApp</strong>
+            <a href="tel:9722158262">(972) 215-8262</a>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-item-text">
+            <strong>Pickup Location</strong>
+            <span>In-person purchase only (DFW area)</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🌿</div>
+          <div class="contact-item-text">
+            <strong>Stock Status</strong>
+            <span>Limited first shipment - order soon!</span>
+          </div>
+        </div>
+      </div>
+      <div class="order-box">
+        <h3>Ready to Order?</h3>
+        <p>Reach out directly via call or WhatsApp. We'll confirm availability and arrange in-person pickup.</p>
+        <span class="order-number">(972) 215-8262</span>
+        <div class="order-actions">
+          <a href="tel:9722158262" class="order-btn call">📞 Call Us</a>
+          <a href="https://wa.me/19722158262" class="order-btn whatsapp" target="_blank">💬 WhatsApp Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>🌱 <strong>Bhoomi FarmFresh Organics</strong> &nbsp;·&nbsp; Natural. Traditional. Chemical-Free.</p>
+  <p style="margin-top:0.4rem;">Sourced from Tamil Nadu with care &nbsp;·&nbsp; (972) 215-8262</p>
+</footer>
+
+<script>
+const products = [
+  // Snacks & Biscuits
+  { name: "Barnyard Millet Biscuits", sub: "Kuthiraivali · 80g", price: "$3.00", cat: "snacks" },
+  { name: "Finger Millet Biscuits", sub: "Kezhvaragu · 80g", price: "$3.00", cat: "snacks" },
+  { name: "Multi Grain Biscuits", sub: "Navathaniyam · 80g", price: "$3.00", cat: "snacks" },
+  { name: "Pearl Millet Biscuits", sub: "Kambu · 80g", price: "$3.00", cat: "snacks" },
+  { name: "Baked Beetroot Urad Dhal Chips", sub: "100g", price: "$4.00", cat: "snacks" },
+  { name: "Vacuum Fried Beetroot Chips", sub: "50g", price: "$4.00", cat: "snacks" },
+  { name: "Millet Cookies", sub: "100g", price: "$5.00", cat: "snacks" },
+  { name: "Farm Fresh Gulkand", sub: "250g", price: "$7.00", cat: "snacks" },
+
+  // Teas & Malts
+  { name: "Blue Butterfly Pea Dip Tea", sub: "20 bags", price: "$7.00", cat: "teas" },
+  { name: "Hibiscus Dip Tea", sub: "20 bags", price: "$6.00", cat: "teas" },
+  { name: "Tulsi Masala Dip Tea", sub: "20 bags", price: "$6.00", cat: "teas" },
+  { name: "ABC Malt", sub: "250g", price: "$8.00", cat: "teas" },
+
+  // Herbal Wellness
+  { name: "Irumal Chooranam Powder", sub: "75g", price: "$3.00", cat: "wellness" },
+  { name: "Murunga Elai Powder", sub: "Moringa · 50g", price: "$3.00", cat: "wellness" },
+  { name: "Pirandai Powder", sub: "50g", price: "$3.00", cat: "wellness" },
+  { name: "Vallarai Powder", sub: "50g", price: "$3.00", cat: "wellness" },
+
+  // Grains & Mixes
+  { name: "Instant Idiyappam - Mappillai Samba", sub: "180g", price: "$3.00", cat: "grains" },
+  { name: "Instant Idiyappam - Ragi", sub: "180g", price: "$3.00", cat: "grains" },
+  { name: "Instant Idiyappam - Thooyamalli", sub: "180g", price: "$3.00", cat: "grains" },
+  { name: "Ancient Rice Porridge Mix (15-in-1)", sub: "250g", price: "$6.00", cat: "grains" },
+  { name: "Sprouted Multigrain Health Mix", sub: "250g", price: "$5.00", cat: "grains" },
+  { name: "Ragi Appalam", sub: "100g", price: "$3.00", cat: "grains" },
+
+  // Soaps & Shampoos
+  { name: "Just Herbs Anti-Hairfall Shampoo", sub: "200ml", price: "$6.00", cat: "beauty" },
+  { name: "Keratin Shampoo", sub: "100ml", price: "$6.00", cat: "beauty" },
+  { name: "Protein Shampoo", sub: "100ml", price: "$6.00", cat: "beauty" },
+  { name: "Shikakai Shampoo", sub: "125ml", price: "$4.00", cat: "beauty" },
+  { name: "ABC Soap", sub: "100g", price: "$4.00", cat: "beauty" },
+  { name: "Kuppaimeni Soap", sub: "100g", price: "$4.00", cat: "beauty" },
+  { name: "Nalangu Mavu Soap", sub: "100g", price: "$3.00", cat: "beauty" },
+  { name: "Herbal Shikakai Powder", sub: "150g", price: "$3.00", cat: "beauty" },
+  { name: "Nalangu Mavu for Women", sub: "50g", price: "$3.00", cat: "beauty" },
+  { name: "50 Herbal Oil", sub: "100ml", price: "$5.00", cat: "beauty" },
+];
+
+const catLabel = {
+  snacks: "Snacks",
+  teas: "Tea & Malt",
+  wellness: "Wellness",
+  grains: "Grains",
+  beauty: "Beauty"
+};
+
+// ── CART STATE ──
+let cart = [];
+
+function getProductId(p) {
+  return p.name.replace(/\s+/g, '-').toLowerCase();
+}
+
+function renderProducts(filter) {
+  const grid = document.getElementById('productsGrid');
+  const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
+  grid.innerHTML = filtered.map(p => {
+    const pid = getProductId(p);
+    const inCart = cart.find(c => c.id === pid);
+    const icon = productIcons[pid] || productIcons['millet-cookies'] || '';
+    return `
+    <div class="product-card">
+      <div class="card-header" style="background:${catGradients[p.cat] || catGradients.snacks}">
+        <div class="card-icon">${icon}</div>
+        <span class="card-price">${p.price}</span>
+      </div>
+      <div class="card-body">
+        <div>
+          <div class="card-name">${p.name}</div>
+          <div class="card-meta">${p.sub}</div>
+        </div>
+        <div class="card-tag">${catLabel[p.cat]}</div>
+        <button class="add-to-cart ${inCart ? 'added' : ''}" onclick="addToCart('${pid}')" id="btn-${pid}">
+          ${inCart ? '✓ Added (' + inCart.qty + ')' : '+ Add to Cart'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addToCart(pid) {
+  const p = products.find(x => getProductId(x) === pid);
+  if (!p) return;
+  const existing = cart.find(c => c.id === pid);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ id: pid, name: p.name, sub: p.sub, price: p.price, qty: 1 });
+  }
+  updateCartUI();
+  // Animate the button
+  const btn = document.getElementById('btn-' + pid);
+  if (btn) {
+    const existing2 = cart.find(c => c.id === pid);
+    btn.textContent = '✓ Added (' + (existing2 ? existing2.qty : 1) + ')';
+    btn.classList.add('added');
+  }
+}
+
+function changeQty(pid, delta) {
+  const item = cart.find(c => c.id === pid);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) {
+    cart = cart.filter(c => c.id !== pid);
+  }
+  updateCartUI();
+  renderProducts(document.querySelector('.tab.active')?.dataset?.cat || 'all');
+}
+
+function removeFromCart(pid) {
+  cart = cart.filter(c => c.id !== pid);
+  updateCartUI();
+  renderProducts(document.querySelector('.tab.active')?.dataset?.cat || 'all');
+}
+
+function clearCart() {
+  cart = [];
+  updateCartUI();
+  renderProducts(document.querySelector('.tab.active')?.dataset?.cat || 'all');
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s, c) => s + parseFloat(c.price.replace('$','')) * c.qty, 0);
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  // Update count badge
+  const badge = document.getElementById('cartCount');
+  if (badge) badge.textContent = count;
+  const headerCount = document.getElementById('cartHeaderCount');
+  if (headerCount) headerCount.textContent = count > 0 ? '(' + count + ' item' + (count > 1 ? 's' : '') + ')' : '';
+  // Update total
+  const totalEl = document.getElementById('cartTotal');
+  if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
+  // Show/hide footer
+  const footer = document.getElementById('cartFooter');
+  if (footer) footer.style.display = cart.length > 0 ? 'block' : 'none';
+  // Render cart items
+  const itemsEl = document.getElementById('cartItems');
+  if (!itemsEl) return;
+  if (cart.length === 0) {
+    itemsEl.innerHTML = '<div class="cart-empty"><span class="empty-icon">🛒</span><p>Your cart is empty.<br>Browse products and tap Add to Cart!</p></div>';
+    return;
+  }
+  itemsEl.innerHTML = cart.map(c => {
+    const lineTotal = (parseFloat(c.price.replace('$','')) * c.qty).toFixed(2);
+    return `
+    <div class="cart-item">
+      <div class="cart-item-emoji">${productIcons[c.id] || ''}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${c.name}</div>
+        <div class="cart-item-sub">${c.sub} &middot; ${c.price} each</div>
+        <div class="cart-item-controls">
+          <button class="qty-btn" onclick="changeQty('${c.id}', -1)">-</button>
+          <span class="qty-val">${c.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${c.id}', 1)">+</button>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
+        <span class="cart-item-price">$${lineTotal}</span>
+        <button class="cart-remove" onclick="removeFromCart('${c.id}')" title="Remove">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCart() {
+  try {
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+    if (drawer) drawer.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('open');
+  } catch(e) {}
+  return false;
+}
+
+function sendWhatsApp() {
+  if (cart.length === 0) return;
+  const lines = cart.map(c => {
+    const lineTotal = (parseFloat(c.price.replace('$','')) * c.qty).toFixed(2);
+    return c.qty + 'x ' + c.name + ' (' + c.sub + ') - $' + lineTotal;
+  });
+  const total = cart.reduce((s, c) => s + parseFloat(c.price.replace('$','')) * c.qty, 0);
+  const msg = 'Hi! I would like to place an order from Bhoomi FarmFresh Organics:%0A%0A' +
+    lines.join('%0A') +
+    '%0A%0ATotal: $' + total.toFixed(2) +
+    '%0A%0APlease confirm availability and pickup details. Thank you!';
+  window.open('https://wa.me/19722158262?text=' + msg, '_blank');
+}
+
+function filterTab(el, cat) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  el.dataset.cat = cat;
+  renderProducts(cat);
+}
+
+const catGradients = {
+  snacks:  'linear-gradient(135deg, #7B3F00 0%, #C47A1E 100%)',
+  teas:    'linear-gradient(135deg, #1A3A4A 0%, #2E7DA0 100%)',
+  wellness:'linear-gradient(135deg, #2D5016 0%, #5A8A2A 100%)',
+  grains:  'linear-gradient(135deg, #5C3D1E 0%, #A0722A 100%)',
+  beauty:  'linear-gradient(135deg, #4A1A3A 0%, #9B3D6A 100%)',
+};
+const productIcons = {
+  "barnyard-millet-biscuits": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Biscuit stack --> <rect x="8" y="22" width="24" height="7" rx="3.5" fill="#F5D08A"/> <rect x="8" y="22" width="24" height="3" rx="1.5" fill="#E8BC60"/> <rect x="10" y="14" width="20" height="7" rx="3.5" fill="#F0C060"/> <rect x="10" y="14" width="20" height="3" rx="1.5" fill="#D4A040"/> <rect x="12" y="7" width="16" height="7" rx="3.5" fill="#E8B040"/> <rect x="12" y="7" width="16" height="3" rx="1.5" fill="#C89030"/> <circle cx="16" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="24" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="14" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="26" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> </svg>`,
+  "finger-millet-biscuits": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Biscuit stack --> <rect x="8" y="22" width="24" height="7" rx="3.5" fill="#F5D08A"/> <rect x="8" y="22" width="24" height="3" rx="1.5" fill="#E8BC60"/> <rect x="10" y="14" width="20" height="7" rx="3.5" fill="#F0C060"/> <rect x="10" y="14" width="20" height="3" rx="1.5" fill="#D4A040"/> <rect x="12" y="7" width="16" height="7" rx="3.5" fill="#E8B040"/> <rect x="12" y="7" width="16" height="3" rx="1.5" fill="#C89030"/> <circle cx="16" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="24" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="14" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="26" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> </svg>`,
+  "multi-grain-biscuits": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Biscuit stack --> <rect x="8" y="22" width="24" height="7" rx="3.5" fill="#F5D08A"/> <rect x="8" y="22" width="24" height="3" rx="1.5" fill="#E8BC60"/> <rect x="10" y="14" width="20" height="7" rx="3.5" fill="#F0C060"/> <rect x="10" y="14" width="20" height="3" rx="1.5" fill="#D4A040"/> <rect x="12" y="7" width="16" height="7" rx="3.5" fill="#E8B040"/> <rect x="12" y="7" width="16" height="3" rx="1.5" fill="#C89030"/> <circle cx="16" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="24" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="14" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="26" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> </svg>`,
+  "pearl-millet-biscuits": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Biscuit stack --> <rect x="8" y="22" width="24" height="7" rx="3.5" fill="#F5D08A"/> <rect x="8" y="22" width="24" height="3" rx="1.5" fill="#E8BC60"/> <rect x="10" y="14" width="20" height="7" rx="3.5" fill="#F0C060"/> <rect x="10" y="14" width="20" height="3" rx="1.5" fill="#D4A040"/> <rect x="12" y="7" width="16" height="7" rx="3.5" fill="#E8B040"/> <rect x="12" y="7" width="16" height="3" rx="1.5" fill="#C89030"/> <circle cx="16" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="24" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="14" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="26" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> </svg>`,
+  "baked-beetroot-urad-dhal-chips": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Biscuit stack --> <rect x="8" y="22" width="24" height="7" rx="3.5" fill="#F5D08A"/> <rect x="8" y="22" width="24" height="3" rx="1.5" fill="#E8BC60"/> <rect x="10" y="14" width="20" height="7" rx="3.5" fill="#F0C060"/> <rect x="10" y="14" width="20" height="3" rx="1.5" fill="#D4A040"/> <rect x="12" y="7" width="16" height="7" rx="3.5" fill="#E8B040"/> <rect x="12" y="7" width="16" height="3" rx="1.5" fill="#C89030"/> <circle cx="16" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="24" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="14" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="26" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> </svg>`,
+  "vacuum-fried-beetroot-chips": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Biscuit stack --> <rect x="8" y="22" width="24" height="7" rx="3.5" fill="#F5D08A"/> <rect x="8" y="22" width="24" height="3" rx="1.5" fill="#E8BC60"/> <rect x="10" y="14" width="20" height="7" rx="3.5" fill="#F0C060"/> <rect x="10" y="14" width="20" height="3" rx="1.5" fill="#D4A040"/> <rect x="12" y="7" width="16" height="7" rx="3.5" fill="#E8B040"/> <rect x="12" y="7" width="16" height="3" rx="1.5" fill="#C89030"/> <circle cx="16" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="24" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="14" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="26" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> </svg>`,
+  "millet-cookies": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Biscuit stack --> <rect x="8" y="22" width="24" height="7" rx="3.5" fill="#F5D08A"/> <rect x="8" y="22" width="24" height="3" rx="1.5" fill="#E8BC60"/> <rect x="10" y="14" width="20" height="7" rx="3.5" fill="#F0C060"/> <rect x="10" y="14" width="20" height="3" rx="1.5" fill="#D4A040"/> <rect x="12" y="7" width="16" height="7" rx="3.5" fill="#E8B040"/> <rect x="12" y="7" width="16" height="3" rx="1.5" fill="#C89030"/> <circle cx="16" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="24" cy="18" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="14" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="20" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> <circle cx="26" cy="26" r="1.2" fill="#C07020" opacity="0.7"/> </svg>`,
+  "farm-fresh-gulkand": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Rose preserve jar --> <rect x="11" y="20" width="18" height="14" rx="3" fill="#F4C2C2"/> <rect x="11" y="20" width="18" height="5" rx="2" fill="#E8A0A0"/> <rect x="9" y="17" width="22" height="4" rx="2" fill="#D47A7A"/> <rect x="13" y="14" width="14" height="3" rx="1.5" fill="#C06060"/> <!-- Rose petals --> <ellipse cx="20" cy="10" rx="4" ry="2.5" fill="#E8607A" transform="rotate(-30 20 10)"/> <ellipse cx="20" cy="10" rx="4" ry="2.5" fill="#D04060" transform="rotate(30 20 10)"/> <ellipse cx="20" cy="10" rx="3" ry="2" fill="#E87090"/> <circle cx="20" cy="10" r="1.5" fill="#C03050"/> </svg>`,
+  "blue-butterfly-pea-dip-tea": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Teacup --> <path d="M8 18 L10 32 Q10.5 34 13 34 H27 Q29.5 34 30 32 L32 18 Z" fill="#4A9EBF"/> <path d="M8 18 L10 24 Q10.5 26 13 26 H27 Q29.5 26 30 24 L32 18 Z" fill="#2E7DA0"/> <path d="M30 20 Q36 20 36 25 Q36 30 30 30" stroke="#4A9EBF" stroke-width="2.5" fill="none" stroke-linecap="round"/> <!-- Tea liquid --> <path d="M11 22 Q11 30 20 30 Q29 30 29 22" fill="#C8860A" opacity="0.55"/> <!-- Steam --> <path d="M15 14 Q16 11 15 8" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <path d="M20 13 Q21 10 20 7" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <path d="M25 14 Q26 11 25 8" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <!-- Saucer --> <ellipse cx="20" cy="34" rx="14" ry="2.5" fill="#3A8AB0" opacity="0.5"/> </svg>`,
+  "hibiscus-dip-tea": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Teacup --> <path d="M8 18 L10 32 Q10.5 34 13 34 H27 Q29.5 34 30 32 L32 18 Z" fill="#4A9EBF"/> <path d="M8 18 L10 24 Q10.5 26 13 26 H27 Q29.5 26 30 24 L32 18 Z" fill="#2E7DA0"/> <path d="M30 20 Q36 20 36 25 Q36 30 30 30" stroke="#4A9EBF" stroke-width="2.5" fill="none" stroke-linecap="round"/> <!-- Tea liquid --> <path d="M11 22 Q11 30 20 30 Q29 30 29 22" fill="#C8860A" opacity="0.55"/> <!-- Steam --> <path d="M15 14 Q16 11 15 8" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <path d="M20 13 Q21 10 20 7" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <path d="M25 14 Q26 11 25 8" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <!-- Saucer --> <ellipse cx="20" cy="34" rx="14" ry="2.5" fill="#3A8AB0" opacity="0.5"/> </svg>`,
+  "tulsi-masala-dip-tea": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Teacup --> <path d="M8 18 L10 32 Q10.5 34 13 34 H27 Q29.5 34 30 32 L32 18 Z" fill="#4A9EBF"/> <path d="M8 18 L10 24 Q10.5 26 13 26 H27 Q29.5 26 30 24 L32 18 Z" fill="#2E7DA0"/> <path d="M30 20 Q36 20 36 25 Q36 30 30 30" stroke="#4A9EBF" stroke-width="2.5" fill="none" stroke-linecap="round"/> <!-- Tea liquid --> <path d="M11 22 Q11 30 20 30 Q29 30 29 22" fill="#C8860A" opacity="0.55"/> <!-- Steam --> <path d="M15 14 Q16 11 15 8" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <path d="M20 13 Q21 10 20 7" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <path d="M25 14 Q26 11 25 8" stroke="#B0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <!-- Saucer --> <ellipse cx="20" cy="34" rx="14" ry="2.5" fill="#3A8AB0" opacity="0.5"/> </svg>`,
+  "abc-malt": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Malt mug --> <rect x="7" y="16" width="20" height="18" rx="4" fill="#8B5E3C"/> <rect x="7" y="16" width="20" height="5" rx="2" fill="#6B4020"/> <path d="M27 20 Q34 20 34 26 Q34 32 27 32" stroke="#8B5E3C" stroke-width="3" fill="none" stroke-linecap="round"/> <path d="M27 20 Q34 20 34 26 Q34 32 27 32" stroke="#6B4020" stroke-width="1.5" fill="none" stroke-linecap="round"/> <!-- Foam top --> <ellipse cx="17" cy="16" rx="10" ry="4" fill="#F5E6C8"/> <circle cx="13" cy="15" r="2.5" fill="#FFF8EC"/> <circle cx="19" cy="14.5" r="3" fill="#FFF8EC"/> <circle cx="24" cy="15.5" r="2" fill="#FFF8EC"/> <!-- Steam --> <path d="M14 10 Q15 7 14 4" stroke="#D4B896" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M19 9 Q20 6 19 3" stroke="#D4B896" stroke-width="1.4" fill="none" stroke-linecap="round"/> </svg>`,
+  "irumal-chooranam-powder": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Mortar bowl --> <ellipse cx="20" cy="30" rx="14" ry="5" fill="#7A5C3A"/> <path d="M6 26 Q6 34 20 34 Q34 34 34 26 L32 20 Q28 18 20 18 Q12 18 8 20 Z" fill="#9A7A50"/> <path d="M6 26 Q6 20 20 20 Q34 20 34 26" fill="#B89A68"/> <!-- Powder content --> <ellipse cx="20" cy="22" rx="11" ry="3.5" fill="#78A832" opacity="0.85"/> <!-- Pestle --> <rect x="18" y="6" width="5" height="18" rx="2.5" fill="#C8A878" transform="rotate(-15 20 15)"/> <ellipse cx="17" cy="24" rx="3" ry="1.5" fill="#A08050" transform="rotate(-15 20 22)"/> </svg>`,
+  "murunga-elai-powder": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Mortar bowl --> <ellipse cx="20" cy="30" rx="14" ry="5" fill="#7A5C3A"/> <path d="M6 26 Q6 34 20 34 Q34 34 34 26 L32 20 Q28 18 20 18 Q12 18 8 20 Z" fill="#9A7A50"/> <path d="M6 26 Q6 20 20 20 Q34 20 34 26" fill="#B89A68"/> <!-- Powder content --> <ellipse cx="20" cy="22" rx="11" ry="3.5" fill="#78A832" opacity="0.85"/> <!-- Pestle --> <rect x="18" y="6" width="5" height="18" rx="2.5" fill="#C8A878" transform="rotate(-15 20 15)"/> <ellipse cx="17" cy="24" rx="3" ry="1.5" fill="#A08050" transform="rotate(-15 20 22)"/> </svg>`,
+  "pirandai-powder": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Mortar bowl --> <ellipse cx="20" cy="30" rx="14" ry="5" fill="#7A5C3A"/> <path d="M6 26 Q6 34 20 34 Q34 34 34 26 L32 20 Q28 18 20 18 Q12 18 8 20 Z" fill="#9A7A50"/> <path d="M6 26 Q6 20 20 20 Q34 20 34 26" fill="#B89A68"/> <!-- Powder content --> <ellipse cx="20" cy="22" rx="11" ry="3.5" fill="#78A832" opacity="0.85"/> <!-- Pestle --> <rect x="18" y="6" width="5" height="18" rx="2.5" fill="#C8A878" transform="rotate(-15 20 15)"/> <ellipse cx="17" cy="24" rx="3" ry="1.5" fill="#A08050" transform="rotate(-15 20 22)"/> </svg>`,
+  "vallarai-powder": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Mortar bowl --> <ellipse cx="20" cy="30" rx="14" ry="5" fill="#7A5C3A"/> <path d="M6 26 Q6 34 20 34 Q34 34 34 26 L32 20 Q28 18 20 18 Q12 18 8 20 Z" fill="#9A7A50"/> <path d="M6 26 Q6 20 20 20 Q34 20 34 26" fill="#B89A68"/> <!-- Powder content --> <ellipse cx="20" cy="22" rx="11" ry="3.5" fill="#78A832" opacity="0.85"/> <!-- Pestle --> <rect x="18" y="6" width="5" height="18" rx="2.5" fill="#C8A878" transform="rotate(-15 20 15)"/> <ellipse cx="17" cy="24" rx="3" ry="1.5" fill="#A08050" transform="rotate(-15 20 22)"/> </svg>`,
+  "instant-idiyappam---mappillai-samba": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Bowl --> <path d="M5 18 Q5 34 20 34 Q35 34 35 18 Z" fill="#C8A060"/> <path d="M5 18 Q5 26 20 26 Q35 26 35 18 Z" fill="#E8C080"/> <ellipse cx="20" cy="18" rx="15" ry="4" fill="#F0D090"/> <!-- Rice / grain dots --> <ellipse cx="14" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-20 14 20)"/> <ellipse cx="20" cy="21" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(10 20 21)"/> <ellipse cx="26" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-35 26 20)"/> <ellipse cx="17" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(25 17 23)"/> <ellipse cx="23" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(-10 23 23)"/> <!-- Steam --> <path d="M15 13 Q16 10 15 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M20 12 Q21 9 20 6" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M25 13 Q26 10 25 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> </svg>`,
+  "instant-idiyappam---ragi": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Bowl --> <path d="M5 18 Q5 34 20 34 Q35 34 35 18 Z" fill="#C8A060"/> <path d="M5 18 Q5 26 20 26 Q35 26 35 18 Z" fill="#E8C080"/> <ellipse cx="20" cy="18" rx="15" ry="4" fill="#F0D090"/> <!-- Rice / grain dots --> <ellipse cx="14" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-20 14 20)"/> <ellipse cx="20" cy="21" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(10 20 21)"/> <ellipse cx="26" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-35 26 20)"/> <ellipse cx="17" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(25 17 23)"/> <ellipse cx="23" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(-10 23 23)"/> <!-- Steam --> <path d="M15 13 Q16 10 15 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M20 12 Q21 9 20 6" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M25 13 Q26 10 25 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> </svg>`,
+  "instant-idiyappam---thooyamalli": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Bowl --> <path d="M5 18 Q5 34 20 34 Q35 34 35 18 Z" fill="#C8A060"/> <path d="M5 18 Q5 26 20 26 Q35 26 35 18 Z" fill="#E8C080"/> <ellipse cx="20" cy="18" rx="15" ry="4" fill="#F0D090"/> <!-- Rice / grain dots --> <ellipse cx="14" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-20 14 20)"/> <ellipse cx="20" cy="21" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(10 20 21)"/> <ellipse cx="26" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-35 26 20)"/> <ellipse cx="17" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(25 17 23)"/> <ellipse cx="23" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(-10 23 23)"/> <!-- Steam --> <path d="M15 13 Q16 10 15 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M20 12 Q21 9 20 6" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M25 13 Q26 10 25 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> </svg>`,
+  "ancient-rice-porridge-mix-(15-in-1)": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Bowl --> <path d="M5 18 Q5 34 20 34 Q35 34 35 18 Z" fill="#C8A060"/> <path d="M5 18 Q5 26 20 26 Q35 26 35 18 Z" fill="#E8C080"/> <ellipse cx="20" cy="18" rx="15" ry="4" fill="#F0D090"/> <!-- Rice / grain dots --> <ellipse cx="14" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-20 14 20)"/> <ellipse cx="20" cy="21" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(10 20 21)"/> <ellipse cx="26" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-35 26 20)"/> <ellipse cx="17" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(25 17 23)"/> <ellipse cx="23" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(-10 23 23)"/> <!-- Steam --> <path d="M15 13 Q16 10 15 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M20 12 Q21 9 20 6" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M25 13 Q26 10 25 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> </svg>`,
+  "sprouted-multigrain-health-mix": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Bowl --> <path d="M5 18 Q5 34 20 34 Q35 34 35 18 Z" fill="#C8A060"/> <path d="M5 18 Q5 26 20 26 Q35 26 35 18 Z" fill="#E8C080"/> <ellipse cx="20" cy="18" rx="15" ry="4" fill="#F0D090"/> <!-- Rice / grain dots --> <ellipse cx="14" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-20 14 20)"/> <ellipse cx="20" cy="21" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(10 20 21)"/> <ellipse cx="26" cy="20" rx="2" ry="1" fill="white" opacity="0.9" transform="rotate(-35 26 20)"/> <ellipse cx="17" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(25 17 23)"/> <ellipse cx="23" cy="23" rx="1.8" ry="0.9" fill="white" opacity="0.8" transform="rotate(-10 23 23)"/> <!-- Steam --> <path d="M15 13 Q16 10 15 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M20 12 Q21 9 20 6" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> <path d="M25 13 Q26 10 25 7" stroke="#E8C080" stroke-width="1.4" fill="none" stroke-linecap="round"/> </svg>`,
+  "ragi-appalam": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Flat cracker - slightly 3D perspective --> <ellipse cx="20" cy="24" rx="15" ry="5" fill="#C8A050" opacity="0.4"/> <circle cx="20" cy="20" r="14" fill="#E8C878"/> <circle cx="20" cy="20" r="14" fill="none" stroke="#C8A050" stroke-width="1.5"/> <circle cx="20" cy="20" r="9" fill="none" stroke="#C8A050" stroke-width="1" opacity="0.7"/> <circle cx="20" cy="20" r="4.5" fill="none" stroke="#C8A050" stroke-width="0.8" opacity="0.6"/> <!-- Texture dots --> <circle cx="13" cy="15" r="1" fill="#A07830" opacity="0.6"/> <circle cx="27" cy="15" r="1" fill="#A07830" opacity="0.6"/> <circle cx="13" cy="25" r="1" fill="#A07830" opacity="0.6"/> <circle cx="27" cy="25" r="1" fill="#A07830" opacity="0.6"/> <circle cx="10" cy="20" r="1" fill="#A07830" opacity="0.5"/> <circle cx="30" cy="20" r="1" fill="#A07830" opacity="0.5"/> <circle cx="20" cy="10" r="1" fill="#A07830" opacity="0.5"/> <circle cx="20" cy="30" r="1" fill="#A07830" opacity="0.5"/> </svg>`,
+  "just-herbs-anti-hairfall-shampoo": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Pump bottle --> <rect x="12" y="18" width="16" height="18" rx="4" fill="#9B5EA0"/> <rect x="12" y="18" width="16" height="6" rx="3" fill="#7A3A80"/> <!-- Label --> <rect x="14" y="25" width="12" height="7" rx="1" fill="white" opacity="0.25"/> <!-- Pump neck --> <rect x="17" y="10" width="6" height="8" rx="2" fill="#7A3A80"/> <!-- Pump head --> <rect x="13" y="8" width="14" height="4" rx="2" fill="#9B5EA0"/> <!-- Pump nozzle --> <rect x="22" y="6" width="7" height="2.5" rx="1.25" fill="#7A3A80"/> <circle cx="29" cy="7.25" r="1.5" fill="#C87AC0"/> <!-- Shine --> <rect x="14" y="20" width="3" height="10" rx="1.5" fill="white" opacity="0.18"/> </svg>`,
+  "keratin-shampoo": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Pump bottle --> <rect x="12" y="18" width="16" height="18" rx="4" fill="#9B5EA0"/> <rect x="12" y="18" width="16" height="6" rx="3" fill="#7A3A80"/> <!-- Label --> <rect x="14" y="25" width="12" height="7" rx="1" fill="white" opacity="0.25"/> <!-- Pump neck --> <rect x="17" y="10" width="6" height="8" rx="2" fill="#7A3A80"/> <!-- Pump head --> <rect x="13" y="8" width="14" height="4" rx="2" fill="#9B5EA0"/> <!-- Pump nozzle --> <rect x="22" y="6" width="7" height="2.5" rx="1.25" fill="#7A3A80"/> <circle cx="29" cy="7.25" r="1.5" fill="#C87AC0"/> <!-- Shine --> <rect x="14" y="20" width="3" height="10" rx="1.5" fill="white" opacity="0.18"/> </svg>`,
+  "protein-shampoo": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Pump bottle --> <rect x="12" y="18" width="16" height="18" rx="4" fill="#9B5EA0"/> <rect x="12" y="18" width="16" height="6" rx="3" fill="#7A3A80"/> <!-- Label --> <rect x="14" y="25" width="12" height="7" rx="1" fill="white" opacity="0.25"/> <!-- Pump neck --> <rect x="17" y="10" width="6" height="8" rx="2" fill="#7A3A80"/> <!-- Pump head --> <rect x="13" y="8" width="14" height="4" rx="2" fill="#9B5EA0"/> <!-- Pump nozzle --> <rect x="22" y="6" width="7" height="2.5" rx="1.25" fill="#7A3A80"/> <circle cx="29" cy="7.25" r="1.5" fill="#C87AC0"/> <!-- Shine --> <rect x="14" y="20" width="3" height="10" rx="1.5" fill="white" opacity="0.18"/> </svg>`,
+  "shikakai-shampoo": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Pump bottle --> <rect x="12" y="18" width="16" height="18" rx="4" fill="#9B5EA0"/> <rect x="12" y="18" width="16" height="6" rx="3" fill="#7A3A80"/> <!-- Label --> <rect x="14" y="25" width="12" height="7" rx="1" fill="white" opacity="0.25"/> <!-- Pump neck --> <rect x="17" y="10" width="6" height="8" rx="2" fill="#7A3A80"/> <!-- Pump head --> <rect x="13" y="8" width="14" height="4" rx="2" fill="#9B5EA0"/> <!-- Pump nozzle --> <rect x="22" y="6" width="7" height="2.5" rx="1.25" fill="#7A3A80"/> <circle cx="29" cy="7.25" r="1.5" fill="#C87AC0"/> <!-- Shine --> <rect x="14" y="20" width="3" height="10" rx="1.5" fill="white" opacity="0.18"/> </svg>`,
+  "abc-soap": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Soap bar --> <rect x="7" y="20" width="26" height="14" rx="5" fill="#78C8A0"/> <rect x="7" y="20" width="26" height="7" rx="3" fill="#50A878"/> <!-- Soap label indent --> <rect x="11" y="23" width="18" height="7" rx="3" fill="#60B888" opacity="0.5"/> <!-- Bubbles --> <circle cx="14" cy="16" r="3" fill="white" opacity="0.7"/> <circle cx="22" cy="13" r="4" fill="white" opacity="0.6"/> <circle cx="30" cy="16" r="2.5" fill="white" opacity="0.65"/> <circle cx="14" cy="16" r="1.5" fill="white" opacity="0.4"/> <circle cx="22" cy="13" r="2" fill="white" opacity="0.35"/> <circle cx="30" cy="16" r="1.2" fill="white" opacity="0.4"/> </svg>`,
+  "kuppaimeni-soap": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Soap bar --> <rect x="7" y="20" width="26" height="14" rx="5" fill="#78C8A0"/> <rect x="7" y="20" width="26" height="7" rx="3" fill="#50A878"/> <!-- Soap label indent --> <rect x="11" y="23" width="18" height="7" rx="3" fill="#60B888" opacity="0.5"/> <!-- Bubbles --> <circle cx="14" cy="16" r="3" fill="white" opacity="0.7"/> <circle cx="22" cy="13" r="4" fill="white" opacity="0.6"/> <circle cx="30" cy="16" r="2.5" fill="white" opacity="0.65"/> <circle cx="14" cy="16" r="1.5" fill="white" opacity="0.4"/> <circle cx="22" cy="13" r="2" fill="white" opacity="0.35"/> <circle cx="30" cy="16" r="1.2" fill="white" opacity="0.4"/> </svg>`,
+  "nalangu-mavu-soap": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Soap bar --> <rect x="7" y="20" width="26" height="14" rx="5" fill="#78C8A0"/> <rect x="7" y="20" width="26" height="7" rx="3" fill="#50A878"/> <!-- Soap label indent --> <rect x="11" y="23" width="18" height="7" rx="3" fill="#60B888" opacity="0.5"/> <!-- Bubbles --> <circle cx="14" cy="16" r="3" fill="white" opacity="0.7"/> <circle cx="22" cy="13" r="4" fill="white" opacity="0.6"/> <circle cx="30" cy="16" r="2.5" fill="white" opacity="0.65"/> <circle cx="14" cy="16" r="1.5" fill="white" opacity="0.4"/> <circle cx="22" cy="13" r="2" fill="white" opacity="0.35"/> <circle cx="30" cy="16" r="1.2" fill="white" opacity="0.4"/> </svg>`,
+  "herbal-shikakai-powder": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Wide jar --> <rect x="9" y="20" width="22" height="15" rx="4" fill="#B87CB0"/> <rect x="7" y="17" width="26" height="5" rx="2.5" fill="#8A508A"/> <!-- Lid shine --> <rect x="10" y="18" width="7" height="3" rx="1.5" fill="white" opacity="0.2"/> <!-- Powder puff on top --> <ellipse cx="20" cy="17" rx="7" ry="3" fill="#E0B0D8" opacity="0.6"/> <!-- Leaf accent --> <path d="M20 30 Q20 24 24 21" stroke="#D4A0C8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <path d="M24 21 Q26 24 22 27" fill="#C880B8" opacity="0.7"/> <!-- Shine on jar --> <rect x="11" y="22" width="3" height="10" rx="1.5" fill="white" opacity="0.15"/> </svg>`,
+  "nalangu-mavu-for-women": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Wide jar --> <rect x="9" y="20" width="22" height="15" rx="4" fill="#B87CB0"/> <rect x="7" y="17" width="26" height="5" rx="2.5" fill="#8A508A"/> <!-- Lid shine --> <rect x="10" y="18" width="7" height="3" rx="1.5" fill="white" opacity="0.2"/> <!-- Powder puff on top --> <ellipse cx="20" cy="17" rx="7" ry="3" fill="#E0B0D8" opacity="0.6"/> <!-- Leaf accent --> <path d="M20 30 Q20 24 24 21" stroke="#D4A0C8" stroke-width="1.5" fill="none" stroke-linecap="round"/> <path d="M24 21 Q26 24 22 27" fill="#C880B8" opacity="0.7"/> <!-- Shine on jar --> <rect x="11" y="22" width="3" height="10" rx="1.5" fill="white" opacity="0.15"/> </svg>`,
+  "50-herbal-oil": `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"> <!-- Dropper bottle --> <path d="M14 20 Q13 14 20 10 Q27 14 26 20 L26 32 Q26 35 20 35 Q14 35 14 32 Z" fill="#C8A832"/> <path d="M14 20 Q13 14 20 10 Q27 14 26 20 L26 24 Q26 24 20 24 Q14 24 14 20 Z" fill="#A88820"/> <!-- Neck --> <rect x="17" y="6" width="6" height="5" rx="2" fill="#8A6A18"/> <!-- Dropper cap --> <rect x="16" y="3" width="8" height="4" rx="2" fill="#C8A832"/> <!-- Droplet inside --> <path d="M20 27 Q18 29 18 31 Q18 33.5 20 33.5 Q22 33.5 22 31 Q22 29 20 27Z" fill="#F5D060" opacity="0.9"/> <!-- Shine --> <rect x="15" y="21" width="3" height="8" rx="1.5" fill="white" opacity="0.2"/> </svg>`
+};
+
+function scrollToSection(id) {
+  try {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+    const nav = document.getElementById('navLinks');
+    if (nav) nav.classList.remove('open');
+  } catch(e) {}
+  return false;
+}
+
+function toggleMenu() {
+  try {
+    const links = document.getElementById('navLinks');
+    if (links) links.classList.toggle('open');
+  } catch(e) {}
+  return false;
+}
+
+renderProducts('all');
+</script>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+<!-- CART DRAWER -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Your Cart <span id="cartHeaderCount"></span></h2>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <span class="empty-icon">🛒</span>
+      <p>Your cart is empty.<br>Browse products and tap "Add to Cart"!</p>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none;">
+    <div class="cart-subtotal">
+      <span>Subtotal</span>
+      <strong id="cartTotal">$0.00</strong>
+    </div>
+    <div class="cart-note">
+      In-person pickup only. We will confirm your order via WhatsApp or call.
+    </div>
+    <div class="cart-actions">
+      <button class="cart-whatsapp" id="cartWhatsappBtn" onclick="sendWhatsApp()">💬 Send Order via WhatsApp</button>
+      <a href="tel:9722158262" class="cart-call">📞 Call to Confirm Order</a>
+      <button class="cart-clear" onclick="clearCart()">Clear cart</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
