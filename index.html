@@ -647,6 +647,118 @@
   .reveal.in-view { opacity: 1; transform: translateY(0); }
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
+    .leaf-decor { animation: none !important; }
+  }
+
+  /* ─── GLOBAL POLISH ─── */
+  ::selection { background: var(--gold); color: #1A0A00; }
+  body::-webkit-scrollbar { width: 10px; }
+  body::-webkit-scrollbar-track { background: var(--cream); }
+  body::-webkit-scrollbar-thumb { background: var(--forest); border-radius: 5px; }
+
+  nav { transition: padding 0.25s, background 0.25s, box-shadow 0.25s; }
+  nav.scrolled { padding: 0.4rem 2rem; background: rgba(15, 7, 3, 0.97); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+  .nav-links a.active { color: var(--gold-light); }
+  .nav-links a { position: relative; }
+  .nav-links a::after {
+    content: ''; position: absolute; left: 0; bottom: -4px;
+    width: 0; height: 2px; background: var(--gold-light);
+    transition: width 0.25s;
+  }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+  /* floating hero leaves */
+  .leaf-decor { animation: leafFloat 7s ease-in-out infinite; }
+  .leaf-decor.tr { animation-delay: 1.5s; }
+  .leaf-decor.bl { animation-delay: 3s; }
+  .leaf-decor.br { animation-delay: 4.5s; }
+  @keyframes leafFloat {
+    0%, 100% { translate: 0 0; }
+    50% { translate: 0 -18px; }
+  }
+  .scroll-hint {
+    position: absolute; bottom: 1.6rem; left: 50%; transform: translateX(-50%);
+    color: rgba(253,246,227,0.55); font-size: 1.4rem; cursor: pointer;
+    animation: hintBounce 2s ease-in-out infinite; z-index: 1;
+    background: none; border: none;
+  }
+  @keyframes hintBounce { 0%, 100% { translate: 0 0; opacity: 0.55; } 50% { translate: 0 8px; opacity: 1; } }
+
+  /* product card polish */
+  .product-card { position: relative; }
+  .product-card:hover .card-icon { transform: scale(1.15) rotate(-4deg); }
+  .card-icon { transition: transform 0.25s ease; }
+
+  /* ─── HOW IT WORKS ─── */
+  #how { background: var(--warm-white); border-top: 1px solid #EDE8DC; }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .step-card {
+    background: var(--cream);
+    border: 1px solid #EDE8DC; border-radius: 8px;
+    padding: 2rem 1.6rem; text-align: center; position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .step-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .step-num {
+    position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--gold); color: #1A0A00;
+    font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .step-icon { font-size: 2.4rem; margin-bottom: 0.8rem; }
+  .step-card h4 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--forest); margin-bottom: 0.5rem; }
+  .step-card p { font-size: 0.88rem; color: var(--text-mid); line-height: 1.6; }
+
+  /* ─── FAQ ─── */
+  #faq { background: var(--cream); }
+  .faq-list { max-width: 720px; margin-top: 2.5rem; }
+  .faq-item {
+    background: white; border: 1px solid #EDE8DC; border-radius: 6px;
+    margin-bottom: 0.8rem; overflow: hidden;
+  }
+  .faq-q {
+    width: 100%; background: none; border: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.4rem; text-align: left;
+    font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700;
+    color: var(--text-dark); transition: color 0.2s;
+  }
+  .faq-q:hover { color: var(--crimson); }
+  .faq-q .chev { transition: transform 0.25s; color: var(--gold); flex-shrink: 0; }
+  .faq-item.open .faq-q .chev { transform: rotate(180deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+  }
+  .faq-a p { padding: 0 1.4rem 1.2rem; font-size: 0.92rem; color: var(--text-mid); line-height: 1.7; font-weight: 300; }
+  .faq-item.open .faq-a { max-height: 250px; }
+
+  /* ─── FOOTER UPGRADE ─── */
+  footer { text-align: left; padding: 3rem 1.5rem 1.5rem; }
+  .footer-grid {
+    max-width: 1100px; margin: 0 auto 2rem;
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2.5rem;
+  }
+  .footer-col h4 {
+    font-family: 'Playfair Display', serif; color: var(--gold);
+    font-size: 1rem; margin-bottom: 0.9rem; font-weight: 700;
+  }
+  .footer-col p, .footer-col li { font-size: 0.85rem; line-height: 1.8; color: rgba(253,246,227,0.6); }
+  .footer-col ul { list-style: none; }
+  .footer-col a { color: rgba(253,246,227,0.6); text-decoration: none; cursor: pointer; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--gold-light); }
+  .footer-bottom {
+    max-width: 1100px; margin: 0 auto; text-align: center;
+    border-top: 1px solid rgba(212,172,13,0.25); padding-top: 1.4rem;
+    font-size: 0.78rem;
+  }
+  @media (max-width: 768px) {
+    .steps-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   }
 
 </style>
@@ -659,10 +771,12 @@
     <img src="data:image/png;base64,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" alt="Bhoomi FarmFresh Organics" class="nav-logo-img" />
   </span>
   <ul class="nav-links" id="navLinks">
-    <li><a onclick="return scrollToSection('why')">Why Us</a></li>
-    <li><a onclick="return scrollToSection('products')">Products</a></li>
-    <li><a onclick="return scrollToSection('events')">Events</a></li>
-    <li><a onclick="return scrollToSection('contact')">Contact</a></li>
+    <li><a onclick="return scrollToSection('why')" data-section="why">Why Us</a></li>
+    <li><a onclick="return scrollToSection('products')" data-section="products">Products</a></li>
+    <li><a onclick="return scrollToSection('how')" data-section="how">How It Works</a></li>
+    <li><a onclick="return scrollToSection('events')" data-section="events">Events</a></li>
+    <li><a onclick="return scrollToSection('faq')" data-section="faq">FAQ</a></li>
+    <li><a onclick="return scrollToSection('contact')" data-section="contact">Contact</a></li>
   </ul>
   <div style="display:flex;align-items:center;gap:0.75rem;">
     <button class="cart-btn" onclick="toggleCart()" title="View Cart">
@@ -696,6 +810,7 @@
       <a onclick="return scrollToSection('contact')" class="btn-outline" style="cursor:pointer;" id="heroBtn2">Place an Order</a>
     </div>
   </div>
+  <button class="scroll-hint" onclick="return scrollToSection('why')" aria-label="Scroll down">▾</button>
 </section>
 
 <!-- MARQUEE -->
@@ -740,6 +855,35 @@
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-label reveal">Simple & Personal</div>
+    <h2 class="section-title reveal">How Ordering <em>Works</em></h2>
+    <p class="section-sub reveal">No checkout forms, no shipping fees - just a quick message and a friendly pickup.</p>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">1</div>
+        <div class="step-icon">🛒</div>
+        <h4>Browse & Add to Cart</h4>
+        <p>Explore the products above, use search or categories, and add what you'd like to your cart.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">2</div>
+        <div class="step-icon">💬</div>
+        <h4>Send via WhatsApp</h4>
+        <p>One tap sends your order list to us on WhatsApp. We'll confirm availability right away.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">3</div>
+        <div class="step-icon">🤝</div>
+        <h4>Pick Up In Person</h4>
+        <p>Meet us at the stall or arrange a convenient pickup in the DFW area. Pay when you collect.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- EVENTS -->
 <section id="events">
   <div class="section-inner">
@@ -747,6 +891,36 @@
     <h2 class="section-title">Upcoming Stall</h2>
     <p class="section-sub">See, smell, and sample the products in person. Come by our stall and pick up what you need.</p>
     <div id="eventsList"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="section-label reveal">Good to Know</div>
+    <h2 class="section-title reveal">Common <em>Questions</em></h2>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">Are the products really chemical-free?<span class="chev">▾</span></button>
+        <div class="faq-a"><p>Yes. Every item is sourced from trusted distributors in Tamil Nadu who specialize in traditional, chemical-free production. No preservatives, no artificial colors - what's on the label is everything that's in the product.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">Do you ship or deliver?<span class="chev">▾</span></button>
+        <div class="faq-a"><p>Not yet - we're a small operation, so it's in-person pickup only in the DFW area for now. Catch us at our pop-up stalls or message us to arrange a pickup.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">How do I pay?<span class="chev">▾</span></button>
+        <div class="faq-a"><p>You pay when you pick up your order. We'll confirm the total via WhatsApp before you come, so there are no surprises.</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">What if something is out of stock?<span class="chev">▾</span></button>
+        <div class="faq-a"><p>Our first shipment is limited, so popular items can sell out. Out-of-stock items are marked on the site. Tell us what you'd like to see restocked - your feedback decides what's in the next shipment!</p></div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">What does "Mappillai Samba" or "Kuthiraivali" mean?<span class="chev">▾</span></button>
+        <div class="faq-a"><p>These are traditional Tamil heritage grains. Mappillai Samba is an ancient red rice variety, and Kuthiraivali is barnyard millet - nutrient-dense grains that have been part of Tamil cuisine for centuries.</p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -796,9 +970,35 @@
 
 <!-- FOOTER -->
 <footer>
-  <p>🌱 <strong>Bhoomi FarmFresh Organics</strong> &nbsp;·&nbsp; Natural. Traditional. Chemical-Free.</p>
-  <p style="margin-top:0.4rem;">Sourced from Tamil Nadu with care &nbsp;·&nbsp; <span id="footerPhone">(972) 215-8262</span></p>
-  <p style="margin-top:1rem;font-size:0.72rem;opacity:0.4;"><a href="admin.html" style="color:inherit;text-decoration:none;">Admin</a></p>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>🌱 Bhoomi FarmFresh Organics</h4>
+      <p>Natural. Traditional. Chemical-Free.<br>
+      Reviving the wisdom of traditional Tamil food and wellness, sourced with care from Tamil Nadu and shared with the DFW community.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a onclick="return scrollToSection('why')">Why Bhoomi</a></li>
+        <li><a onclick="return scrollToSection('products')">Products</a></li>
+        <li><a onclick="return scrollToSection('how')">How It Works</a></li>
+        <li><a onclick="return scrollToSection('events')">Events</a></li>
+        <li><a onclick="return scrollToSection('faq')">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li>📞 <a href="tel:9722158262"><span id="footerPhone">(972) 215-8262</span></a></li>
+        <li>💬 <a href="https://wa.me/19722158262" target="_blank" id="footerWhatsapp">WhatsApp Us</a></li>
+        <li>📍 In-person pickup · DFW area</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>🌱 <strong>Bhoomi FarmFresh Organics</strong> · Sourced from Tamil Nadu with care</p>
+    <p style="margin-top:0.6rem;font-size:0.72rem;opacity:0.4;"><a href="admin.html" style="color:inherit;text-decoration:none;">Admin</a></p>
+  </div>
 </footer>
 
 <!-- BACK TO TOP -->
@@ -1264,6 +1464,8 @@ function renderContactSection() {
   if (callBtn) callBtn.href = 'tel:' + c.phone;
   const waBtn = document.getElementById('orderWhatsappBtn');
   if (waBtn) waBtn.href = 'https://wa.me/' + c.whatsapp;
+  const footerWa = document.getElementById('footerWhatsapp');
+  if (footerWa) footerWa.href = 'https://wa.me/' + c.whatsapp;
   document.querySelectorAll('a[href^="tel:"]').forEach(a => { a.href = 'tel:' + c.phone; });
 }
 
@@ -1280,10 +1482,30 @@ function initScrollReveal() {
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
-// ── BACK TO TOP ──
+// ── FAQ ──
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// ── BACK TO TOP + NAV STATE + SCROLL SPY ──
+const sectionIds = ['why', 'products', 'how', 'events', 'faq', 'contact'];
 window.addEventListener('scroll', () => {
   const btn = document.getElementById('backToTop');
   if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+  const nav = document.querySelector('nav');
+  if (nav) nav.classList.toggle('scrolled', window.scrollY > 60);
+  // highlight the nav link of the section currently in view
+  let current = '';
+  for (const id of sectionIds) {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 120) current = id;
+  }
+  document.querySelectorAll('.nav-links a[data-section]').forEach(a => {
+    a.classList.toggle('active', a.dataset.section === current);
+  });
 }, { passive: true });
 
 // ── INIT ──
