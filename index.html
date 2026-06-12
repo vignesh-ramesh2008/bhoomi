@@ -688,6 +688,50 @@
   .product-card { position: relative; }
   .product-card:hover .card-icon { transform: scale(1.15) rotate(-4deg); }
   .card-icon { transition: transform 0.25s ease; }
+  .card-photo-wrap {
+    position: relative; height: 150px; overflow: hidden;
+    background: linear-gradient(135deg, var(--forest), #1A4A1A);
+  }
+  .card-photo { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; display: block; }
+  .product-card:hover .card-photo { transform: scale(1.06); }
+  .card-photo-wrap .card-price { position: absolute; top: 0.8rem; right: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .card-desc { font-size: 0.82rem; color: var(--text-mid); line-height: 1.5; margin-top: 0.45rem; font-weight: 300; }
+
+  /* ─── DISCOUNT / TOTALS in cart ─── */
+  .discount-row { display: flex; gap: 0.5rem; margin-bottom: 0.9rem; }
+  .discount-row input {
+    flex: 1; padding: 0.55rem 0.8rem;
+    border: 1.5px solid #ddd; border-radius: 4px;
+    font-family: 'Lato', sans-serif; font-size: 0.85rem;
+    text-transform: uppercase;
+  }
+  .discount-row input:focus { outline: none; border-color: var(--leaf); }
+  .discount-row button {
+    padding: 0.55rem 1rem; border: none; border-radius: 4px;
+    background: var(--forest); color: white; cursor: pointer;
+    font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    transition: background 0.2s;
+  }
+  .discount-row button:hover { background: var(--leaf); }
+  .discount-msg { font-size: 0.78rem; margin: -0.5rem 0 0.8rem; }
+  .discount-msg.ok { color: var(--forest); font-weight: 700; }
+  .discount-msg.err { color: var(--crimson); }
+  .cart-totals-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.35rem; font-size: 0.85rem; color: #666;
+  }
+  .cart-totals-row.discount { color: var(--forest); font-weight: 700; }
+  .cart-totals-row.grand { font-size: 1.05rem; color: var(--text-dark); font-weight: 700; border-top: 1px solid #EDE8DC; padding-top: 0.5rem; margin-top: 0.5rem; }
+  .shipping-bar {
+    background: #F0FAF0; border: 1px solid #CFEACF; border-radius: 4px;
+    padding: 0.55rem 0.8rem; margin-bottom: 0.9rem;
+    font-size: 0.78rem; color: var(--forest); text-align: center; line-height: 1.45;
+  }
+  .shipping-bar .progress {
+    height: 5px; background: #DDEEDD; border-radius: 3px; margin-top: 0.4rem; overflow: hidden;
+  }
+  .shipping-bar .progress span { display: block; height: 100%; background: var(--leaf); border-radius: 3px; transition: width 0.3s; }
 
   /* ─── HOW IT WORKS ─── */
   #how { background: var(--warm-white); border-top: 1px solid #EDE8DC; }
@@ -878,7 +922,7 @@
         <div class="step-num">3</div>
         <div class="step-icon">🤝</div>
         <h4>Pick Up In Person</h4>
-        <p>Meet us at the stall or arrange a convenient pickup in the DFW area. Pay when you collect.</p>
+        <p>Meet us at the stall or arrange a convenient pickup in the Houston area. Pay when you collect.</p>
       </div>
     </div>
   </div>
@@ -906,7 +950,7 @@
       </div>
       <div class="faq-item reveal">
         <button class="faq-q" onclick="toggleFaq(this)">Do you ship or deliver?<span class="chev">▾</span></button>
-        <div class="faq-a"><p>Not yet - we're a small operation, so it's in-person pickup only in the DFW area for now. Catch us at our pop-up stalls or message us to arrange a pickup.</p></div>
+        <div class="faq-a"><p>Orders over $50 ship free! For smaller orders, it's in-person pickup in the Houston area - catch us at our pop-up stalls or message us to arrange a pickup.</p></div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-q" onclick="toggleFaq(this)">How do I pay?<span class="chev">▾</span></button>
@@ -944,7 +988,7 @@
           <div class="contact-icon">📍</div>
           <div class="contact-item-text">
             <strong>Pickup Location</strong>
-            <span id="contactLocation">In-person purchase only (DFW area)</span>
+            <span id="contactLocation">In-person purchase only (Houston area)</span>
           </div>
         </div>
         <div class="contact-item">
@@ -974,7 +1018,7 @@
     <div class="footer-col">
       <h4>🌱 Bhoomi FarmFresh Organics</h4>
       <p>Natural. Traditional. Chemical-Free.<br>
-      Reviving the wisdom of traditional Tamil food and wellness, sourced with care from Tamil Nadu and shared with the DFW community.</p>
+      Reviving the wisdom of traditional Tamil food and wellness, sourced with care from Tamil Nadu and shared with the Houston community.</p>
     </div>
     <div class="footer-col">
       <h4>Explore</h4>
@@ -991,7 +1035,7 @@
       <ul>
         <li>📞 <a href="tel:9722158262"><span id="footerPhone">(972) 215-8262</span></a></li>
         <li>💬 <a href="https://wa.me/19722158262" target="_blank" id="footerWhatsapp">WhatsApp Us</a></li>
-        <li>📍 In-person pickup · DFW area</li>
+        <li>📍 In-person pickup · Houston area</li>
       </ul>
     </div>
   </div>
@@ -1020,7 +1064,7 @@ const defaultData = {
     btn1: "Browse Products",
     btn2: "Place an Order"
   },
-  marquee: ["100% Natural", "No Preservatives", "Tamil Nadu Sourced", "Traditional Recipes", "Chemical-Free", "Farmer-Sourced", "Limited Stock Available"],
+  marquee: ["100% Natural", "No Preservatives", "Tamil Nadu Sourced", "Traditional Recipes", "Chemical-Free", "Farmer-Sourced", "Free Shipping Over $50", "Limited Stock Available"],
   why: {
     sectionLabel: "Our Promise",
     title: "Why",
@@ -1039,39 +1083,43 @@ const defaultData = {
     ]
   },
   products: [
-    { name: "Barnyard Millet Biscuits", sub: "Kuthiraivali · 80g", price: 3.00, cat: "snacks", inStock: true },
-    { name: "Finger Millet Biscuits", sub: "Kezhvaragu · 80g", price: 3.00, cat: "snacks", inStock: true },
-    { name: "Multi Grain Biscuits", sub: "Navathaniyam · 80g", price: 3.00, cat: "snacks", inStock: true },
-    { name: "Pearl Millet Biscuits", sub: "Kambu · 80g", price: 3.00, cat: "snacks", inStock: true },
-    { name: "Baked Beetroot Urad Dhal Chips", sub: "100g", price: 4.00, cat: "snacks", inStock: true },
-    { name: "Vacuum Fried Beetroot Chips", sub: "50g", price: 4.00, cat: "snacks", inStock: true },
-    { name: "Millet Cookies", sub: "100g", price: 5.00, cat: "snacks", inStock: true },
-    { name: "Farm Fresh Gulkand", sub: "250g", price: 7.00, cat: "snacks", inStock: true },
-    { name: "Blue Butterfly Pea Dip Tea", sub: "20 bags", price: 7.00, cat: "teas", inStock: true },
-    { name: "Hibiscus Dip Tea", sub: "20 bags", price: 6.00, cat: "teas", inStock: true },
-    { name: "Tulsi Masala Dip Tea", sub: "20 bags", price: 6.00, cat: "teas", inStock: true },
-    { name: "ABC Malt", sub: "250g", price: 8.00, cat: "teas", inStock: true },
-    { name: "Irumal Chooranam Powder", sub: "75g", price: 3.00, cat: "wellness", inStock: true },
-    { name: "Murunga Elai Powder", sub: "Moringa · 50g", price: 3.00, cat: "wellness", inStock: true },
-    { name: "Pirandai Powder", sub: "50g", price: 3.00, cat: "wellness", inStock: true },
-    { name: "Vallarai Powder", sub: "50g", price: 3.00, cat: "wellness", inStock: true },
-    { name: "Instant Idiyappam - Mappillai Samba", sub: "180g", price: 3.00, cat: "grains", inStock: true },
-    { name: "Instant Idiyappam - Ragi", sub: "180g", price: 3.00, cat: "grains", inStock: true },
-    { name: "Instant Idiyappam - Thooyamalli", sub: "180g", price: 3.00, cat: "grains", inStock: true },
-    { name: "Ancient Rice Porridge Mix (15-in-1)", sub: "250g", price: 6.00, cat: "grains", inStock: true },
-    { name: "Sprouted Multigrain Health Mix", sub: "250g", price: 5.00, cat: "grains", inStock: true },
-    { name: "Ragi Appalam", sub: "100g", price: 3.00, cat: "grains", inStock: true },
-    { name: "Just Herbs Anti-Hairfall Shampoo", sub: "200ml", price: 6.00, cat: "beauty", inStock: true },
-    { name: "Keratin Shampoo", sub: "100ml", price: 6.00, cat: "beauty", inStock: true },
-    { name: "Protein Shampoo", sub: "100ml", price: 6.00, cat: "beauty", inStock: true },
-    { name: "Shikakai Shampoo", sub: "125ml", price: 4.00, cat: "beauty", inStock: true },
-    { name: "ABC Soap", sub: "100g", price: 4.00, cat: "beauty", inStock: true },
-    { name: "Kuppaimeni Soap", sub: "100g", price: 4.00, cat: "beauty", inStock: true },
-    { name: "Nalangu Mavu Soap", sub: "100g", price: 3.00, cat: "beauty", inStock: true },
-    { name: "Herbal Shikakai Powder", sub: "150g", price: 3.00, cat: "beauty", inStock: true },
-    { name: "Nalangu Mavu for Women", sub: "50g", price: 3.00, cat: "beauty", inStock: true },
-    { name: "50 Herbal Oil", sub: "100ml", price: 5.00, cat: "beauty", inStock: true }
+    { name: "Barnyard Millet Biscuits", sub: "Kuthiraivali · 80g", price: 3.00, cat: "snacks", inStock: true, image: "", desc: "Crunchy, wholesome biscuits baked with nutrient-rich barnyard millet." },
+    { name: "Finger Millet Biscuits", sub: "Kezhvaragu · 80g", price: 3.00, cat: "snacks", inStock: true, image: "", desc: "Ragi goodness in a crisp biscuit - calcium-rich and kid-friendly." },
+    { name: "Multi Grain Biscuits", sub: "Navathaniyam · 80g", price: 3.00, cat: "snacks", inStock: true, image: "", desc: "Nine traditional grains in one hearty, satisfying biscuit." },
+    { name: "Pearl Millet Biscuits", sub: "Kambu · 80g", price: 3.00, cat: "snacks", inStock: true, image: "", desc: "Iron-rich pearl millet biscuits with a rustic, nutty flavour." },
+    { name: "Baked Beetroot Urad Dhal Chips", sub: "100g", price: 4.00, cat: "snacks", inStock: true, image: "", desc: "Guilt-free baked chips combining earthy beetroot and protein-rich urad dhal." },
+    { name: "Vacuum Fried Beetroot Chips", sub: "50g", price: 4.00, cat: "snacks", inStock: true, image: "", desc: "Vibrant beetroot chips, vacuum-fried to keep nutrients and crunch." },
+    { name: "Millet Cookies", sub: "100g", price: 5.00, cat: "snacks", inStock: true, image: "", desc: "Soft-baked cookies made with mixed millets and jaggery sweetness." },
+    { name: "Farm Fresh Gulkand", sub: "250g", price: 7.00, cat: "snacks", inStock: true, image: "", desc: "Traditional rose petal preserve - cooling, fragrant, and delicious." },
+    { name: "Blue Butterfly Pea Dip Tea", sub: "20 bags", price: 7.00, cat: "teas", inStock: true, image: "", desc: "Striking blue herbal tea rich in antioxidants - add lemon and watch it turn purple." },
+    { name: "Hibiscus Dip Tea", sub: "20 bags", price: 6.00, cat: "teas", inStock: true, image: "", desc: "Tangy crimson hibiscus tea, traditionally enjoyed for heart wellness." },
+    { name: "Tulsi Masala Dip Tea", sub: "20 bags", price: 6.00, cat: "teas", inStock: true, image: "", desc: "Holy basil and warming spices in a soothing everyday brew." },
+    { name: "ABC Malt", sub: "250g", price: 8.00, cat: "teas", inStock: true, image: "", desc: "Apple, beetroot, and carrot malt - a nourishing drink for the whole family." },
+    { name: "Irumal Chooranam Powder", sub: "75g", price: 3.00, cat: "wellness", inStock: true, image: "", desc: "Traditional Siddha herbal blend for cough and throat comfort." },
+    { name: "Murunga Elai Powder", sub: "Moringa · 50g", price: 3.00, cat: "wellness", inStock: true, image: "", desc: "Pure moringa leaf powder - a nutrient-dense daily superfood." },
+    { name: "Pirandai Powder", sub: "50g", price: 3.00, cat: "wellness", inStock: true, image: "", desc: "Veldt grape powder, traditionally used for bone and joint strength." },
+    { name: "Vallarai Powder", sub: "50g", price: 3.00, cat: "wellness", inStock: true, image: "", desc: "Brahmi-family herb powder known to support memory and focus." },
+    { name: "Instant Idiyappam - Mappillai Samba", sub: "180g", price: 3.00, cat: "grains", inStock: true, image: "", desc: "String hoppers made easy with heritage red rice - ready in minutes." },
+    { name: "Instant Idiyappam - Ragi", sub: "180g", price: 3.00, cat: "grains", inStock: true, image: "", desc: "Wholesome finger millet idiyappam mix for quick, healthy breakfasts." },
+    { name: "Instant Idiyappam - Thooyamalli", sub: "180g", price: 3.00, cat: "grains", inStock: true, image: "", desc: "Fragrant Thooyamalli rice idiyappam - soft, light, and traditional." },
+    { name: "Ancient Rice Porridge Mix (15-in-1)", sub: "250g", price: 6.00, cat: "grains", inStock: true, image: "", desc: "Fifteen heritage rices and grains in one nourishing porridge mix." },
+    { name: "Sprouted Multigrain Health Mix", sub: "250g", price: 5.00, cat: "grains", inStock: true, image: "", desc: "Sprouted grains ground fresh - an energizing drink mix for all ages." },
+    { name: "Ragi Appalam", sub: "100g", price: 3.00, cat: "grains", inStock: true, image: "", desc: "Crispy finger millet papads that fry up light and flavourful." },
+    { name: "Just Herbs Anti-Hairfall Shampoo", sub: "200ml", price: 6.00, cat: "beauty", inStock: true, image: "", desc: "Herbal blend shampoo to strengthen roots and reduce hair fall." },
+    { name: "Keratin Shampoo", sub: "100ml", price: 6.00, cat: "beauty", inStock: true, image: "", desc: "Smoothing keratin care with natural ingredients for frizz-free hair." },
+    { name: "Protein Shampoo", sub: "100ml", price: 6.00, cat: "beauty", inStock: true, image: "", desc: "Protein-enriched gentle cleanse for soft, healthy-looking hair." },
+    { name: "Shikakai Shampoo", sub: "125ml", price: 4.00, cat: "beauty", inStock: true, image: "", desc: "Classic shikakai cleanse - the way Tamil grandmothers washed hair." },
+    { name: "ABC Soap", sub: "100g", price: 4.00, cat: "beauty", inStock: true, image: "", desc: "Apple, beetroot, and carrot soap for naturally glowing skin." },
+    { name: "Kuppaimeni Soap", sub: "100g", price: 4.00, cat: "beauty", inStock: true, image: "", desc: "Indian acalypha herbal soap, traditionally loved for clear skin." },
+    { name: "Nalangu Mavu Soap", sub: "100g", price: 3.00, cat: "beauty", inStock: true, image: "", desc: "The traditional bridal bath blend, now in a convenient soap bar." },
+    { name: "Herbal Shikakai Powder", sub: "150g", price: 3.00, cat: "beauty", inStock: true, image: "", desc: "Pure ground shikakai pods for a chemical-free hair wash." },
+    { name: "Nalangu Mavu for Women", sub: "50g", price: 3.00, cat: "beauty", inStock: true, image: "", desc: "Aromatic herbal bath powder for soft, radiant skin." },
+    { name: "50 Herbal Oil", sub: "100ml", price: 5.00, cat: "beauty", inStock: true, image: "", desc: "Fifty herbs infused in one nourishing oil for hair and scalp." }
   ],
+  discounts: [
+    { code: "BHOOMI10", percent: 10 }
+  ],
+  freeShippingThreshold: 50,
   events: [
     {
       day: "SAT",
@@ -1085,7 +1133,7 @@ const defaultData = {
     phone: "9722158262",
     phoneDisplay: "(972) 215-8262",
     whatsapp: "19722158262",
-    location: "In-person purchase only (DFW area)",
+    location: "In-person purchase only (Houston area)",
     stockStatus: "Limited first shipment - order soon!",
     introText: "We're a small operation, so every order matters to us. Reach out directly and we'll make sure you get exactly what you need, whether it's a single item or a full basket.",
     orderTitle: "Ready to Order?",
@@ -1152,16 +1200,23 @@ function renderProducts(filter) {
     const inCart = cart.find(c => c.id === pid);
     const icon = productIcons[pid] || productIcons['millet-cookies'] || '';
     const outOfStock = p.inStock === false;
+    const header = p.image
+      ? `<div class="card-photo-wrap">
+          <img class="card-photo" src="${p.image.replace(/"/g, '&quot;')}" alt="${escapeHtml(p.name)}" loading="lazy" />
+          <span class="card-price">${formatPrice(p.price)}</span>
+        </div>`
+      : `<div class="card-header" style="background:${catGradients[p.cat] || catGradients.snacks}">
+          <div class="card-icon">${icon}</div>
+          <span class="card-price">${formatPrice(p.price)}</span>
+        </div>`;
     return `
     <div class="product-card${outOfStock ? ' out-of-stock' : ''}">
-      <div class="card-header" style="background:${catGradients[p.cat] || catGradients.snacks}">
-        <div class="card-icon">${icon}</div>
-        <span class="card-price">${formatPrice(p.price)}</span>
-      </div>
+      ${header}
       <div class="card-body">
         <div>
           <div class="card-name">${p.name}</div>
           <div class="card-meta">${p.sub}</div>
+          ${p.desc ? `<div class="card-desc">${escapeHtml(p.desc)}</div>` : ''}
         </div>
         <div>
           <span class="card-tag">${catLabel[p.cat] || p.cat}</span>${outOfStock ? '<span class="stock-badge">Out of Stock</span>' : ''}
@@ -1242,10 +1297,62 @@ function clearCart() {
   renderProducts(document.querySelector('.tab.active')?.dataset?.cat || 'all');
 }
 
+// ── DISCOUNT CODE ──
+let appliedDiscount = null;
+try { appliedDiscount = JSON.parse(sessionStorage.getItem('bhoomi_discount')) || null; } catch (e) {}
+
+function applyDiscount() {
+  const input = document.getElementById('discountInput');
+  const msg = document.getElementById('discountMsg');
+  const code = (input?.value || '').trim().toUpperCase();
+  if (!code) return;
+  const found = (DATA.discounts || []).find(d => d.code.toUpperCase() === code);
+  if (found) {
+    appliedDiscount = { code: found.code.toUpperCase(), percent: found.percent };
+    try { sessionStorage.setItem('bhoomi_discount', JSON.stringify(appliedDiscount)); } catch (e) {}
+    if (msg) { msg.textContent = '✓ Code applied - ' + found.percent + '% off!'; msg.className = 'discount-msg ok'; }
+    showToast('🎉 ' + found.percent + '% discount applied!');
+  } else {
+    appliedDiscount = null;
+    try { sessionStorage.removeItem('bhoomi_discount'); } catch (e) {}
+    if (msg) { msg.textContent = 'Invalid code. Please check and try again.'; msg.className = 'discount-msg err'; }
+  }
+  updateCartUI();
+}
+
+function getCartTotals() {
+  const subtotal = cart.reduce((s, c) => s + cartPrice(c) * c.qty, 0);
+  const discount = appliedDiscount ? subtotal * (appliedDiscount.percent / 100) : 0;
+  return { subtotal, discount, total: subtotal - discount };
+}
+
 function updateCartUI() {
   saveCart();
-  const total = cart.reduce((s, c) => s + cartPrice(c) * c.qty, 0);
+  const { subtotal, discount, total } = getCartTotals();
   const count = cart.reduce((s, c) => s + c.qty, 0);
+  // Subtotal / discount / total breakdown
+  const subEl = document.getElementById('cartSubtotal');
+  if (subEl) subEl.textContent = '$' + subtotal.toFixed(2);
+  const dLine = document.getElementById('discountLine');
+  if (dLine) {
+    dLine.style.display = appliedDiscount ? 'flex' : 'none';
+    if (appliedDiscount) {
+      document.getElementById('discountLabel').textContent = 'Discount (' + appliedDiscount.code + ' · ' + appliedDiscount.percent + '%)';
+      document.getElementById('discountAmount').textContent = '-$' + discount.toFixed(2);
+    }
+  }
+  // Free shipping progress
+  const bar = document.getElementById('shippingBar');
+  if (bar) {
+    const threshold = DATA.freeShippingThreshold || 50;
+    if (total >= threshold) {
+      bar.innerHTML = '🎉 <strong>You\'ve unlocked FREE shipping!</strong>';
+    } else {
+      const remaining = (threshold - total).toFixed(2);
+      const pct = Math.min(100, (total / threshold) * 100);
+      bar.innerHTML = `Add <strong>$${remaining}</strong> more for free shipping (orders $${threshold}+)<div class="progress"><span style="width:${pct}%"></span></div>`;
+    }
+  }
   // Update count badge
   const badge = document.getElementById('cartCount');
   if (badge) badge.textContent = count;
@@ -1302,11 +1409,18 @@ function sendWhatsApp() {
     const lineTotal = (cartPrice(c) * c.qty).toFixed(2);
     return c.qty + 'x ' + c.name + ' (' + c.sub + ') - $' + lineTotal;
   });
-  const total = cart.reduce((s, c) => s + cartPrice(c) * c.qty, 0);
+  const { subtotal, discount, total } = getCartTotals();
+  const threshold = DATA.freeShippingThreshold || 50;
+  let totalsBlock = 'Subtotal: $' + subtotal.toFixed(2);
+  if (appliedDiscount) {
+    totalsBlock += '%0ADiscount (' + appliedDiscount.code + ' - ' + appliedDiscount.percent + '%25 off): -$' + discount.toFixed(2);
+  }
+  totalsBlock += '%0ATotal: $' + total.toFixed(2);
+  totalsBlock += total >= threshold ? '%0A(Qualifies for FREE shipping!)' : '%0A(In-person pickup)';
   const msg = 'Hi! I would like to place an order from Bhoomi FarmFresh Organics:%0A%0A' +
     lines.join('%0A') +
-    '%0A%0ATotal: $' + total.toFixed(2) +
-    '%0A%0APlease confirm availability and pickup details. Thank you!';
+    '%0A%0A' + totalsBlock +
+    '%0A%0APlease confirm availability and delivery/pickup details. Thank you!';
   window.open('https://wa.me/' + (DATA.contact.whatsapp || '19722158262') + '?text=' + msg, '_blank');
 }
 
@@ -1536,12 +1650,26 @@ initScrollReveal();
     </div>
   </div>
   <div class="cart-footer" id="cartFooter" style="display:none;">
-    <div class="cart-subtotal">
+    <div class="shipping-bar" id="shippingBar"></div>
+    <div class="discount-row">
+      <input type="text" id="discountInput" placeholder="Discount code" />
+      <button onclick="applyDiscount()">Apply</button>
+    </div>
+    <div class="discount-msg" id="discountMsg"></div>
+    <div class="cart-totals-row">
       <span>Subtotal</span>
-      <strong id="cartTotal">$0.00</strong>
+      <span id="cartSubtotal">$0.00</span>
+    </div>
+    <div class="cart-totals-row discount" id="discountLine" style="display:none;">
+      <span id="discountLabel">Discount</span>
+      <span id="discountAmount">-$0.00</span>
+    </div>
+    <div class="cart-totals-row grand">
+      <span>Total</span>
+      <span id="cartTotal">$0.00</span>
     </div>
     <div class="cart-note">
-      In-person pickup only. We will confirm your order via WhatsApp or call.
+      We will confirm your order via WhatsApp or call. Orders over $50 ship free; smaller orders are in-person pickup.
     </div>
     <div class="cart-actions">
       <button class="cart-whatsapp" id="cartWhatsappBtn" onclick="sendWhatsApp()">💬 Send Order via WhatsApp</button>
