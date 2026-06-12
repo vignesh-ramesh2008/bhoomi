@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bhoomi CMS Admin</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --header-bg: #0E2E0E;
+    --sidebar-bg: #1A4A1A;
+    --sidebar-hover: #255225;
+    --sidebar-active: #2E6B2E;
+    --accent: #D4AC0D;
+    --accent-hover: #B8960B;
+    --content-bg: #f8f9fa;
+    --white: #ffffff;
+    --text-dark: #1a1a1a;
+    --text-muted: #6c757d;
+    --border: #dee2e6;
+    --danger: #dc3545;
+    --success: #28a745;
+    --warning: #ffc107;
+    --badge-snacks: #fd7e14;
+    --badge-teas: #0d6efd;
+    --badge-wellness: #198754;
+    --badge-grains: #795548;
+    --badge-beauty: #6f42c1;
+    --shadow: 0 2px 8px rgba(0,0,0,0.12);
+    --radius: 8px;
+    --sidebar-width: 220px;
+    --header-height: 60px;
+  }
+
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--content-bg); color: var(--text-dark); height: 100vh; overflow: hidden; }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    position: fixed; inset: 0; background: linear-gradient(135deg, #0E2E0E 0%, #1A4A1A 50%, #0E2E0E 100%);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
+  }
+  #login-screen.hidden { display: none; }
+  .login-box {
+    background: var(--white); border-radius: 16px; padding: 48px 40px; width: 100%; max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4); text-align: center;
+  }
+  .login-logo { font-size: 48px; margin-bottom: 8px; }
+  .login-title { font-size: 24px; font-weight: 700; color: var(--header-bg); margin-bottom: 4px; }
+  .login-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 32px; }
+  .login-box input {
+    width: 100%; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius);
+    font-size: 16px; outline: none; transition: border-color 0.2s; margin-bottom: 16px;
+  }
+  .login-box input:focus { border-color: var(--accent); }
+  .login-btn {
+    width: 100%; padding: 13px; background: var(--header-bg); color: var(--white);
+    border: none; border-radius: var(--radius); font-size: 16px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .login-btn:hover { background: var(--sidebar-active); }
+  .login-error { color: var(--danger); font-size: 14px; margin-top: 12px; min-height: 20px; }
+
+  /* ── LAYOUT ── */
+  #app { display: flex; flex-direction: column; height: 100vh; }
+  #app.hidden { display: none; }
+
+  /* Header */
+  #header {
+    background: var(--header-bg); color: var(--white); height: var(--header-height);
+    display: flex; align-items: center; padding: 0 24px; gap: 16px;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .header-brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; flex: 1; }
+  .header-brand span { color: var(--accent); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-user { font-size: 13px; color: #9dc99d; }
+  #save-status {
+    font-size: 12px; padding: 4px 10px; border-radius: 20px;
+    background: rgba(212,172,13,0.2); color: var(--accent);
+    transition: opacity 0.5s; font-weight: 600;
+  }
+  #save-status.hidden { opacity: 0; }
+  .btn-logout {
+    padding: 7px 16px; background: rgba(255,255,255,0.1); color: var(--white);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-size: 13px;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .btn-logout:hover { background: rgba(255,255,255,0.2); }
+
+  /* Sidebar + Content wrapper */
+  #main-wrapper { display: flex; margin-top: var(--header-height); height: calc(100vh - var(--header-height)); }
+
+  #sidebar {
+    width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--white);
+    flex-shrink: 0; overflow-y: auto; padding: 16px 0;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+    cursor: pointer; font-size: 14px; font-weight: 500; color: #9dc99d;
+    transition: all 0.2s; border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: var(--sidebar-hover); color: var(--white); }
+  .nav-item.active { background: var(--sidebar-active); color: var(--white); border-left-color: var(--accent); }
+  .nav-icon { font-size: 18px; width: 24px; text-align: center; }
+
+  #content { flex: 1; overflow-y: auto; padding: 32px; }
+
+  /* ── CARDS ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--white); border-radius: var(--radius); padding: 24px;
+    box-shadow: var(--shadow); border-top: 4px solid var(--accent);
+  }
+  .stat-card .stat-val { font-size: 36px; font-weight: 700; color: var(--header-bg); line-height: 1; margin-bottom: 6px; }
+  .stat-card .stat-lbl { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+  .page-title { font-size: 22px; font-weight: 700; color: var(--header-bg); margin-bottom: 6px; }
+  .page-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px;
+    border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;
+    border: none; transition: all 0.2s; text-decoration: none;
+  }
+  .btn-primary { background: var(--header-bg); color: var(--white); }
+  .btn-primary:hover { background: var(--sidebar-active); }
+  .btn-accent { background: var(--accent); color: var(--white); }
+  .btn-accent:hover { background: var(--accent-hover); }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-danger { background: var(--danger); color: var(--white); }
+  .btn-danger:hover { background: #b02a37; }
+  .btn-outline { background: transparent; color: var(--header-bg); border: 1px solid var(--border); }
+  .btn-outline:hover { background: var(--content-bg); }
+  .btn-success { background: var(--success); color: var(--white); }
+  .btn-success:hover { background: #1e7e34; }
+
+  /* ── TABLE ── */
+  .table-container { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .table-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; gap: 12px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: #f0f4f0; padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f8fff8; }
+  tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-snacks { background: #fff0e0; color: var(--badge-snacks); }
+  .badge-teas { background: #e7f0ff; color: var(--badge-teas); }
+  .badge-wellness { background: #e8f5e9; color: var(--badge-wellness); }
+  .badge-grains { background: #f3ede8; color: var(--badge-grains); }
+  .badge-beauty { background: #f0eaff; color: var(--badge-beauty); }
+
+  /* ── TOGGLE ── */
+  .toggle { position: relative; display: inline-block; width: 40px; height: 22px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background: #ccc; border-radius: 22px; transition: 0.3s;
+  }
+  .toggle-slider:before {
+    position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+    background: white; border-radius: 50%; transition: 0.3s;
+  }
+  input:checked + .toggle-slider { background: var(--success); }
+  input:checked + .toggle-slider:before { transform: translateX(18px); }
+
+  /* ── FILTER TABS ── */
+  .filter-tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-tab {
+    padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: 2px solid var(--border); background: var(--white); color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .filter-tab.active { border-color: var(--header-bg); background: var(--header-bg); color: var(--white); }
+
+  /* ── PILLS TABS ── */
+  .pill-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); padding-bottom: 0; }
+  .pill-tab {
+    padding: 10px 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+    color: var(--text-muted); border-bottom: 3px solid transparent; margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+  .pill-tab:hover { color: var(--header-bg); }
+  .pill-tab.active { color: var(--header-bg); border-bottom-color: var(--accent); }
+
+  /* ── FORMS ── */
+  .form-section { background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .form-section h3 { font-size: 15px; font-weight: 700; color: var(--header-bg); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 13px; font-weight: 600; color: var(--text-dark); }
+  .form-group input, .form-group textarea, .form-group select {
+    padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 6px;
+    font-size: 14px; outline: none; transition: border-color 0.2s; font-family: inherit;
+    background: var(--white);
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .form-full { grid-column: 1 / -1; }
+
+  /* ── MODAL ── */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-backdrop.hidden { display: none; }
+  .modal-box {
+    background: var(--white); border-radius: 12px; width: 100%; max-width: 560px;
+    max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--white); z-index: 1;
+  }
+  .modal-header h2 { font-size: 18px; font-weight: 700; color: var(--header-bg); }
+  .modal-close { font-size: 22px; cursor: pointer; color: var(--text-muted); line-height: 1; border: none; background: none; padding: 4px; }
+  .modal-close:hover { color: var(--danger); }
+  .modal-body { padding: 24px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* ── EVENTS ── */
+  .events-list { display: flex; flex-direction: column; gap: 12px; }
+  .event-card {
+    background: var(--white); border-radius: var(--radius); padding: 20px;
+    box-shadow: var(--shadow); display: flex; align-items: flex-start; gap: 16px;
+  }
+  .event-date-box {
+    background: var(--header-bg); color: var(--white); border-radius: 8px;
+    padding: 10px 14px; text-align: center; flex-shrink: 0; min-width: 64px;
+  }
+  .event-date-box .day { font-size: 20px; font-weight: 800; line-height: 1; }
+  .event-date-box .month { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; color: var(--accent); }
+  .event-info { flex: 1; }
+  .event-info h4 { font-size: 16px; font-weight: 700; color: var(--header-bg); margin-bottom: 4px; }
+  .event-info p { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+  .event-location { font-size: 12px; color: var(--sidebar-active); font-weight: 600; }
+  .event-actions { display: flex; gap: 8px; align-items: flex-start; }
+
+  /* ── PILLS MANAGER ── */
+  .pills-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .pill-item {
+    display: flex; align-items: center; gap: 10px; background: #f0f4f0;
+    border-radius: 6px; padding: 8px 12px;
+  }
+  .pill-item span { flex: 1; font-size: 14px; }
+  .btn-icon { background: none; border: none; cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 4px; }
+  .btn-icon:hover { background: rgba(0,0,0,0.08); }
+  .btn-icon.danger:hover { background: rgba(220,53,69,0.1); color: var(--danger); }
+
+  /* Marquee list */
+  .marquee-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .marquee-item {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--white); border: 1.5px solid var(--border); border-radius: 6px; padding: 8px 12px;
+  }
+  .marquee-item span { flex: 1; font-size: 14px; }
+
+  /* Cards editor */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card-editor { background: #f8fff8; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .card-editor .card-num { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; }
+
+  /* Settings */
+  .settings-panel { background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .settings-panel h3 { font-size: 15px; font-weight: 700; color: var(--header-bg); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .info-panel { background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: var(--radius); padding: 16px; font-size: 13px; line-height: 1.7; }
+  .info-panel h4 { color: var(--header-bg); font-size: 14px; margin-bottom: 8px; }
+  .info-panel ol, .info-panel ul { padding-left: 20px; }
+
+  /* Dashboard quick links */
+  .quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 24px; }
+  .quick-link {
+    background: var(--white); border-radius: var(--radius); padding: 20px;
+    box-shadow: var(--shadow); cursor: pointer; transition: all 0.2s;
+    border: 2px solid transparent; text-align: center;
+  }
+  .quick-link:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .quick-link .ql-icon { font-size: 32px; margin-bottom: 8px; }
+  .quick-link .ql-title { font-size: 14px; font-weight: 700; color: var(--header-bg); }
+  .quick-link .ql-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .last-saved { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+  /* Add item row */
+  .add-item-row { display: flex; gap: 8px; align-items: center; }
+  .add-item-row input { flex: 1; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 14px; outline: none; }
+  .add-item-row input:focus { border-color: var(--accent); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #sidebar { width: 60px; }
+    .nav-item span { display: none; }
+    #content { padding: 16px; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Hidden utility */
+  .hidden { display: none !important; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Section content placeholder */
+  #section-content { min-height: 200px; }
+
+  /* Product name in table */
+  .prod-name { font-weight: 600; color: var(--text-dark); }
+  .prod-sub { font-size: 12px; color: var(--text-muted); }
+
+  /* Danger zone */
+  .danger-zone { border: 2px solid var(--danger); border-radius: var(--radius); padding: 16px; }
+  .danger-zone h4 { color: var(--danger); margin-bottom: 8px; }
+  .danger-zone p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🌱</div>
+    <div class="login-title">Bhoomi CMS</div>
+    <div class="login-sub">FarmFresh Organics Admin Panel</div>
+    <input type="password" id="login-pw" placeholder="Enter admin password" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <!-- Header -->
+  <header id="header">
+    <div class="header-brand">🌱 <span>Bhoomi</span> CMS &nbsp;<small style="font-weight:400;font-size:14px;color:#9dc99d;">FarmFresh Organics</small></div>
+    <div class="header-right">
+      <div id="save-status" class="hidden">Saved ✓</div>
+      <span class="header-user">Logged in as Admin</span>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Wrapper -->
+  <div id="main-wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="nav-item active" data-section="dashboard" onclick="navigate('dashboard')">
+        <span class="nav-icon">📊</span><span>Dashboard</span>
+      </div>
+      <div class="nav-item" data-section="products" onclick="navigate('products')">
+        <span class="nav-icon">🛒</span><span>Products</span>
+      </div>
+      <div class="nav-item" data-section="events" onclick="navigate('events')">
+        <span class="nav-icon">📅</span><span>Events</span>
+      </div>
+      <div class="nav-item" data-section="content" onclick="navigate('content')">
+        <span class="nav-icon">✏️</span><span>Content</span>
+      </div>
+      <div class="nav-item" data-section="settings" onclick="navigate('settings')">
+        <span class="nav-icon">⚙️</span><span>Settings</span>
+      </div>
+    </nav>
+
+    <!-- Content -->
+    <main id="content">
+      <div id="section-content"></div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop hidden" id="modal-backdrop" onclick="handleBackdropClick(event)">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-header">
+      <h2 id="modal-title">Modal</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ─── DEFAULT DATA ──────────────────────────────────────────────────────────
+const DEFAULT_DATA = {
+  hero: {
+    badge: "New - First Shipment Now Available",
+    titleLine1: "Pure.",
+    titleHighlight: "Traditional.",
+    titleLine2: "Chemical-Free.",
+    subtitle: "Bringing you the finest natural products from Tamil Nadu's farms directly to your table. No chemicals, no compromise.",
+    pills: ["🌾 Millet Snacks", "🌿 Herbal Powders", "🍵 Dip Teas", "🧴 Natural Soaps"],
+    btn1: "Browse Products",
+    btn2: "Place an Order"
+  },
+  marquee: ["100% Natural", "No Preservatives", "Tamil Nadu Sourced", "Traditional Recipes", "Chemical-Free", "Farmer-Sourced", "Limited Stock Available"],
+  why: {
+    sectionLabel: "Our Promise",
+    title: "Why",
+    titleHighlight: "Bhoomi?",
+    subtitle: "We believe in the power of traditional wisdom combined with modern accessibility. Every product tells a story of the land it comes from.",
+    paragraphs: [
+      "Every item in our collection is sourced directly from small-scale farmers and traditional artisans across Tamil Nadu who have preserved ancient agricultural practices for generations.",
+      "We believe you deserve to know exactly what goes into your food and personal care products. That's why we maintain complete transparency about our ingredients and sourcing.",
+      "By choosing Bhoomi, you're not just buying a product — you're supporting sustainable farming practices, preserving traditional knowledge, and investing in the health of your family."
+    ],
+    cards: [
+      { icon: "🌱", title: "100% Chemical-Free", desc: "No pesticides, preservatives, or artificial additives. Just pure, natural goodness." },
+      { icon: "🤝", title: "Farmer-Direct", desc: "We work directly with small farmers, ensuring fair prices and authentic products." },
+      { icon: "🏺", title: "Traditional Methods", desc: "Ancient recipes and time-tested techniques preserved for modern wellness." },
+      { icon: "✨", title: "Quality Assured", desc: "Each batch is carefully inspected to ensure you receive only the best." }
+    ]
+  },
+  products: [
+    { name: "Barnyard Millet Biscuits", sub: "Kuthiraivali · 80g", price: 3.00, cat: "snacks", inStock: true },
+    { name: "Finger Millet Biscuits", sub: "Kezhvaragu · 80g", price: 3.00, cat: "snacks", inStock: true },
+    { name: "Multi Grain Biscuits", sub: "Navathaniyam · 80g", price: 3.00, cat: "snacks", inStock: true },
+    { name: "Pearl Millet Biscuits", sub: "Kambu · 80g", price: 3.00, cat: "snacks", inStock: true },
+    { name: "Baked Beetroot Urad Dhal Chips", sub: "100g", price: 4.00, cat: "snacks", inStock: true },
+    { name: "Vacuum Fried Beetroot Chips", sub: "50g", price: 4.00, cat: "snacks", inStock: true },
+    { name: "Millet Cookies", sub: "100g", price: 5.00, cat: "snacks", inStock: true },
+    { name: "Farm Fresh Gulkand", sub: "250g", price: 7.00, cat: "snacks", inStock: true },
+    { name: "Blue Butterfly Pea Dip Tea", sub: "20 bags", price: 7.00, cat: "teas", inStock: true },
+    { name: "Hibiscus Dip Tea", sub: "20 bags", price: 6.00, cat: "teas", inStock: true },
+    { name: "Tulsi Masala Dip Tea", sub: "20 bags", price: 6.00, cat: "teas", inStock: true },
+    { name: "ABC Malt", sub: "250g", price: 8.00, cat: "teas", inStock: true },
+    { name: "Irumal Chooranam Powder", sub: "75g", price: 3.00, cat: "wellness", inStock: true },
+    { name: "Murunga Elai Powder", sub: "Moringa · 50g", price: 3.00, cat: "wellness", inStock: true },
+    { name: "Pirandai Powder", sub: "50g", price: 3.00, cat: "wellness", inStock: true },
+    { name: "Vallarai Powder", sub: "50g", price: 3.00, cat: "wellness", inStock: true },
+    { name: "Instant Idiyappam - Mappillai Samba", sub: "180g", price: 3.00, cat: "grains", inStock: true },
+    { name: "Instant Idiyappam - Ragi", sub: "180g", price: 3.00, cat: "grains", inStock: true },
+    { name: "Instant Idiyappam - Thooyamalli", sub: "180g", price: 3.00, cat: "grains", inStock: true },
+    { name: "Ancient Rice Porridge Mix (15-in-1)", sub: "250g", price: 6.00, cat: "grains", inStock: true },
+    { name: "Sprouted Multigrain Health Mix", sub: "250g", price: 5.00, cat: "grains", inStock: true },
+    { name: "Ragi Appalam", sub: "100g", price: 3.00, cat: "grains", inStock: true },
+    { name: "Just Herbs Anti-Hairfall Shampoo", sub: "200ml", price: 6.00, cat: "beauty", inStock: true },
+    { name: "Keratin Shampoo", sub: "100ml", price: 6.00, cat: "beauty", inStock: true },
+    { name: "Protein Shampoo", sub: "100ml", price: 6.00, cat: "beauty", inStock: true },
+    { name: "Shikakai Shampoo", sub: "125ml", price: 4.00, cat: "beauty", inStock: true },
+    { name: "ABC Soap", sub: "100g", price: 4.00, cat: "beauty", inStock: true },
+    { name: "Kuppaimeni Soap", sub: "100g", price: 4.00, cat: "beauty", inStock: true },
+    { name: "Nalangu Mavu Soap", sub: "100g", price: 3.00, cat: "beauty", inStock: true },
+    { name: "Herbal Shikakai Powder", sub: "150g", price: 3.00, cat: "beauty", inStock: true },
+    { name: "Nalangu Mavu for Women", sub: "50g", price: 3.00, cat: "beauty", inStock: true },
+    { name: "50 Herbal Oil", sub: "100ml", price: 5.00, cat: "beauty", inStock: true }
+  ],
+  events: [
+    { day: "SAT", month: "This Week", title: "Bhoomi Pop-Up Stall", desc: "Join us for a special pop-up where you can sample and purchase our full range of organic products. Meet the team and learn about the farmers behind your food.", location: "MTS Temple, DFW Area" }
+  ],
+  contact: {
+    phone: "9722158262",
+    phoneDisplay: "(972) 215-8262",
+    whatsapp: "19722158262",
+    location: "In-person purchase only (DFW area)",
+    stockStatus: "Limited first shipment - order soon!",
+    introText: "We're a small family-run operation bringing authentic Tamil Nadu organic products directly to the DFW community. Reach out to us to place your order.",
+    orderTitle: "Ready to Order?",
+    orderDesc: "Contact us via WhatsApp or phone to place your order. We'll confirm availability and arrange pick-up or delivery within the DFW area.",
+    sectionSubtitle: "We'd love to hear from you. Whether you have questions about our products or want to place an order, we're here to help."
+  }
+};
+
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let cmsData = {};
+let currentSection = 'dashboard';
+let currentProductFilter = 'all';
+let currentContentTab = 'hero';
+let saveTimer = null;
+let editingProductIdx = -1;
+let editingEventIdx = -1;
+
+// ─── AUTH ──────────────────────────────────────────────────────────────────
+function getStoredPw() {
+  const stored = localStorage.getItem('bhoomi_admin_pw');
+  if (!stored) return btoa('bhoomi2024');
+  return stored;
+}
+
+function doLogin() {
+  const pw = document.getElementById('login-pw').value;
+  const stored = getStoredPw();
+  if (btoa(pw) === stored) {
+    sessionStorage.setItem('bhoomi_admin_auth', '1');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    loadData();
+    navigate('dashboard');
+  } else {
+    document.getElementById('login-error').textContent = 'Incorrect password. Please try again.';
+    document.getElementById('login-pw').value = '';
+    document.getElementById('login-pw').focus();
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('bhoomi_admin_auth');
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-pw').value = '';
+  document.getElementById('login-error').textContent = '';
+}
+
+document.getElementById('login-pw').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ─── DATA ──────────────────────────────────────────────────────────────────
+function loadData() {
+  const raw = localStorage.getItem('bhoomi_cms');
+  if (raw) {
+    try { cmsData = JSON.parse(raw); } catch { cmsData = deepClone(DEFAULT_DATA); }
+    // Merge any missing keys from defaults
+    cmsData = deepMerge(deepClone(DEFAULT_DATA), cmsData);
+  } else {
+    cmsData = deepClone(DEFAULT_DATA);
+  }
+}
+
+function saveData() {
+  localStorage.setItem('bhoomi_cms', JSON.stringify(cmsData));
+  showSaveStatus();
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 500);
+}
+
+function showSaveStatus() {
+  const el = document.getElementById('save-status');
+  el.classList.remove('hidden');
+  el.textContent = 'Saved ✓';
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => el.classList.add('hidden'), 2500);
+}
+
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+function deepMerge(target, source) {
+  for (const key in source) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      if (!target[key] || typeof target[key] !== 'object') target[key] = {};
+      deepMerge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+function getLastSaved() {
+  const raw = localStorage.getItem('bhoomi_cms');
+  if (!raw) return 'Never';
+  // We can't store timestamp without modifying the schema, so just say "data exists"
+  return 'Data loaded from localStorage';
+}
+
+// ─── NAVIGATION ────────────────────────────────────────────────────────────
+function navigate(section) {
+  currentSection = section;
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.section === section);
+  });
+  renderSection(section);
+}
+
+function renderSection(name) {
+  const el = document.getElementById('section-content');
+  switch(name) {
+    case 'dashboard': el.innerHTML = renderDashboard(); break;
+    case 'products':  el.innerHTML = renderProducts(); break;
+    case 'events':    el.innerHTML = renderEvents(); break;
+    case 'content':   el.innerHTML = renderContent(); activateContentTab(currentContentTab); break;
+    case 'settings':  el.innerHTML = renderSettings(); break;
+  }
+}
+
+// ─── DASHBOARD ─────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const total = cmsData.products.length;
+  const inStock = cmsData.products.filter(p => p.inStock).length;
+  const outOfStock = total - inStock;
+  const events = cmsData.events.length;
+
+  return `
+  <div class="page-title">Dashboard</div>
+  <div class="page-sub">Welcome back! Here's an overview of your Bhoomi store content.</div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-val">${total}</div>
+      <div class="stat-lbl">Total Products</div>
+    </div>
+    <div class="stat-card" style="border-top-color:#28a745">
+      <div class="stat-val" style="color:#28a745">${inStock}</div>
+      <div class="stat-lbl">In Stock</div>
+    </div>
+    <div class="stat-card" style="border-top-color:#dc3545">
+      <div class="stat-val" style="color:#dc3545">${outOfStock}</div>
+      <div class="stat-lbl">Out of Stock</div>
+    </div>
+    <div class="stat-card" style="border-top-color:#0d6efd">
+      <div class="stat-val" style="color:#0d6efd">${events}</div>
+      <div class="stat-lbl">Upcoming Events</div>
+    </div>
+  </div>
+
+  <div class="page-title" style="font-size:16px;margin-bottom:12px;">Quick Access</div>
+  <div class="quick-links">
+    <div class="quick-link" onclick="navigate('products')">
+      <div class="ql-icon">🛒</div>
+      <div class="ql-title">Products</div>
+      <div class="ql-sub">Manage ${total} products</div>
+    </div>
+    <div class="quick-link" onclick="navigate('events')">
+      <div class="ql-icon">📅</div>
+      <div class="ql-title">Events</div>
+      <div class="ql-sub">Manage ${events} event${events!==1?'s':''}</div>
+    </div>
+    <div class="quick-link" onclick="navigate('content')">
+      <div class="ql-icon">✏️</div>
+      <div class="ql-title">Content</div>
+      <div class="ql-sub">Hero, Why Us, Contact</div>
+    </div>
+    <div class="quick-link" onclick="navigate('settings')">
+      <div class="ql-icon">⚙️</div>
+      <div class="ql-title">Settings</div>
+      <div class="ql-sub">Export, import, reset</div>
+    </div>
+  </div>
+
+  <div class="last-saved" style="margin-top:20px;">💾 ${getLastSaved()}</div>
+  `;
+}
+
+// ─── PRODUCTS ──────────────────────────────────────────────────────────────
+function renderProducts() {
+  const cats = ['all','snacks','teas','wellness','grains','beauty'];
+  const filtered = currentProductFilter === 'all'
+    ? cmsData.products
+    : cmsData.products.filter(p => p.cat === currentProductFilter);
+
+  const catCounts = {};
+  cats.forEach(c => catCounts[c] = c === 'all' ? cmsData.products.length : cmsData.products.filter(p=>p.cat===c).length);
+
+  const filterTabsHtml = cats.map(c => `
+    <div class="filter-tab ${currentProductFilter===c?'active':''}" onclick="setProductFilter('${c}')">
+      ${c.charAt(0).toUpperCase()+c.slice(1)} <small>(${catCounts[c]})</small>
+    </div>
+  `).join('');
+
+  const rowsHtml = filtered.map((p, idx) => {
+    const realIdx = cmsData.products.indexOf(p);
+    return `
+    <tr>
+      <td>
+        <div class="prod-name">${esc(p.name)}</div>
+        <div class="prod-sub">${esc(p.sub)}</div>
+      </td>
+      <td>$${parseFloat(p.price).toFixed(2)}</td>
+      <td><span class="badge badge-${p.cat}">${p.cat}</span></td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${p.inStock?'checked':''} onchange="toggleStock(${realIdx}, this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="openEditProduct(${realIdx})" title="Edit">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${realIdx})" title="Delete">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  return `
+  <div class="page-title">Products</div>
+  <div class="page-sub">Manage your product catalog. ${cmsData.products.length} products total.</div>
+
+  <div class="filter-tabs">${filterTabsHtml}</div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <span style="font-weight:700;font-size:14px;color:var(--header-bg)">
+        ${filtered.length} product${filtered.length!==1?'s':''}${currentProductFilter!=='all'?' in '+currentProductFilter:''}
+      </span>
+      <button class="btn btn-primary" onclick="openAddProduct()">+ Add Product</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Name / Description</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>In Stock</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>${rowsHtml.length ? rowsHtml : '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px">No products found.</td></tr>'}</tbody>
+    </table>
+  </div>`;
+}
+
+function setProductFilter(cat) {
+  currentProductFilter = cat;
+  navigate('products');
+}
+
+function toggleStock(idx, checked) {
+  cmsData.products[idx].inStock = checked;
+  scheduleSave();
+}
+
+function openAddProduct() {
+  editingProductIdx = -1;
+  const p = { name: '', sub: '', price: '', cat: 'snacks', inStock: true };
+  showProductModal(p);
+}
+
+function openEditProduct(idx) {
+  editingProductIdx = idx;
+  showProductModal(cmsData.products[idx]);
+}
+
+function showProductModal(p) {
+  document.getElementById('modal-title').textContent = editingProductIdx === -1 ? 'Add Product' : 'Edit Product';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label>Product Name</label>
+        <input type="text" id="pm-name" value="${esc(p.name)}" placeholder="e.g. Barnyard Millet Biscuits">
+      </div>
+      <div class="form-group form-full">
+        <label>Sub / Description</label>
+        <input type="text" id="pm-sub" value="${esc(p.sub)}" placeholder="e.g. Kuthiraivali · 80g">
+      </div>
+      <div class="form-group">
+        <label>Price ($)</label>
+        <input type="number" id="pm-price" value="${p.price}" step="0.01" min="0" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="pm-cat">
+          ${['snacks','teas','wellness','grains','beauty'].map(c =>
+            `<option value="${c}" ${p.cat===c?'selected':''}>${c.charAt(0).toUpperCase()+c.slice(1)}</option>`
+          ).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>In Stock</label>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+          <label class="toggle">
+            <input type="checkbox" id="pm-stock" ${p.inStock?'checked':''}>
+            <span class="toggle-slider"></span>
+          </label>
+          <span style="font-size:13px;color:var(--text-muted)">Mark as available</span>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML = `
+    <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>
+  `;
+  openModal();
+}
+
+function saveProduct() {
+  const name = document.getElementById('pm-name').value.trim();
+  const sub = document.getElementById('pm-sub').value.trim();
+  const price = parseFloat(document.getElementById('pm-price').value) || 0;
+  const cat = document.getElementById('pm-cat').value;
+  const inStock = document.getElementById('pm-stock').checked;
+
+  if (!name) { alert('Product name is required.'); return; }
+
+  const prod = { name, sub, price, cat, inStock };
+  if (editingProductIdx === -1) {
+    cmsData.products.push(prod);
+  } else {
+    cmsData.products[editingProductIdx] = prod;
+  }
+  saveData();
+  closeModal();
+  navigate('products');
+}
+
+function deleteProduct(idx) {
+  if (confirm(`Delete "${cmsData.products[idx].name}"? This cannot be undone.`)) {
+    cmsData.products.splice(idx, 1);
+    saveData();
+    navigate('products');
+  }
+}
+
+// ─── EVENTS ────────────────────────────────────────────────────────────────
+function renderEvents() {
+  const cardsHtml = cmsData.events.length
+    ? cmsData.events.map((ev, idx) => `
+      <div class="event-card">
+        <div class="event-date-box">
+          <div class="day">${esc(ev.day)}</div>
+          <div class="month">${esc(ev.month)}</div>
+        </div>
+        <div class="event-info">
+          <h4>${esc(ev.title)}</h4>
+          <p>${esc(ev.desc)}</p>
+          <div class="event-location">📍 ${esc(ev.location)}</div>
+        </div>
+        <div class="event-actions">
+          <button class="btn btn-outline btn-sm" onclick="openEditEvent(${idx})" title="Edit">✏️ Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteEvent(${idx})" title="Delete">🗑️</button>
+        </div>
+      </div>
+    `).join('')
+    : '<p style="color:var(--text-muted);padding:20px 0">No events yet. Add one below.</p>';
+
+  return `
+  <div class="page-title">Events</div>
+  <div class="page-sub">Manage upcoming pop-up events and appearances.</div>
+
+  <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+    <button class="btn btn-primary" onclick="openAddEvent()">+ Add Event</button>
+  </div>
+
+  <div class="events-list">${cardsHtml}</div>`;
+}
+
+function openAddEvent() {
+  editingEventIdx = -1;
+  showEventModal({ day: '', month: '', title: '', desc: '', location: '' });
+}
+
+function openEditEvent(idx) {
+  editingEventIdx = idx;
+  showEventModal(cmsData.events[idx]);
+}
+
+function showEventModal(ev) {
+  document.getElementById('modal-title').textContent = editingEventIdx === -1 ? 'Add Event' : 'Edit Event';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Day (e.g. SAT, SUN)</label>
+        <input type="text" id="em-day" value="${esc(ev.day)}" placeholder="SAT">
+      </div>
+      <div class="form-group">
+        <label>Month / Date Label</label>
+        <input type="text" id="em-month" value="${esc(ev.month)}" placeholder="This Week or JUN">
+      </div>
+      <div class="form-group form-full">
+        <label>Event Title</label>
+        <input type="text" id="em-title" value="${esc(ev.title)}" placeholder="e.g. Bhoomi Pop-Up Stall">
+      </div>
+      <div class="form-group form-full">
+        <label>Description</label>
+        <textarea id="em-desc" rows="3" placeholder="Event description...">${esc(ev.desc)}</textarea>
+      </div>
+      <div class="form-group form-full">
+        <label>Location</label>
+        <input type="text" id="em-location" value="${esc(ev.location)}" placeholder="e.g. MTS Temple, DFW Area">
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML = `
+    <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveEvent()">Save Event</button>
+  `;
+  openModal();
+}
+
+function saveEvent() {
+  const day = document.getElementById('em-day').value.trim();
+  const month = document.getElementById('em-month').value.trim();
+  const title = document.getElementById('em-title').value.trim();
+  const desc = document.getElementById('em-desc').value.trim();
+  const location = document.getElementById('em-location').value.trim();
+
+  if (!title) { alert('Event title is required.'); return; }
+
+  const ev = { day, month, title, desc, location };
+  if (editingEventIdx === -1) {
+    cmsData.events.push(ev);
+  } else {
+    cmsData.events[editingEventIdx] = ev;
+  }
+  saveData();
+  closeModal();
+  navigate('events');
+}
+
+function deleteEvent(idx) {
+  if (confirm(`Delete event "${cmsData.events[idx].title}"?`)) {
+    cmsData.events.splice(idx, 1);
+    saveData();
+    navigate('events');
+  }
+}
+
+// ─── CONTENT ───────────────────────────────────────────────────────────────
+function renderContent() {
+  return `
+  <div class="page-title">Content</div>
+  <div class="page-sub">Edit the text and content sections of your website.</div>
+
+  <div class="pill-tabs">
+    <div class="pill-tab active" data-tab="hero" onclick="activateContentTab('hero')">Hero</div>
+    <div class="pill-tab" data-tab="why" onclick="activateContentTab('why')">Why Us</div>
+    <div class="pill-tab" data-tab="marquee" onclick="activateContentTab('marquee')">Marquee</div>
+    <div class="pill-tab" data-tab="contact" onclick="activateContentTab('contact')">Contact</div>
+  </div>
+
+  <div id="tab-hero" class="tab-content">
+    ${renderHeroTab()}
+  </div>
+  <div id="tab-why" class="tab-content">
+    ${renderWhyTab()}
+  </div>
+  <div id="tab-marquee" class="tab-content">
+    ${renderMarqueeTab()}
+  </div>
+  <div id="tab-contact" class="tab-content">
+    ${renderContactTab()}
+  </div>
+  `;
+}
+
+function activateContentTab(tab) {
+  currentContentTab = tab;
+  document.querySelectorAll('.pill-tab').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  document.querySelectorAll('.tab-content').forEach(el => {
+    el.classList.toggle('active', el.id === 'tab-' + tab);
+  });
+}
+
+// Hero Tab
+function renderHeroTab() {
+  const h = cmsData.hero;
+  const pillsHtml = h.pills.map((p, i) => `
+    <div class="pill-item">
+      <span>${esc(p)}</span>
+      <button class="btn-icon danger" onclick="removePill(${i})" title="Remove">✕</button>
+    </div>
+  `).join('');
+
+  return `
+  <div class="form-section">
+    <h3>Hero Badge &amp; Title</h3>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label>Badge Text</label>
+        <input type="text" value="${esc(h.badge)}" oninput="updateField('hero.badge', this.value)" placeholder="e.g. New - First Shipment Now Available">
+      </div>
+      <div class="form-group">
+        <label>Title Line 1</label>
+        <input type="text" value="${esc(h.titleLine1)}" oninput="updateField('hero.titleLine1', this.value)" placeholder="e.g. Pure.">
+      </div>
+      <div class="form-group">
+        <label>Title Highlight (gold)</label>
+        <input type="text" value="${esc(h.titleHighlight)}" oninput="updateField('hero.titleHighlight', this.value)" placeholder="e.g. Traditional.">
+      </div>
+      <div class="form-group">
+        <label>Title Line 2</label>
+        <input type="text" value="${esc(h.titleLine2)}" oninput="updateField('hero.titleLine2', this.value)" placeholder="e.g. Chemical-Free.">
+      </div>
+      <div class="form-group form-full">
+        <label>Subtitle</label>
+        <textarea oninput="updateField('hero.subtitle', this.value)">${esc(h.subtitle)}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Buttons</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Button 1 Text</label>
+        <input type="text" value="${esc(h.btn1)}" oninput="updateField('hero.btn1', this.value)" placeholder="Browse Products">
+      </div>
+      <div class="form-group">
+        <label>Button 2 Text</label>
+        <input type="text" value="${esc(h.btn2)}" oninput="updateField('hero.btn2', this.value)" placeholder="Place an Order">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Product Category Pills</h3>
+    <div class="pills-list" id="pills-list">${pillsHtml}</div>
+    <div class="add-item-row">
+      <input type="text" id="new-pill-input" placeholder="e.g. 🌾 Millet Snacks" onkeydown="if(event.key==='Enter') addPill()">
+      <button class="btn btn-primary" onclick="addPill()">+ Add Pill</button>
+    </div>
+  </div>`;
+}
+
+function addPill() {
+  const input = document.getElementById('new-pill-input');
+  const val = input.value.trim();
+  if (!val) return;
+  cmsData.hero.pills.push(val);
+  input.value = '';
+  saveData();
+  refreshContentSection();
+}
+
+function removePill(idx) {
+  cmsData.hero.pills.splice(idx, 1);
+  saveData();
+  refreshContentSection();
+}
+
+// Why Us Tab
+function renderWhyTab() {
+  const w = cmsData.why;
+  const cardsHtml = w.cards.map((c, i) => `
+    <div class="card-editor">
+      <div class="card-num">Card ${i+1}</div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label>Icon (emoji)</label>
+        <input type="text" value="${esc(c.icon)}" oninput="updateCard(${i}, 'icon', this.value)" placeholder="🌱" style="font-size:20px">
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label>Title</label>
+        <input type="text" value="${esc(c.title)}" oninput="updateCard(${i}, 'title', this.value)" placeholder="Card title">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea rows="3" oninput="updateCard(${i}, 'desc', this.value)">${esc(c.desc)}</textarea>
+      </div>
+    </div>
+  `).join('');
+
+  return `
+  <div class="form-section">
+    <h3>Section Labels &amp; Title</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Section Label</label>
+        <input type="text" value="${esc(w.sectionLabel)}" oninput="updateField('why.sectionLabel', this.value)">
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" value="${esc(w.title)}" oninput="updateField('why.title', this.value)">
+      </div>
+      <div class="form-group">
+        <label>Title Highlight (gold)</label>
+        <input type="text" value="${esc(w.titleHighlight)}" oninput="updateField('why.titleHighlight', this.value)">
+      </div>
+      <div class="form-group form-full">
+        <label>Subtitle</label>
+        <textarea oninput="updateField('why.subtitle', this.value)">${esc(w.subtitle)}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Body Paragraphs</h3>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label>Paragraph 1</label>
+        <textarea rows="3" oninput="updateArrayField('why.paragraphs', 0, this.value)">${esc(w.paragraphs[0]||'')}</textarea>
+      </div>
+      <div class="form-group form-full">
+        <label>Paragraph 2</label>
+        <textarea rows="3" oninput="updateArrayField('why.paragraphs', 1, this.value)">${esc(w.paragraphs[1]||'')}</textarea>
+      </div>
+      <div class="form-group form-full">
+        <label>Paragraph 3</label>
+        <textarea rows="3" oninput="updateArrayField('why.paragraphs', 2, this.value)">${esc(w.paragraphs[2]||'')}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Feature Cards</h3>
+    <div class="cards-grid">${cardsHtml}</div>
+  </div>`;
+}
+
+function updateCard(idx, field, value) {
+  cmsData.why.cards[idx][field] = value;
+  scheduleSave();
+}
+
+// Marquee Tab
+function renderMarqueeTab() {
+  const itemsHtml = cmsData.marquee.map((item, i) => `
+    <div class="marquee-item" id="mq-item-${i}">
+      <span>✦</span>
+      <span style="flex:1">${esc(item)}</span>
+      <button class="btn btn-outline btn-sm" onclick="editMarqueeItem(${i})">✏️</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteMarqueeItem(${i})">🗑️</button>
+    </div>
+  `).join('');
+
+  return `
+  <div class="form-section">
+    <h3>Scrolling Marquee Items</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">These items scroll across the banner strip on your website.</p>
+    <div class="marquee-list" id="marquee-list">${itemsHtml}</div>
+    <div class="add-item-row">
+      <input type="text" id="new-mq-input" placeholder="e.g. 100% Natural" onkeydown="if(event.key==='Enter') addMarqueeItem()">
+      <button class="btn btn-primary" onclick="addMarqueeItem()">+ Add Item</button>
+    </div>
+  </div>`;
+}
+
+function addMarqueeItem() {
+  const input = document.getElementById('new-mq-input');
+  const val = input.value.trim();
+  if (!val) return;
+  cmsData.marquee.push(val);
+  input.value = '';
+  saveData();
+  refreshContentSection();
+}
+
+function editMarqueeItem(idx) {
+  const newVal = prompt('Edit marquee item:', cmsData.marquee[idx]);
+  if (newVal !== null && newVal.trim()) {
+    cmsData.marquee[idx] = newVal.trim();
+    saveData();
+    refreshContentSection();
+  }
+}
+
+function deleteMarqueeItem(idx) {
+  if (confirm(`Remove "${cmsData.marquee[idx]}" from marquee?`)) {
+    cmsData.marquee.splice(idx, 1);
+    saveData();
+    refreshContentSection();
+  }
+}
+
+// Contact Tab
+function renderContactTab() {
+  const c = cmsData.contact;
+  return `
+  <div class="form-section">
+    <h3>Phone &amp; Contact Info</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Phone Number (digits only)</label>
+        <input type="text" value="${esc(c.phone)}" oninput="updateField('contact.phone', this.value)" placeholder="9722158262">
+      </div>
+      <div class="form-group">
+        <label>Phone Display Format</label>
+        <input type="text" value="${esc(c.phoneDisplay)}" oninput="updateField('contact.phoneDisplay', this.value)" placeholder="(972) 215-8262">
+      </div>
+      <div class="form-group">
+        <label>WhatsApp Number (with country code)</label>
+        <input type="text" value="${esc(c.whatsapp)}" oninput="updateField('contact.whatsapp', this.value)" placeholder="19722158262">
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" value="${esc(c.location)}" oninput="updateField('contact.location', this.value)" placeholder="In-person purchase only (DFW area)">
+      </div>
+      <div class="form-group form-full">
+        <label>Stock Status Message</label>
+        <input type="text" value="${esc(c.stockStatus)}" oninput="updateField('contact.stockStatus', this.value)" placeholder="Limited first shipment - order soon!">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Section Text</h3>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label>Section Subtitle</label>
+        <textarea oninput="updateField('contact.sectionSubtitle', this.value)">${esc(c.sectionSubtitle)}</textarea>
+      </div>
+      <div class="form-group form-full">
+        <label>Intro Text</label>
+        <textarea rows="3" oninput="updateField('contact.introText', this.value)">${esc(c.introText)}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3>Order Box</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Order Box Title</label>
+        <input type="text" value="${esc(c.orderTitle)}" oninput="updateField('contact.orderTitle', this.value)" placeholder="Ready to Order?">
+      </div>
+      <div class="form-group form-full">
+        <label>Order Box Description</label>
+        <textarea oninput="updateField('contact.orderDesc', this.value)">${esc(c.orderDesc)}</textarea>
+      </div>
+    </div>
+  </div>`;
+}
+
+function refreshContentSection() {
+  const el = document.getElementById('section-content');
+  el.innerHTML = renderContent();
+  activateContentTab(currentContentTab);
+}
+
+// ─── FIELD UPDATERS ────────────────────────────────────────────────────────
+function updateField(path, value) {
+  const parts = path.split('.');
+  let obj = cmsData;
+  for (let i = 0; i < parts.length - 1; i++) {
+    obj = obj[parts[i]];
+  }
+  obj[parts[parts.length - 1]] = value;
+  scheduleSave();
+}
+
+function updateArrayField(path, idx, value) {
+  const parts = path.split('.');
+  let obj = cmsData;
+  for (let i = 0; i < parts.length - 1; i++) {
+    obj = obj[parts[i]];
+  }
+  obj[parts[parts.length - 1]][idx] = value;
+  scheduleSave();
+}
+
+// ─── SETTINGS ──────────────────────────────────────────────────────────────
+function renderSettings() {
+  return `
+  <div class="page-title">Settings</div>
+  <div class="page-sub">Manage your CMS configuration, data, and security.</div>
+
+  <div class="settings-panel">
+    <h3>🔑 Change Password</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Current Password</label>
+        <input type="password" id="pw-current" placeholder="Current password">
+      </div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="pw-new" placeholder="New password">
+      </div>
+      <div class="form-group">
+        <label>Confirm New Password</label>
+        <input type="password" id="pw-confirm" placeholder="Confirm new password">
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+    </div>
+    <div id="pw-msg" style="margin-top:10px;font-size:13px;"></div>
+  </div>
+
+  <div class="settings-panel">
+    <h3>📤 Export Data</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">Download all CMS data as a JSON file for backup or transfer.</p>
+    <button class="btn btn-accent" onclick="exportData()">Download bhoomi_data.json</button>
+  </div>
+
+  <div class="settings-panel">
+    <h3>📥 Import Data</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">Restore data from a previously exported JSON file. This will overwrite current data.</p>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <input type="file" id="import-file" accept=".json" onchange="importData(this)">
+    </div>
+    <div id="import-msg" style="margin-top:10px;font-size:13px;"></div>
+  </div>
+
+  <div class="settings-panel">
+    <h3>👁️ Preview Site</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">Open the main website in a new tab to preview your changes.</p>
+    <a class="btn btn-success" href="index.html" target="_blank">Open index.html ↗</a>
+  </div>
+
+  <div class="settings-panel">
+    <h3>ℹ️ How to Use</h3>
+    <div class="info-panel">
+      <h4>Getting Started</h4>
+      <ol>
+        <li>Use the sidebar to navigate between sections.</li>
+        <li>Changes auto-save to localStorage within 0.5 seconds.</li>
+        <li>The main site (index.html) reads from the same localStorage key: <code>bhoomi_cms</code>.</li>
+        <li>If the main site doesn't reflect changes, do a hard refresh (Ctrl+Shift+R).</li>
+      </ol>
+      <br>
+      <h4>Sections</h4>
+      <ul>
+        <li><strong>Products</strong> – Add, edit, delete products. Toggle stock status inline.</li>
+        <li><strong>Events</strong> – Manage pop-up stall dates and descriptions.</li>
+        <li><strong>Content → Hero</strong> – Edit the main banner text and pills.</li>
+        <li><strong>Content → Why Us</strong> – Edit the "Why Bhoomi?" section text and cards.</li>
+        <li><strong>Content → Marquee</strong> – Edit the scrolling banner items.</li>
+        <li><strong>Content → Contact</strong> – Edit phone, location, and order information.</li>
+      </ul>
+      <br>
+      <h4>Data Storage</h4>
+      <ul>
+        <li>All data is stored in your browser's localStorage under key <code>bhoomi_cms</code>.</li>
+        <li>Use Export to back up data before clearing browser storage.</li>
+        <li>Use Import to restore from a backup.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="settings-panel">
+    <h3>⚠️ Danger Zone</h3>
+    <div class="danger-zone">
+      <h4>Reset to Defaults</h4>
+      <p>This will erase all your customizations and restore the original default data. This action cannot be undone.</p>
+      <button class="btn btn-danger" onclick="resetToDefaults()">Reset All Data to Defaults</button>
+    </div>
+  </div>`;
+}
+
+function changePassword() {
+  const cur = document.getElementById('pw-current').value;
+  const nw = document.getElementById('pw-new').value;
+  const conf = document.getElementById('pw-confirm').value;
+  const msg = document.getElementById('pw-msg');
+
+  if (btoa(cur) !== getStoredPw()) {
+    msg.style.color = 'var(--danger)';
+    msg.textContent = 'Current password is incorrect.';
+    return;
+  }
+  if (!nw || nw.length < 6) {
+    msg.style.color = 'var(--danger)';
+    msg.textContent = 'New password must be at least 6 characters.';
+    return;
+  }
+  if (nw !== conf) {
+    msg.style.color = 'var(--danger)';
+    msg.textContent = 'New passwords do not match.';
+    return;
+  }
+  localStorage.setItem('bhoomi_admin_pw', btoa(nw));
+  msg.style.color = 'var(--success)';
+  msg.textContent = 'Password updated successfully!';
+  document.getElementById('pw-current').value = '';
+  document.getElementById('pw-new').value = '';
+  document.getElementById('pw-confirm').value = '';
+}
+
+function exportData() {
+  const json = JSON.stringify(cmsData, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'bhoomi_data.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const msg = document.getElementById('import-msg');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed.products || !parsed.hero) {
+        msg.style.color = 'var(--danger)';
+        msg.textContent = 'Invalid data format. Please use a file exported from this CMS.';
+        return;
+      }
+      cmsData = parsed;
+      saveData();
+      msg.style.color = 'var(--success)';
+      msg.textContent = 'Data imported successfully! Navigate to any section to see changes.';
+    } catch {
+      msg.style.color = 'var(--danger)';
+      msg.textContent = 'Failed to parse JSON file. Please check the file is valid.';
+    }
+  };
+  reader.readAsText(file);
+}
+
+function resetToDefaults() {
+  if (confirm('Are you sure you want to reset ALL data to defaults? This cannot be undone.')) {
+    if (confirm('Last chance: this will permanently erase all your customizations. Continue?')) {
+      cmsData = deepClone(DEFAULT_DATA);
+      saveData();
+      navigate(currentSection);
+      alert('Data has been reset to defaults.');
+    }
+  }
+}
+
+// ─── MODAL ─────────────────────────────────────────────────────────────────
+function openModal() {
+  document.getElementById('modal-backdrop').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-backdrop').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById('modal-backdrop')) closeModal();
+}
+
+// ─── UTILS ─────────────────────────────────────────────────────────────────
+function esc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+// ─── INIT ──────────────────────────────────────────────────────────────────
+(function init() {
+  if (sessionStorage.getItem('bhoomi_admin_auth') === '1') {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    loadData();
+    navigate('dashboard');
+  } else {
+    setTimeout(() => document.getElementById('login-pw').focus(), 100);
+  }
+})();
+</script>
+</body>
+</html>
