@@ -358,6 +358,9 @@
       <div class="nav-item" data-section="events" onclick="navigate('events')">
         <span class="nav-icon">📅</span><span>Events</span>
       </div>
+      <div class="nav-item" data-section="discounts" onclick="navigate('discounts')">
+        <span class="nav-icon">🏷️</span><span>Discounts</span>
+      </div>
       <div class="nav-item" data-section="content" onclick="navigate('content')">
         <span class="nav-icon">✏️</span><span>Content</span>
       </div>
@@ -400,7 +403,11 @@ const DEFAULT_DATA = {
     btn1: "Browse Products",
     btn2: "Place an Order"
   },
-  marquee: ["100% Natural", "No Preservatives", "Tamil Nadu Sourced", "Traditional Recipes", "Chemical-Free", "Farmer-Sourced", "Limited Stock Available"],
+  sale: {
+    enabled: true,
+    text: "🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off · Free shipping on orders over $50!"
+  },
+  marquee: ["100% Natural", "No Preservatives", "Tamil Nadu Sourced", "Traditional Recipes", "Chemical-Free", "Farmer-Sourced", "Limited Stock Available", "Free Shipping Over $50"],
   why: {
     sectionLabel: "Our Promise",
     title: "Why",
@@ -453,17 +460,21 @@ const DEFAULT_DATA = {
     { name: "50 Herbal Oil", sub: "100ml", price: 5.00, cat: "beauty", inStock: true }
   ],
   events: [
-    { day: "SAT", month: "This Week", title: "Bhoomi Pop-Up Stall", desc: "Join us for a special pop-up where you can sample and purchase our full range of organic products. Meet the team and learn about the farmers behind your food.", location: "MTS Temple, DFW Area" }
+    { day: "SAT", month: "This Week", title: "Bhoomi Pop-Up Stall", desc: "Join us for a special pop-up where you can sample and purchase our full range of organic products. Meet the team and learn about the farmers behind your food.", location: "MTS Temple, Houston Area" }
   ],
+  discounts: [
+    { code: "BHOOMI10", percent: 10 }
+  ],
+  freeShippingThreshold: 50,
   contact: {
     phone: "9722158262",
     phoneDisplay: "(972) 215-8262",
     whatsapp: "19722158262",
-    location: "In-person purchase only (DFW area)",
+    location: "In-person purchase only (Houston area)",
     stockStatus: "Limited first shipment - order soon!",
-    introText: "We're a small family-run operation bringing authentic Tamil Nadu organic products directly to the DFW community. Reach out to us to place your order.",
+    introText: "We're a small family-run operation bringing authentic Tamil Nadu organic products directly to the Houston community. Reach out to us to place your order.",
     orderTitle: "Ready to Order?",
-    orderDesc: "Contact us via WhatsApp or phone to place your order. We'll confirm availability and arrange pick-up or delivery within the DFW area.",
+    orderDesc: "Contact us via WhatsApp or phone to place your order. We'll confirm availability and arrange pick-up or delivery within the Houston area.",
     sectionSubtitle: "We'd love to hear from you. Whether you have questions about our products or want to place an order, we're here to help."
   }
 };
@@ -476,6 +487,7 @@ let currentContentTab = 'hero';
 let saveTimer = null;
 let editingProductIdx = -1;
 let editingEventIdx = -1;
+let editingDiscountIdx = -1;
 
 // ─── AUTH ──────────────────────────────────────────────────────────────────
 function getStoredPw() {
@@ -522,6 +534,30 @@ function loadData() {
   } else {
     cmsData = deepClone(DEFAULT_DATA);
   }
+  migrateData();
+}
+
+function migrateData() {
+  if (!Array.isArray(cmsData.discounts)) {
+    cmsData.discounts = [{ code: "BHOOMI10", percent: 10 }];
+  }
+  if (typeof cmsData.freeShippingThreshold !== 'number') {
+    cmsData.freeShippingThreshold = 50;
+  }
+  if (!cmsData.sale || typeof cmsData.sale !== 'object') {
+    cmsData.sale = {
+      enabled: true,
+      text: "🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off · Free shipping on orders over $50!"
+    };
+  }
+  if (typeof cmsData.sale.enabled !== 'boolean') cmsData.sale.enabled = true;
+  if (typeof cmsData.sale.text !== 'string') {
+    cmsData.sale.text = "🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off · Free shipping on orders over $50!";
+  }
+  cmsData.products.forEach(p => {
+    if (typeof p.image !== 'string') p.image = '';
+    if (typeof p.desc !== 'string') p.desc = '';
+  });
 }
 
 function saveData() {
@@ -578,6 +614,7 @@ function renderSection(name) {
     case 'dashboard': el.innerHTML = renderDashboard(); break;
     case 'products':  el.innerHTML = renderProducts(); break;
     case 'events':    el.innerHTML = renderEvents(); break;
+    case 'discounts': el.innerHTML = renderDiscounts(); break;
     case 'content':   el.innerHTML = renderContent(); activateContentTab(currentContentTab); break;
     case 'settings':  el.innerHTML = renderSettings(); break;
   }
@@ -610,6 +647,10 @@ function renderDashboard() {
     <div class="stat-card" style="border-top-color:#0d6efd">
       <div class="stat-val" style="color:#0d6efd">${events}</div>
       <div class="stat-lbl">Upcoming Events</div>
+    </div>
+    <div class="stat-card" style="border-top-color:#6f42c1">
+      <div class="stat-val" style="color:#6f42c1">${cmsData.discounts.length}</div>
+      <div class="stat-lbl">Discount Codes</div>
     </div>
   </div>
 
@@ -659,11 +700,21 @@ function renderProducts() {
 
   const rowsHtml = filtered.map((p, idx) => {
     const realIdx = cmsData.products.indexOf(p);
+    const descPreview = p.desc ? esc(p.desc.length > 50 ? p.desc.slice(0, 50) + '…' : p.desc) : '';
+    const thumb = p.image
+      ? `<img src="${esc(p.image)}" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:6px;border:1px solid var(--border);flex-shrink:0">`
+      : `<span style="font-size:24px;width:36px;text-align:center;flex-shrink:0">📦</span>`;
     return `
     <tr>
       <td>
-        <div class="prod-name">${esc(p.name)}</div>
-        <div class="prod-sub">${esc(p.sub)}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          ${thumb}
+          <div>
+            <div class="prod-name">${esc(p.name)}</div>
+            <div class="prod-sub">${esc(p.sub)}</div>
+            ${descPreview ? `<div class="prod-sub" style="font-style:italic">${descPreview}</div>` : ''}
+          </div>
+        </div>
       </td>
       <td>$${parseFloat(p.price).toFixed(2)}</td>
       <td><span class="badge badge-${p.cat}">${p.cat}</span></td>
@@ -720,7 +771,7 @@ function toggleStock(idx, checked) {
 
 function openAddProduct() {
   editingProductIdx = -1;
-  const p = { name: '', sub: '', price: '', cat: 'snacks', inStock: true };
+  const p = { name: '', sub: '', price: '', cat: 'snacks', inStock: true, image: '', desc: '' };
   showProductModal(p);
 }
 
@@ -740,6 +791,19 @@ function showProductModal(p) {
       <div class="form-group form-full">
         <label>Sub / Description</label>
         <input type="text" id="pm-sub" value="${esc(p.sub)}" placeholder="e.g. Kuthiraivali · 80g">
+      </div>
+      <div class="form-group form-full">
+        <label>Description</label>
+        <textarea id="pm-desc" rows="3" placeholder="Longer product description...">${esc(p.desc || '')}</textarea>
+      </div>
+      <div class="form-group form-full">
+        <label>Image</label>
+        <input type="text" id="pm-image-url" value="${esc(p.image || '')}" placeholder="https://example.com/image.jpg" oninput="updateProductImagePreview(this.value)">
+        <input type="file" id="pm-image-file" accept="image/*" onchange="handleProductImageUpload(this)" style="margin-top:6px">
+        <div id="pm-image-preview" style="margin-top:8px;${p.image ? '' : 'display:none'}">
+          <img id="pm-image-thumb" src="${esc(p.image || '')}" alt="Preview" style="width:64px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--border);vertical-align:middle">
+          <button type="button" class="btn btn-outline btn-sm" onclick="removeProductImage()" style="margin-left:10px;vertical-align:middle">Remove image</button>
+        </div>
       </div>
       <div class="form-group">
         <label>Price ($)</label>
@@ -772,16 +836,47 @@ function showProductModal(p) {
   openModal();
 }
 
+function updateProductImagePreview(src) {
+  const preview = document.getElementById('pm-image-preview');
+  const thumb = document.getElementById('pm-image-thumb');
+  if (src) {
+    thumb.src = src;
+    preview.style.display = '';
+  } else {
+    thumb.src = '';
+    preview.style.display = 'none';
+  }
+}
+
+function handleProductImageUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('pm-image-url').value = e.target.result;
+    updateProductImagePreview(e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeProductImage() {
+  document.getElementById('pm-image-url').value = '';
+  document.getElementById('pm-image-file').value = '';
+  updateProductImagePreview('');
+}
+
 function saveProduct() {
   const name = document.getElementById('pm-name').value.trim();
   const sub = document.getElementById('pm-sub').value.trim();
   const price = parseFloat(document.getElementById('pm-price').value) || 0;
   const cat = document.getElementById('pm-cat').value;
   const inStock = document.getElementById('pm-stock').checked;
+  const desc = document.getElementById('pm-desc').value.trim();
+  const image = document.getElementById('pm-image-url').value.trim();
 
   if (!name) { alert('Product name is required.'); return; }
 
-  const prod = { name, sub, price, cat, inStock };
+  const prod = { name, sub, price, cat, inStock, image, desc };
   if (editingProductIdx === -1) {
     cmsData.products.push(prod);
   } else {
@@ -865,7 +960,7 @@ function showEventModal(ev) {
       </div>
       <div class="form-group form-full">
         <label>Location</label>
-        <input type="text" id="em-location" value="${esc(ev.location)}" placeholder="e.g. MTS Temple, DFW Area">
+        <input type="text" id="em-location" value="${esc(ev.location)}" placeholder="e.g. MTS Temple, Houston Area">
       </div>
     </div>
   `;
@@ -904,6 +999,115 @@ function deleteEvent(idx) {
   }
 }
 
+// ─── DISCOUNTS ─────────────────────────────────────────────────────────────
+function renderDiscounts() {
+  const rowsHtml = cmsData.discounts.map((d, idx) => `
+    <tr>
+      <td><span style="font-family:monospace;font-weight:700;color:var(--header-bg)">${esc(d.code)}</span></td>
+      <td>${d.percent}%</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="openEditDiscount(${idx})" title="Edit">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteDiscount(${idx})" title="Delete">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+
+  return `
+  <div class="page-title">Discounts</div>
+  <div class="page-sub">Manage discount codes and shipping settings.</div>
+
+  <div class="form-section">
+    <h3>Shipping</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Free shipping threshold ($)</label>
+        <input type="number" min="0" step="1" value="${cmsData.freeShippingThreshold}" oninput="updateFreeShippingThreshold(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-header">
+      <span style="font-weight:700;font-size:14px;color:var(--header-bg)">
+        ${cmsData.discounts.length} discount code${cmsData.discounts.length!==1?'s':''}
+      </span>
+      <button class="btn btn-primary" onclick="openAddDiscount()">+ Add Discount</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Percent Off</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>${rowsHtml.length ? rowsHtml : '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:40px">No discount codes yet.</td></tr>'}</tbody>
+    </table>
+  </div>`;
+}
+
+function updateFreeShippingThreshold(val) {
+  cmsData.freeShippingThreshold = parseFloat(val) || 0;
+  scheduleSave();
+}
+
+function openAddDiscount() {
+  editingDiscountIdx = -1;
+  showDiscountModal({ code: '', percent: 10 });
+}
+
+function openEditDiscount(idx) {
+  editingDiscountIdx = idx;
+  showDiscountModal(cmsData.discounts[idx]);
+}
+
+function showDiscountModal(d) {
+  document.getElementById('modal-title').textContent = editingDiscountIdx === -1 ? 'Add Discount' : 'Edit Discount';
+  document.getElementById('modal-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Code</label>
+        <input type="text" id="dm-code" value="${esc(d.code)}" placeholder="e.g. BHOOMI10" style="text-transform:uppercase">
+      </div>
+      <div class="form-group">
+        <label>Percent off (1-100)</label>
+        <input type="number" id="dm-percent" value="${d.percent}" min="1" max="100" step="1" placeholder="10">
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML = `
+    <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="saveDiscount()">Save Discount</button>
+  `;
+  openModal();
+}
+
+function saveDiscount() {
+  const code = document.getElementById('dm-code').value.trim().toUpperCase();
+  const percent = parseInt(document.getElementById('dm-percent').value, 10);
+
+  if (!code) { alert('Discount code is required.'); return; }
+  if (!percent || percent < 1 || percent > 100) { alert('Percent off must be between 1 and 100.'); return; }
+
+  const disc = { code, percent };
+  if (editingDiscountIdx === -1) {
+    cmsData.discounts.push(disc);
+  } else {
+    cmsData.discounts[editingDiscountIdx] = disc;
+  }
+  saveData();
+  closeModal();
+  navigate('discounts');
+}
+
+function deleteDiscount(idx) {
+  if (confirm(`Delete discount code "${cmsData.discounts[idx].code}"?`)) {
+    cmsData.discounts.splice(idx, 1);
+    saveData();
+    navigate('discounts');
+  }
+}
+
 // ─── CONTENT ───────────────────────────────────────────────────────────────
 function renderContent() {
   return `
@@ -915,6 +1119,7 @@ function renderContent() {
     <div class="pill-tab" data-tab="why" onclick="activateContentTab('why')">Why Us</div>
     <div class="pill-tab" data-tab="marquee" onclick="activateContentTab('marquee')">Marquee</div>
     <div class="pill-tab" data-tab="contact" onclick="activateContentTab('contact')">Contact</div>
+    <div class="pill-tab" data-tab="sale" onclick="activateContentTab('sale')">Sale Banner</div>
   </div>
 
   <div id="tab-hero" class="tab-content">
@@ -928,6 +1133,9 @@ function renderContent() {
   </div>
   <div id="tab-contact" class="tab-content">
     ${renderContactTab()}
+  </div>
+  <div id="tab-sale" class="tab-content">
+    ${renderSaleTab()}
   </div>
   `;
 }
@@ -1163,7 +1371,7 @@ function renderContactTab() {
       </div>
       <div class="form-group">
         <label>Location</label>
-        <input type="text" value="${esc(c.location)}" oninput="updateField('contact.location', this.value)" placeholder="In-person purchase only (DFW area)">
+        <input type="text" value="${esc(c.location)}" oninput="updateField('contact.location', this.value)" placeholder="In-person purchase only (Houston area)">
       </div>
       <div class="form-group form-full">
         <label>Stock Status Message</label>
@@ -1196,6 +1404,32 @@ function renderContactTab() {
       <div class="form-group form-full">
         <label>Order Box Description</label>
         <textarea oninput="updateField('contact.orderDesc', this.value)">${esc(c.orderDesc)}</textarea>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Sale Banner Tab
+function renderSaleTab() {
+  const s = cmsData.sale;
+  return `
+  <div class="form-section">
+    <h3>Sale Announcement Banner</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">This banner appears at the very top of the website, above everything else. Visitors can dismiss it with the ✕ button.</p>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label>Show sale banner on website</label>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+          <label class="toggle">
+            <input type="checkbox" ${s.enabled?'checked':''} onchange="updateField('sale.enabled', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+          <span style="font-size:13px;color:var(--text-muted)">Show sale banner on website</span>
+        </div>
+      </div>
+      <div class="form-group form-full">
+        <label>Banner text</label>
+        <textarea rows="2" oninput="updateField('sale.text', this.value)" placeholder="e.g. 🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off!">${esc(s.text)}</textarea>
       </div>
     </div>
   </div>`;
@@ -1371,6 +1605,7 @@ function importData(input) {
         return;
       }
       cmsData = parsed;
+      migrateData();
       saveData();
       msg.style.color = 'var(--success)';
       msg.textContent = 'Data imported successfully! Navigate to any section to see changes.';
