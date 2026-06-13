@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chromathic CMS · Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A1628;--navy-mid:#1C3F8E;--orange:#FF6B2B;--teal:#00C9B8;
+  --bg:#F4F7FF;--surface:#fff;--border:#E2E8F4;
+  --text:#0F172A;--text-mid:#475569;--text-light:#94A3B8;
+  --danger:#dc2626;--success:#16a34a;
+  --r:12px;--sh:0 4px 20px rgba(10,22,40,.08);--sidebar:240px;--header:62px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden}
+
+/* LOGIN */
+#login{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#060f1e,#0d2050 60%,#0a1e40);padding:20px}
+#login.hidden{display:none}
+.login-box{background:#fff;border-radius:22px;padding:44px 38px;width:100%;max-width:400px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);text-align:center}
+.login-logo{font-family:'Plus Jakarta Sans';font-size:28px;font-weight:900;letter-spacing:-.5px;
+  background:linear-gradient(120deg,var(--navy),var(--navy-mid));-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;margin-bottom:6px}
+.login-sub{color:var(--text-light);font-size:14px;margin-bottom:30px}
+.login-box input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:11px;
+  font-size:16px;outline:none;transition:border-color .2s;margin-bottom:16px;font-family:inherit}
+.login-box input:focus{border-color:var(--navy-mid)}
+.login-btn{width:100%;padding:14px;background:var(--navy);color:#fff;border:none;border-radius:11px;
+  font-size:16px;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit}
+.login-btn:hover{background:var(--navy-mid)}
+.login-err{color:var(--danger);font-size:13px;margin-top:12px;min-height:18px}
+.login-hint{color:var(--text-light);font-size:12px;margin-top:18px}
+
+/* LAYOUT */
+#app{display:flex;flex-direction:column;height:100vh}
+#app.hidden{display:none}
+#header{height:var(--header);background:var(--navy);color:#fff;display:flex;align-items:center;
+  padding:0 22px;gap:14px;position:fixed;top:0;left:0;right:0;z-index:100}
+.h-brand{font-family:'Plus Jakarta Sans';font-weight:900;font-size:18px;flex:1;letter-spacing:-.3px}
+.h-brand b{color:var(--teal)}
+#save-ind{font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;
+  background:rgba(0,201,184,.18);color:var(--teal);opacity:0;transition:opacity .4s}
+#save-ind.show{opacity:1}
+.h-btn{padding:8px 15px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;
+  border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;
+  text-decoration:none;transition:background .2s;font-family:inherit}
+.h-btn:hover{background:rgba(255,255,255,.18)}
+.h-btn.orange{background:var(--orange);border-color:var(--orange)}
+.h-btn.orange:hover{background:#ff8147}
+
+#wrap{display:flex;margin-top:var(--header);height:calc(100vh - var(--header))}
+#side{width:var(--sidebar);background:#fff;border-right:1px solid var(--border);flex-shrink:0;
+  overflow-y:auto;padding:14px 0}
+.nav-i{display:flex;align-items:center;gap:12px;padding:11px 22px;cursor:pointer;font-size:14px;
+  font-weight:600;color:var(--text-mid);border-left:3px solid transparent;transition:all .15s}
+.nav-i:hover{background:var(--bg);color:var(--navy)}
+.nav-i.active{background:var(--bg);color:var(--navy);border-left-color:var(--orange)}
+.nav-i .ic{font-size:17px;width:22px;text-align:center}
+
+#content{flex:1;overflow-y:auto;padding:30px 38px}
+.page-head{margin-bottom:24px}
+.page-title{font-family:'Plus Jakarta Sans';font-size:24px;font-weight:900;letter-spacing:-.5px}
+.page-sub{font-size:14px;color:var(--text-light);margin-top:3px}
+
+/* CARDS / FORM */
+.card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+.card-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.card-t{font-weight:800;font-size:15px;color:var(--navy)}
+.fld{margin-bottom:16px}
+.fld:last-child{margin-bottom:0}
+.fld label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.4px}
+.fld input,.fld textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;
+  font-size:14px;font-family:inherit;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s;
+  background:var(--bg);resize:vertical}
+.fld input:focus,.fld textarea:focus{border-color:var(--navy-mid);background:#fff;
+  box-shadow:0 0 0 3px rgba(28,63,142,.08)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:auto 1fr 1fr;gap:14px;align-items:end}
+.hint{font-size:12px;color:var(--text-light);margin-top:5px}
+
+.btn{padding:9px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;
+  font-family:inherit;transition:all .15s}
+.btn-add{background:rgba(28,63,142,.09);color:var(--navy-mid)}
+.btn-add:hover{background:rgba(28,63,142,.16)}
+.btn-del{background:rgba(220,38,38,.08);color:var(--danger);padding:7px 12px}
+.btn-del:hover{background:rgba(220,38,38,.16)}
+.btn-ghost{background:var(--bg);color:var(--text-mid);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--navy-mid);color:var(--navy)}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:hover{background:var(--navy-mid)}
+.btn-danger{background:var(--danger);color:#fff}
+
+.item-card{background:var(--bg);border:1.5px solid var(--border);border-radius:13px;padding:18px;margin-bottom:14px;
+  position:relative}
+.item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.item-num{font-size:12px;font-weight:800;color:var(--text-light);text-transform:uppercase;letter-spacing:.6px}
+
+/* DASHBOARD */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
+.stat-c{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:22px;border-top:4px solid var(--orange)}
+.stat-v{font-family:'Plus Jakarta Sans';font-size:32px;font-weight:900;color:var(--navy);line-height:1}
+.stat-l{font-size:13px;color:var(--text-light);margin-top:5px;font-weight:500}
+.info-box{background:rgba(0,201,184,.07);border:1.5px solid rgba(0,201,184,.25);border-radius:13px;
+  padding:18px 20px;font-size:14px;color:var(--text-mid);line-height:1.7}
+.info-box b{color:var(--navy)}
+.info-box code{background:#fff;padding:2px 7px;border-radius:5px;font-size:13px;border:1px solid var(--border)}
+
+input[type=file]{font-size:13px}
+.muted{color:var(--text-light);font-size:13px;line-height:1.7}
+@media(max-width:760px){
+  #side{position:fixed;left:0;top:var(--header);bottom:0;z-index:90;transform:translateX(-100%);transition:transform .25s}
+  #side.open{transform:none}
+  #content{padding:22px 18px}
+  .row2,.row3{grid-template-columns:1fr}
+  .menu-toggle{display:inline-flex !important}
+}
+.menu-toggle{display:none}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">Chromathic</div>
+    <div class="login-sub">Content Management · Admin Login</div>
+    <input type="password" id="pw" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Log In</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-hint">Default password: <b>chromathic2025</b> — change it in Settings.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <div id="header">
+    <button class="h-btn menu-toggle" onclick="document.getElementById('side').classList.toggle('open')">☰</button>
+    <div class="h-brand">Chromathic <b>CMS</b></div>
+    <span id="save-ind">✓ Saved</span>
+    <a class="h-btn orange" href="chromathic.html" target="_blank">👁 View Site</a>
+    <button class="h-btn" onclick="doLogout()">Log Out</button>
+  </div>
+  <div id="wrap">
+    <div id="side"></div>
+    <div id="content"></div>
+  </div>
+</div>
+
+<script>
+/* ════════ CONFIG ════════ */
+const CMS_KEY='chromathic_cms', PW_KEY='chromathic_admin_pw', DEFAULT_PW='chromathic2025';
+
+const DEFAULT_DATA = {
+  brand:"Chromathic", phone:"2813875857",
+  hero:{ badge:"Now enrolling new students", titleTop:"Learning for", titleGrad:"Success.",
+    subtitle:"Expert one-on-one tutoring in K–12 Math, Science, Reading & Writing, and SAT/ACT prep — tailored to your student's pace.",
+    primaryBtn:"📱 Text to Schedule",
+    stats:[{num:"5.0 ★",label:"Average Rating"},{num:"69+",label:"Google Reviews"},{num:"K–12",label:"All Grade Levels"}]},
+  services:{ label:"What We Offer", title:"Personalized Tutoring for Every Student",
+    subtitle:"From elementary foundations to college prep — we help students build real confidence and lasting skills.",
+    items:[
+      {icon:"🧮",title:"Math & Science",desc:"Comprehensive K–12 support covering arithmetic through advanced calculus, chemistry, biology, and physics — explained clearly and patiently.",tags:["Algebra","Geometry","Calculus","Chemistry","Biology","Physics"]},
+      {icon:"📖",title:"Reading & Writing",desc:"Build strong literacy skills with focused work on reading comprehension, essay structure, grammar, vocabulary, and critical thinking.",tags:["Comprehension","Essay Writing","Grammar","Vocabulary"]},
+      {icon:"🎯",title:"SAT / ACT Prep",desc:"Targeted test strategies, timed practice, and personalized coaching to help students achieve their best scores and open doors for college.",tags:["SAT Math","SAT Reading","ACT Prep","Test Strategy"]}
+    ]},
+  features:{ label:"Why Chromathic", title:"Results That Speak for Themselves",
+    subtitle:"We're committed to every student's success with personal attention, proven methods, and a track record parents trust.",
+    items:[
+      {num:"5.0",label:"Star Rating",desc:"Consistently 5-star rated on Google with 69+ verified parent and student reviews"},
+      {num:"1:1",label:"Personal Sessions",desc:"Full individual attention — every session built around your student's specific needs"},
+      {num:"K–12",label:"All Grade Levels",desc:"From kindergarten through senior year, we support students at every stage"},
+      {num:"TX",label:"Sugar Land Based",desc:"Conveniently located at 4610 Sweetwater Blvd, serving the greater Houston area"}
+    ]},
+  reviews:{ label:"Student Reviews", title:"Loved by Families Across Sugar Land", rating:"5.0",
+    count:"from 69+ Google reviews", viewAllUrl:"https://www.google.com/maps/search/Chromathic+Sugar+Land+TX",
+    items:[
+      {text:"My kids struggled with math, but Chromathic made it fun with 1:1 tutoring. They quickly grasped the concepts and their grades have improved significantly.",name:"Andrew Mig",meta:"Google Review · November 2025"},
+      {text:"Excellent experience from start to finish. Our son went from barely passing to earning A's in science. The personalized attention made all the difference.",name:"Sarah Johnson",meta:"Google Review · October 2025"},
+      {text:"We saw huge improvement in our daughter's SAT scores after just a few sessions. Highly recommend for any student preparing for college admissions.",name:"Raj Patel",meta:"Google Review · September 2025"}
+    ]},
+  resources:{ label:"Free Resources", title:"Study Tools & Printable Sheets",
+    subtitle:"Download free educational materials to support learning at home — no sign-up needed.",
+    blocks:[
+      {icon:"📐",iconClass:"ri-blue",title:"Charts and Graphs",items:[
+        {name:"3 Coordinate Graphs with Tables",url:"#"},{name:"6 Coordinate Graphs (−10 to 10)",url:"#"},
+        {name:"6 Coordinate Graphs (−20 to 20)",url:"#"},{name:"Periodic Table (Color)",url:"#"},
+        {name:"Periodic Table (Black & White)",url:"#"},{name:"Week Planner",url:"#"}]},
+      {icon:"✖️",iconClass:"ri-orange",title:"Multiplication Facts",items:[
+        {name:"Multiplying by 2",url:"#"},{name:"Multiplying by 3",url:"#"},{name:"Multiplying by 4",url:"#"},
+        {name:"Multiplying by 5",url:"#"},{name:"Multiplying by 6–9",url:"#"},{name:"Mixed Multiplication",url:"#"}]},
+      {icon:"➗",iconClass:"ri-teal",title:"Division Facts",items:[
+        {name:"Dividing by 2",url:"#"},{name:"Dividing by 3",url:"#"},{name:"Dividing by 4",url:"#"},
+        {name:"Dividing by 5",url:"#"},{name:"Dividing by 6",url:"#"},{name:"Dividing by 7",url:"#"},
+        {name:"Dividing by 8",url:"#"},{name:"Dividing by 9",url:"#"},{name:"Dividing by 10",url:"#"},
+        {name:"Dividing by 11",url:"#"},{name:"Dividing by 12",url:"#"},{name:"Mixed Division",url:"#"}]}
+    ]},
+  location:{ label:"Find Us", title:"Visit Our Tutoring Center",
+    blurb:"Located in Sugar Land, TX — easy access for families across the greater Houston area.",
+    address1:"4610 Sweetwater Blvd, Suite #120", address2:"Sugar Land, TX 77479",
+    mapQuery:"4610 Sweetwater Blvd Suite 120 Sugar Land TX 77479",
+    contactName:"Andrew Chan", contactPhone:"281-387-5857" },
+  contact:{ label:"Get in Touch", title:"Contact Us",
+    blurb:"Every student has unique needs for support. Tell us more about what you are hoping a tutor can do for you, and we will start on a plan to help you get what you need.",
+    hoursDays:"Sunday – Saturday", hoursTime:"10:00 am – 8:00 pm" },
+  cta:{ title:"Ready to Get Started?", text:"Text Andrew today to schedule your first session — spots fill up fast.", btn:"📱 Text 281-387-5857" },
+  footer:{ desc:"Expert K-12 tutoring in Sugar Land, TX. One-on-one sessions that build confidence, raise grades, and prepare students for the future.",
+    copyright:"© 2025 Chromathic. All rights reserved." }
+};
+
+/* ════════ DATA ════════ */
+let D = loadData();
+function loadData(){
+  let stored={}; try{ stored=JSON.parse(localStorage.getItem(CMS_KEY))||{}; }catch(e){}
+  const d=JSON.parse(JSON.stringify(DEFAULT_DATA));
+  for(const k in stored){ if(stored[k]!=null) d[k]=stored[k]; }
+  return d;
+}
+let saveTimer;
+function save(){
+  localStorage.setItem(CMS_KEY, JSON.stringify(D));
+  const ind=document.getElementById('save-ind');
+  ind.classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>ind.classList.remove('show'),1400);
+}
+function setPath(path,val){
+  const parts=path.split('.'); let o=D;
+  for(let i=0;i<parts.length-1;i++){ o=o[parts[i]]; }
+  o[parts[parts.length-1]]=val;
+  save();
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ════════ AUTH ════════ */
+function getPw(){ return localStorage.getItem(PW_KEY) || btoa(DEFAULT_PW); }
+function doLogin(){
+  const v=document.getElementById('pw').value;
+  if(btoa(v)===getPw()){
+    sessionStorage.setItem('chromathic_auth','1');
+    document.getElementById('login').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    initApp();
+  } else {
+    document.getElementById('login-err').textContent='Incorrect password. Try again.';
+  }
+}
+function doLogout(){ sessionStorage.removeItem('chromathic_auth'); location.reload(); }
+if(sessionStorage.getItem('chromathic_auth')==='1'){
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+}
+
+/* ════════ NAV ════════ */
+const SECTIONS=[
+  ['dashboard','📊','Dashboard'],
+  ['brand','🏷️','Brand & Phone'],
+  ['hero','🚀','Hero Section'],
+  ['services','📚','Services'],
+  ['features','⭐','Why Us / Stats'],
+  ['reviews','💬','Reviews'],
+  ['resources','📄','Resources'],
+  ['location','📍','Location'],
+  ['contact','✉️','Contact & Hours'],
+  ['cta','📣','CTA & Footer'],
+  ['settings','⚙️','Settings']
+];
+let current='dashboard';
+function buildSidebar(){
+  document.getElementById('side').innerHTML=SECTIONS.map(([id,ic,lbl])=>
+    `<div class="nav-i ${id===current?'active':''}" onclick="go('${id}')"><span class="ic">${ic}</span>${lbl}</div>`
+  ).join('');
+}
+function go(id){ current=id; buildSidebar(); renderSection(); document.getElementById('side').classList.remove('open'); document.getElementById('content').scrollTop=0; }
+function initApp(){ buildSidebar(); renderSection(); }
+if(sessionStorage.getItem('chromathic_auth')==='1') initApp();
+
+/* ════════ FIELD HELPERS ════════ */
+function txt(label,path,val,hint){
+  return `<div class="fld"><label>${label}</label>
+    <input value="${esc(val)}" oninput="setPath('${path}',this.value)">
+    ${hint?`<div class="hint">${hint}</div>`:''}</div>`;
+}
+function area(label,path,val,rows){
+  return `<div class="fld"><label>${label}</label>
+    <textarea rows="${rows||3}" oninput="setPath('${path}',this.value)">${esc(val)}</textarea></div>`;
+}
+function head(title,sub){
+  return `<div class="page-head"><div class="page-title">${title}</div><div class="page-sub">${sub}</div></div>`;
+}
+
+/* ════════ SECTION RENDERERS ════════ */
+function renderSection(){
+  const c=document.getElementById('content');
+  c.innerHTML=({
+    dashboard:rDashboard, brand:rBrand, hero:rHero, services:rServices, features:rFeatures,
+    reviews:rReviews, resources:rResources, location:rLocation, contact:rContact, cta:rCta, settings:rSettings
+  })[current]();
+}
+
+function rDashboard(){
+  return head('Dashboard','Overview of your website content')+
+    `<div class="stats-grid">
+      <div class="stat-c"><div class="stat-v">${D.services.items.length}</div><div class="stat-l">Services</div></div>
+      <div class="stat-c"><div class="stat-v">${D.reviews.items.length}</div><div class="stat-l">Reviews</div></div>
+      <div class="stat-c"><div class="stat-v">${D.resources.blocks.reduce((n,b)=>n+b.items.length,0)}</div><div class="stat-l">Resource Files</div></div>
+      <div class="stat-c"><div class="stat-v">${D.features.items.length}</div><div class="stat-l">Stat Cards</div></div>
+    </div>
+    <div class="info-box">
+      <b>How it works.</b> Edit any section from the left menu — changes <b>save automatically</b> to this browser.
+      The public site (<code>chromathic.html</code>) reads the same data, so refresh it to see updates.<br><br>
+      <b>To publish changes for real visitors:</b> go to <b>Settings → Export</b>, download <code>chromathic_data.json</code>,
+      and send it to your developer (or re-import it on the computer that hosts the site). Use <b>👁 View Site</b> up top to preview anytime.
+    </div>`;
+}
+
+function rBrand(){
+  return head('Brand & Phone','Business name and the phone number used by every "Text" button')+
+    `<div class="card">
+      ${txt('Business Name','brand',D.brand)}
+      ${txt('Phone Number (for SMS links)','phone',D.phone,'Digits only, e.g. 2813875857 — powers every Text/Schedule button')}
+    </div>`;
+}
+
+function rHero(){
+  const h=D.hero;
+  return head('Hero Section','The big banner at the top of the page')+
+    `<div class="card">
+      ${txt('Badge Text','hero.badge',h.badge)}
+      <div class="row2">${txt('Title — Line 1','hero.titleTop',h.titleTop)}${txt('Title — Line 2 (highlighted)','hero.titleGrad',h.titleGrad)}</div>
+      ${area('Subtitle','hero.subtitle',h.subtitle,3)}
+      ${txt('Primary Button Text','hero.primaryBtn',h.primaryBtn)}
+    </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Hero Stats (3 recommended)</div>
+        <button class="btn btn-add" onclick="addItem('hero.stats',{num:'New',label:'Label'})">+ Add Stat</button></div>
+      ${h.stats.map((s,i)=>`<div class="item-card">
+        <div class="item-head"><span class="item-num">Stat ${i+1}</span>
+          <button class="btn btn-del" onclick="delItem('hero.stats',${i})">Delete</button></div>
+        <div class="row2">${txt('Value','hero.stats.'+i+'.num',s.num)}${txt('Label','hero.stats.'+i+'.label',s.label)}</div>
+      </div>`).join('')}
+    </div>`;
+}
+
+function rServices(){
+  const s=D.services;
+  return head('Services','The three service cards')+
+    `<div class="card">
+      ${txt('Section Label','services.label',s.label)}
+      ${txt('Section Title','services.title',s.title)}
+      ${area('Section Subtitle','services.subtitle',s.subtitle,2)}
+    </div>
+    <div class="card-h" style="margin:0 0 14px"><div class="card-t">Service Cards</div>
+      <button class="btn btn-add" onclick="addItem('services.items',{icon:'✨',title:'New Service',desc:'Description',tags:['Tag']})">+ Add Service</button></div>
+    ${s.items.map((it,i)=>`<div class="item-card">
+      <div class="item-head"><span class="item-num">Service ${i+1}</span>
+        <button class="btn btn-del" onclick="delItem('services.items',${i})">Delete</button></div>
+      <div class="row2">${txt('Icon (emoji)','services.items.'+i+'.icon',it.icon)}${txt('Title','services.items.'+i+'.title',it.title)}</div>
+      ${area('Description','services.items.'+i+'.desc',it.desc,2)}
+      <div class="fld"><label>Tags (comma-separated)</label>
+        <input value="${esc((it.tags||[]).join(', '))}" oninput="setTags('services.items.${i}.tags',this.value)"></div>
+    </div>`).join('')}`;
+}
+
+function rFeatures(){
+  const f=D.features;
+  return head('Why Us / Stats','The dark stats band ("Results That Speak for Themselves")')+
+    `<div class="card">
+      ${txt('Section Label','features.label',f.label)}
+      ${txt('Section Title','features.title',f.title)}
+      ${area('Section Subtitle','features.subtitle',f.subtitle,2)}
+    </div>
+    <div class="card-h" style="margin:0 0 14px"><div class="card-t">Stat Cards (4 recommended)</div>
+      <button class="btn btn-add" onclick="addItem('features.items',{num:'New',label:'Label',desc:'Description'})">+ Add Card</button></div>
+    ${f.items.map((it,i)=>`<div class="item-card">
+      <div class="item-head"><span class="item-num">Card ${i+1}</span>
+        <button class="btn btn-del" onclick="delItem('features.items',${i})">Delete</button></div>
+      <div class="row2">${txt('Big Value','features.items.'+i+'.num',it.num)}${txt('Label','features.items.'+i+'.label',it.label)}</div>
+      ${area('Description','features.items.'+i+'.desc',it.desc,2)}
+    </div>`).join('')}`;
+}
+
+function rReviews(){
+  const r=D.reviews;
+  return head('Reviews','Testimonials and the rating summary')+
+    `<div class="card">
+      ${txt('Section Label','reviews.label',r.label)}
+      ${txt('Section Title','reviews.title',r.title)}
+      <div class="row2">${txt('Rating Number','reviews.rating',r.rating)}${txt('Rating Caption','reviews.count',r.count)}</div>
+      ${txt('"View All Reviews" Link','reviews.viewAllUrl',r.viewAllUrl,'Your Google reviews URL')}
+    </div>
+    <div class="card-h" style="margin:0 0 14px"><div class="card-t">Testimonials</div>
+      <button class="btn btn-add" onclick="addItem('reviews.items',{text:'Great experience!',name:'New Reviewer',meta:'Google Review'})">+ Add Review</button></div>
+    ${r.items.map((it,i)=>`<div class="item-card">
+      <div class="item-head"><span class="item-num">Review ${i+1}</span>
+        <button class="btn btn-del" onclick="delItem('reviews.items',${i})">Delete</button></div>
+      ${area('Review Text','reviews.items.'+i+'.text',it.text,3)}
+      <div class="row2">${txt('Reviewer Name','reviews.items.'+i+'.name',it.name)}${txt('Meta (source · date)','reviews.items.'+i+'.meta',it.meta)}</div>
+    </div>`).join('')}`;
+}
+
+function rResources(){
+  const r=D.resources;
+  return head('Resources','Download categories and PDF links')+
+    `<div class="card">
+      ${txt('Section Label','resources.label',r.label)}
+      ${txt('Section Title','resources.title',r.title)}
+      ${area('Section Subtitle','resources.subtitle',r.subtitle,2)}
+    </div>
+    <div class="card-h" style="margin:0 0 14px"><div class="card-t">Resource Categories</div>
+      <button class="btn btn-add" onclick="addItem('resources.blocks',{icon:'📚',iconClass:'ri-blue',title:'New Category',items:[{name:'New file',url:'#'}]})">+ Add Category</button></div>
+    ${r.blocks.map((b,i)=>`<div class="item-card">
+      <div class="item-head"><span class="item-num">Category ${i+1}</span>
+        <button class="btn btn-del" onclick="delItem('resources.blocks',${i})">Delete Category</button></div>
+      <div class="row2">${txt('Icon (emoji)','resources.blocks.'+i+'.icon',b.icon)}${txt('Title','resources.blocks.'+i+'.title',b.title)}</div>
+      <div class="fld"><label>Icon Color</label>
+        <select onchange="setPath('resources.blocks.${i}.iconClass',this.value)"
+          style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:var(--bg)">
+          <option value="ri-blue" ${b.iconClass==='ri-blue'?'selected':''}>Blue</option>
+          <option value="ri-orange" ${b.iconClass==='ri-orange'?'selected':''}>Orange</option>
+          <option value="ri-teal" ${b.iconClass==='ri-teal'?'selected':''}>Teal</option>
+        </select></div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <label style="font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.4px">Files</label>
+          <button class="btn btn-add" onclick="addItem('resources.blocks.${i}.items',{name:'New file',url:'#'})">+ Add File</button></div>
+        ${b.items.map((f,j)=>`<div class="row3" style="margin-bottom:10px">
+          <button class="btn btn-del" onclick="delItem('resources.blocks.${i}.items',${j})" style="height:42px">✕</button>
+          <input value="${esc(f.name)}" oninput="setPath('resources.blocks.${i}.items.${j}.name',this.value)" placeholder="File name"
+            style="padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:var(--bg)">
+          <input value="${esc(f.url)}" oninput="setPath('resources.blocks.${i}.items.${j}.url',this.value)" placeholder="Download URL (or #)"
+            style="padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:var(--bg)">
+        </div>`).join('')}
+      </div>
+    </div>`).join('')}`;
+}
+
+function rLocation(){
+  const l=D.location;
+  return head('Location','Address, map, and the contact card')+
+    `<div class="card">
+      ${txt('Section Label','location.label',l.label)}
+      ${txt('Section Title','location.title',l.title)}
+      ${area('Blurb','location.blurb',l.blurb,2)}
+      <div class="row2">${txt('Address Line 1','location.address1',l.address1)}${txt('Address Line 2','location.address2',l.address2)}</div>
+      ${txt('Map Search Query','location.mapQuery',l.mapQuery,'What the embedded Google Map searches for')}
+      <div class="row2">${txt('Contact Name','location.contactName',l.contactName)}${txt('Contact Phone (display)','location.contactPhone',l.contactPhone)}</div>
+    </div>`;
+}
+
+function rContact(){
+  const x=D.contact;
+  return head('Contact & Hours','Contact section text and business hours')+
+    `<div class="card">
+      ${txt('Section Label','contact.label',x.label)}
+      ${txt('Section Title','contact.title',x.title)}
+      ${area('Blurb','contact.blurb',x.blurb,3)}
+      <div class="row2">${txt('Business Days','contact.hoursDays',x.hoursDays)}${txt('Business Hours','contact.hoursTime',x.hoursTime)}</div>
+    </div>`;
+}
+
+function rCta(){
+  return head('CTA & Footer','Bottom call-to-action banner and footer text')+
+    `<div class="card"><div class="card-t" style="margin-bottom:16px">Call-to-Action Banner</div>
+      ${txt('Title','cta.title',D.cta.title)}
+      ${area('Text','cta.text',D.cta.text,2)}
+      ${txt('Button Text','cta.btn',D.cta.btn)}
+    </div>
+    <div class="card"><div class="card-t" style="margin-bottom:16px">Footer</div>
+      ${area('Footer Description','footer.desc',D.footer.desc,2)}
+      ${txt('Copyright Line','footer.copyright',D.footer.copyright)}
+    </div>`;
+}
+
+function rSettings(){
+  return head('Settings','Password, backup, and reset')+
+    `<div class="card"><div class="card-t" style="margin-bottom:16px">Change Password</div>
+      <div class="fld"><label>New Password</label><input type="password" id="np" placeholder="New password"></div>
+      <button class="btn btn-primary" onclick="changePw()">Update Password</button>
+      <span id="pw-msg" class="muted" style="margin-left:12px"></span>
+    </div>
+    <div class="card"><div class="card-t" style="margin-bottom:8px">Backup & Publish</div>
+      <p class="muted" style="margin-bottom:16px">Export your content as a file to back it up or hand to a developer to publish. Import restores from a saved file.</p>
+      <button class="btn btn-primary" onclick="exportData()">⬇ Export chromathic_data.json</button>
+      <label class="btn btn-ghost" style="margin-left:10px">⬆ Import JSON
+        <input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>
+    </div>
+    <div class="card" style="border-color:rgba(220,38,38,.3)">
+      <div class="card-t" style="margin-bottom:8px;color:var(--danger)">Reset</div>
+      <p class="muted" style="margin-bottom:16px">Restore all content to the original defaults. This cannot be undone.</p>
+      <button class="btn btn-danger" onclick="resetData()">Reset All Content</button>
+    </div>`;
+}
+
+/* ════════ ARRAY / TAG OPS ════════ */
+function getArr(path){ const p=path.split('.'); let o=D; for(const k of p) o=o[k]; return o; }
+function addItem(path,obj){ getArr(path).push(JSON.parse(JSON.stringify(obj))); save(); renderSection(); }
+function delItem(path,i){ getArr(path).splice(i,1); save(); renderSection(); }
+function setTags(path,val){ setPath(path, val.split(',').map(s=>s.trim()).filter(Boolean)); }
+
+/* ════════ SETTINGS OPS ════════ */
+function changePw(){
+  const v=document.getElementById('np').value.trim();
+  if(v.length<4){ document.getElementById('pw-msg').textContent='Use at least 4 characters.'; return; }
+  localStorage.setItem(PW_KEY,btoa(v));
+  document.getElementById('np').value='';
+  document.getElementById('pw-msg').textContent='✓ Password updated.';
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='chromathic_data.json'; a.click();
+  URL.revokeObjectURL(a.href);
+}
+function importData(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const obj=JSON.parse(e.target.result);
+      D=obj; save(); renderSection();
+      alert('✓ Content imported successfully.');
+    }catch(err){ alert('Invalid file: '+err.message); }
+  };
+  reader.readAsText(file); input.value='';
+}
+function resetData(){
+  if(!confirm('Reset ALL content to defaults? This cannot be undone.')) return;
+  D=JSON.parse(JSON.stringify(DEFAULT_DATA)); save(); renderSection();
+}
+</script>
+</body>
+</html>

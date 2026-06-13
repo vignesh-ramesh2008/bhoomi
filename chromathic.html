@@ -476,7 +476,7 @@ footer{background:var(--navy);padding:60px 0 30px}
 
 <!-- NAV -->
 <nav id="nav">
-  <a class="nav-logo" href="#">Chromathic</a>
+  <a class="nav-logo" href="#" id="nav-logo">Chromathic</a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#reviews">Reviews</a></li>
@@ -528,18 +528,14 @@ footer{background:var(--navy);padding:60px 0 30px}
   <div class="hero-glow2"></div>
   <div class="hero-dots"></div>
   <div class="hero-content container">
-    <div class="hero-badge"><div class="dot-pulse"></div>Now enrolling new students</div>
-    <h1>Learning for<br><span class="grad">Success.</span></h1>
-    <p class="hero-sub">Expert one-on-one tutoring in K–12 Math, Science, Reading & Writing, and SAT/ACT prep — tailored to your student's pace.</p>
+    <div class="hero-badge"><div class="dot-pulse"></div><span id="hero-badge">Now enrolling new students</span></div>
+    <h1><span id="hero-title-top">Learning for</span><br><span class="grad" id="hero-title-grad">Success.</span></h1>
+    <p class="hero-sub" id="hero-sub">Expert one-on-one tutoring in K–12 Math, Science, Reading &amp; Writing, and SAT/ACT prep — tailored to your student's pace.</p>
     <div class="hero-actions">
-      <a href="sms:2813875857" class="btn-primary">📱 Text to Schedule</a>
+      <a href="#" class="btn-primary" id="hero-primary">📱 Text to Schedule</a>
       <a href="#services" class="btn-ghost">Explore Services →</a>
     </div>
-    <div class="hero-stats">
-      <div><div class="stat-num">5.0 ★</div><div class="stat-lbl">Average Rating</div></div>
-      <div><div class="stat-num">69+</div><div class="stat-lbl">Google Reviews</div></div>
-      <div><div class="stat-num">K–12</div><div class="stat-lbl">All Grade Levels</div></div>
-    </div>
+    <div class="hero-stats" id="hero-stats"></div>
   </div>
 </section>
 
@@ -547,39 +543,11 @@ footer{background:var(--navy);padding:60px 0 30px}
 <section class="services" id="services">
   <div class="container">
     <div class="text-center mb-56 reveal">
-      <div class="sec-label">What We Offer</div>
-      <h2 class="sec-title">Personalized Tutoring<br>for Every Student</h2>
-      <p class="sec-sub mx-auto">From elementary foundations to college prep — we help students build real confidence and lasting skills.</p>
+      <div class="sec-label" id="svc-label">What We Offer</div>
+      <h2 class="sec-title" id="svc-title">Personalized Tutoring for Every Student</h2>
+      <p class="sec-sub mx-auto" id="svc-sub">From elementary foundations to college prep — we help students build real confidence and lasting skills.</p>
     </div>
-    <div class="services-grid">
-      <div class="svc-card reveal d1">
-        <div class="svc-icon">🧮</div>
-        <h3>Math &amp; Science</h3>
-        <p>Comprehensive K–12 support covering arithmetic through advanced calculus, chemistry, biology, and physics — explained clearly and patiently.</p>
-        <div class="tags">
-          <span class="tag">Algebra</span><span class="tag">Geometry</span><span class="tag">Calculus</span>
-          <span class="tag">Chemistry</span><span class="tag">Biology</span><span class="tag">Physics</span>
-        </div>
-      </div>
-      <div class="svc-card reveal d2">
-        <div class="svc-icon">📖</div>
-        <h3>Reading &amp; Writing</h3>
-        <p>Build strong literacy skills with focused work on reading comprehension, essay structure, grammar, vocabulary, and critical thinking.</p>
-        <div class="tags">
-          <span class="tag">Comprehension</span><span class="tag">Essay Writing</span>
-          <span class="tag">Grammar</span><span class="tag">Vocabulary</span>
-        </div>
-      </div>
-      <div class="svc-card reveal d3">
-        <div class="svc-icon">🎯</div>
-        <h3>SAT / ACT Prep</h3>
-        <p>Targeted test strategies, timed practice, and personalized coaching to help students achieve their best scores and open doors for college.</p>
-        <div class="tags">
-          <span class="tag">SAT Math</span><span class="tag">SAT Reading</span>
-          <span class="tag">ACT Prep</span><span class="tag">Test Strategy</span>
-        </div>
-      </div>
-    </div>
+    <div class="services-grid" id="services-grid"></div>
   </div>
 </section>
 
@@ -587,32 +555,11 @@ footer{background:var(--navy);padding:60px 0 30px}
 <section class="features">
   <div class="container">
     <div class="text-center mb-56 reveal">
-      <div class="sec-label">Why Chromathic</div>
-      <h2 class="sec-title">Results That Speak<br>for Themselves</h2>
-      <p class="sec-sub mx-auto">We're committed to every student's success with personal attention, proven methods, and a track record parents trust.</p>
+      <div class="sec-label" id="feat-label">Why Chromathic</div>
+      <h2 class="sec-title" id="feat-title">Results That Speak for Themselves</h2>
+      <p class="sec-sub mx-auto" id="feat-sub">We're committed to every student's success with personal attention, proven methods, and a track record parents trust.</p>
     </div>
-    <div class="feat-grid">
-      <div class="feat-card reveal d1">
-        <div class="feat-num">5.0</div>
-        <div class="feat-lbl">Star Rating</div>
-        <div class="feat-desc">Consistently 5-star rated on Google with 69+ verified parent and student reviews</div>
-      </div>
-      <div class="feat-card reveal d2">
-        <div class="feat-num">1:1</div>
-        <div class="feat-lbl">Personal Sessions</div>
-        <div class="feat-desc">Full individual attention — every session built around your student's specific needs</div>
-      </div>
-      <div class="feat-card reveal d3">
-        <div class="feat-num">K–12</div>
-        <div class="feat-lbl">All Grade Levels</div>
-        <div class="feat-desc">From kindergarten through senior year, we support students at every stage</div>
-      </div>
-      <div class="feat-card reveal d3">
-        <div class="feat-num">TX</div>
-        <div class="feat-lbl">Sugar Land Based</div>
-        <div class="feat-desc">Conveniently located at 4610 Sweetwater Blvd, serving the greater Houston area</div>
-      </div>
-    </div>
+    <div class="feat-grid" id="feat-grid"></div>
   </div>
 </section>
 
@@ -621,51 +568,17 @@ footer{background:var(--navy);padding:60px 0 30px}
   <div class="container">
     <div class="reviews-head reveal">
       <div>
-        <div class="sec-label">Student Reviews</div>
-        <h2 class="sec-title">Loved by Families<br>Across Sugar Land</h2>
+        <div class="sec-label" id="rev-label">Student Reviews</div>
+        <h2 class="sec-title" id="rev-title">Loved by Families Across Sugar Land</h2>
         <div class="rating-row">
-          <span class="rating-big">5.0</span>
-          <span class="stars">★★★★★</span>
-          <span class="rating-cnt">from 69+ Google reviews</span>
+          <span class="rating-big" id="rev-rating">5.0</span>
+          <span class="stars" id="rev-stars">★★★★★</span>
+          <span class="rating-cnt" id="rev-count">from 69+ Google reviews</span>
         </div>
       </div>
-      <a class="view-all" href="https://www.google.com/maps/search/Chromathic+Sugar+Land+TX" target="_blank" rel="noopener">View All Reviews →</a>
+      <a class="view-all" id="rev-viewall" href="#" target="_blank" rel="noopener">View All Reviews →</a>
     </div>
-    <div class="reviews-grid">
-      <div class="rev-card reveal d1">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">"My kids struggled with math, but Chromathic made it fun with 1:1 tutoring. They quickly grasped the concepts and their grades have improved significantly."</p>
-        <div class="rev-author">
-          <div class="rev-avatar">AM</div>
-          <div>
-            <div class="rev-name">Andrew Mig</div>
-            <div class="rev-meta">Google Review · November 2025</div>
-          </div>
-        </div>
-      </div>
-      <div class="rev-card reveal d2">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">"Excellent experience from start to finish. Our son went from barely passing to earning A's in science. The personalized attention made all the difference."</p>
-        <div class="rev-author">
-          <div class="rev-avatar">SJ</div>
-          <div>
-            <div class="rev-name">Sarah Johnson</div>
-            <div class="rev-meta">Google Review · October 2025</div>
-          </div>
-        </div>
-      </div>
-      <div class="rev-card reveal d3">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">"We saw huge improvement in our daughter's SAT scores after just a few sessions. Highly recommend for any student preparing for college admissions."</p>
-        <div class="rev-author">
-          <div class="rev-avatar">RP</div>
-          <div>
-            <div class="rev-name">Raj Patel</div>
-            <div class="rev-meta">Google Review · September 2025</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="reviews-grid" id="reviews-grid"></div>
   </div>
 </section>
 
@@ -673,135 +586,11 @@ footer{background:var(--navy);padding:60px 0 30px}
 <section class="resources" id="resources">
   <div class="container">
     <div class="text-center mb-56 reveal">
-      <div class="sec-label">Free Resources</div>
-      <h2 class="sec-title">Study Tools &amp;<br>Printable Sheets</h2>
-      <p class="sec-sub mx-auto">Download free educational materials to support learning at home — no sign-up needed.</p>
+      <div class="sec-label" id="res-label">Free Resources</div>
+      <h2 class="sec-title" id="res-title">Study Tools &amp; Printable Sheets</h2>
+      <p class="sec-sub mx-auto" id="res-sub">Download free educational materials to support learning at home — no sign-up needed.</p>
     </div>
-    <div class="res-grid">
-      <!-- Charts & Graphs -->
-      <div class="res-block reveal d1">
-        <div class="res-block-head">
-          <div class="res-icon ri-blue">📐</div>
-          <div class="res-block-title">Charts and Graphs</div>
-        </div>
-        <ul class="res-list">
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">3 Coordinate Graphs with Tables</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">6 Coordinate Graphs (−10 to 10)</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">6 Coordinate Graphs (−20 to 20)</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Periodic Table (Color)</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Periodic Table (Black &amp; White)</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Week Planner</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-        </ul>
-      </div>
-      <!-- Multiplication -->
-      <div class="res-block reveal d2">
-        <div class="res-block-head">
-          <div class="res-icon ri-orange">✖️</div>
-          <div class="res-block-title">Multiplication Facts</div>
-        </div>
-        <ul class="res-list">
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Multiplying by 2</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Multiplying by 3</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Multiplying by 4</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Multiplying by 5</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Multiplying by 6–9</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Mixed Multiplication</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-        </ul>
-      </div>
-      <!-- Division -->
-      <div class="res-block reveal d1">
-        <div class="res-block-head">
-          <div class="res-icon ri-teal">➗</div>
-          <div class="res-block-title">Division Facts</div>
-        </div>
-        <ul class="res-list">
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 2</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 3</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 4</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 5</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 6</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 7</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 8</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 9</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 10</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 11</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Dividing by 12</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-          <li class="res-item">
-            <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">Mixed Division</div><span class="res-badge">PDF</span></div></div>
-            <a href="#" class="res-dl" title="Download">↓</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <div class="res-grid" id="res-grid"></div>
   </div>
 </section>
 
@@ -810,30 +599,30 @@ footer{background:var(--navy);padding:60px 0 30px}
   <div class="container">
     <div class="loc-grid">
       <div class="map-wrap reveal d1">
-        <iframe
+        <iframe id="loc-map"
           src="https://maps.google.com/maps?q=4610+Sweetwater+Blvd+Suite+120+Sugar+Land+TX+77479&t=&z=15&ie=UTF8&iwloc=&output=embed"
           allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
         </iframe>
       </div>
       <div class="reveal d2">
-        <div class="sec-label loc-label">Find Us</div>
-        <h2 class="sec-title">Visit Our<br>Tutoring Center</h2>
-        <p style="color:var(--text-mid);font-size:16px;line-height:1.75">Located in Sugar Land, TX — easy access for families across the greater Houston area.</p>
+        <div class="sec-label loc-label" id="loc-label">Find Us</div>
+        <h2 class="sec-title" id="loc-title">Visit Our Tutoring Center</h2>
+        <p style="color:var(--text-mid);font-size:16px;line-height:1.75" id="loc-blurb">Located in Sugar Land, TX — easy access for families across the greater Houston area.</p>
         <div class="contact-stack">
           <div class="ccard">
             <div class="ccard-icon ci-navy">📍</div>
             <div>
               <div class="ccard-lbl">Address</div>
-              <div class="ccard-val">4610 Sweetwater Blvd, Suite #120</div>
-              <div class="ccard-sub">Sugar Land, TX 77479</div>
+              <div class="ccard-val" id="loc-addr1">4610 Sweetwater Blvd, Suite #120</div>
+              <div class="ccard-sub" id="loc-addr2">Sugar Land, TX 77479</div>
             </div>
           </div>
-          <a class="ccard" href="sms:2813875857" style="text-decoration:none">
+          <a class="ccard" id="loc-contact" href="#" style="text-decoration:none">
             <div class="ccard-icon ci-green">📱</div>
             <div>
               <div class="ccard-lbl">Text to Schedule</div>
-              <div class="ccard-val">Andrew Chan</div>
-              <div class="ccard-sub">281-387-5857</div>
+              <div class="ccard-val" id="loc-cname">Andrew Chan</div>
+              <div class="ccard-sub" id="loc-cphone">281-387-5857</div>
             </div>
           </a>
         </div>
@@ -847,13 +636,13 @@ footer{background:var(--navy);padding:60px 0 30px}
   <div class="container">
     <div class="contact-grid">
       <div class="reveal d1">
-        <div class="sec-label">Get in Touch</div>
-        <h2 class="sec-title">Contact Us</h2>
-        <p class="contact-blurb">Every student has unique needs for support. Tell us more about what you are hoping a tutor can do for you, and we will start on a plan to help you get what you need.</p>
+        <div class="sec-label" id="con-label">Get in Touch</div>
+        <h2 class="sec-title" id="con-title">Contact Us</h2>
+        <p class="contact-blurb" id="con-blurb">Every student has unique needs for support. Tell us more about what you are hoping a tutor can do for you, and we will start on a plan to help you get what you need.</p>
         <div class="biz-hours">
           <div class="biz-label">Business Hours</div>
-          <div class="biz-days">Sunday – Saturday</div>
-          <div class="biz-time">10:00 am – 8:00 pm</div>
+          <div class="biz-days" id="con-days">Sunday – Saturday</div>
+          <div class="biz-time" id="con-time">10:00 am – 8:00 pm</div>
         </div>
       </div>
       <div class="contact-form-wrap reveal d2">
@@ -881,9 +670,9 @@ footer{background:var(--navy);padding:60px 0 30px}
 <!-- CTA BANNER -->
 <section class="cta-banner">
   <div class="container reveal">
-    <h2>Ready to Get Started?</h2>
-    <p>Text Andrew today to schedule your first session — spots fill up fast.</p>
-    <a href="sms:2813875857" class="btn-primary">📱 Text 281-387-5857</a>
+    <h2 id="cta-title">Ready to Get Started?</h2>
+    <p id="cta-text">Text Andrew today to schedule your first session — spots fill up fast.</p>
+    <a href="#" class="btn-primary" id="cta-btn">📱 Text 281-387-5857</a>
   </div>
 </section>
 
@@ -892,8 +681,8 @@ footer{background:var(--navy);padding:60px 0 30px}
   <div class="container">
     <div class="foot-top">
       <div class="foot-brand">
-        <h3>Chromathic</h3>
-        <p>Expert K-12 tutoring in Sugar Land, TX. One-on-one sessions that build confidence, raise grades, and prepare students for the future.</p>
+        <h3 id="foot-brand">Chromathic</h3>
+        <p id="foot-desc">Expert K-12 tutoring in Sugar Land, TX. One-on-one sessions that build confidence, raise grades, and prepare students for the future.</p>
       </div>
       <div class="foot-col">
         <h4>Services</h4>
@@ -918,26 +707,285 @@ footer{background:var(--navy);padding:60px 0 30px}
       <div class="foot-col">
         <h4>Contact</h4>
         <ul>
-          <li><a href="sms:2813875857">281-387-5857</a></li>
-          <li><a href="#location">4610 Sweetwater Blvd</a></li>
-          <li><a href="#location">Sugar Land, TX 77479</a></li>
+          <li><a href="#" id="foot-phone">281-387-5857</a></li>
+          <li><a href="#location" id="foot-addr1">4610 Sweetwater Blvd</a></li>
+          <li><a href="#location" id="foot-addr2">Sugar Land, TX 77479</a></li>
           <li><a href="#contact" style="color:var(--teal);margin-top:8px;display:block">Contact Form →</a></li>
         </ul>
         <div style="margin-top:20px;font-size:12px;color:rgba(255,255,255,.35);line-height:1.8">
           <div style="font-weight:700;color:rgba(255,255,255,.5);margin-bottom:4px">Hours</div>
-          Sun – Sat · 10am – 8pm
+          <span id="foot-hours">Sun – Sat · 10am – 8pm</span>
         </div>
       </div>
     </div>
     <hr class="foot-div">
     <div class="foot-bot">
-      <p>© 2025 Chromathic. All rights reserved.</p>
+      <p id="foot-copy">© 2025 Chromathic. All rights reserved.</p>
       <p>Sugar Land, TX · K-12 Tutoring</p>
     </div>
   </div>
 </footer>
 
 <script>
+/* ════════════════════════════════════════════════════════════
+   CONTENT LAYER — edited via chromathic-admin.html
+   Reads from localStorage['chromathic_cms']; falls back to
+   DEFAULT_DATA below so the site always renders perfectly.
+   ════════════════════════════════════════════════════════════ */
+const CMS_KEY = 'chromathic_cms';
+
+const DEFAULT_DATA = {
+  brand: "Chromathic",
+  phone: "2813875857",
+  hero: {
+    badge: "Now enrolling new students",
+    titleTop: "Learning for",
+    titleGrad: "Success.",
+    subtitle: "Expert one-on-one tutoring in K–12 Math, Science, Reading & Writing, and SAT/ACT prep — tailored to your student's pace.",
+    primaryBtn: "📱 Text to Schedule",
+    stats: [
+      { num: "5.0 ★", label: "Average Rating" },
+      { num: "69+", label: "Google Reviews" },
+      { num: "K–12", label: "All Grade Levels" }
+    ]
+  },
+  services: {
+    label: "What We Offer",
+    title: "Personalized Tutoring for Every Student",
+    subtitle: "From elementary foundations to college prep — we help students build real confidence and lasting skills.",
+    items: [
+      { icon: "🧮", title: "Math & Science", desc: "Comprehensive K–12 support covering arithmetic through advanced calculus, chemistry, biology, and physics — explained clearly and patiently.", tags: ["Algebra","Geometry","Calculus","Chemistry","Biology","Physics"] },
+      { icon: "📖", title: "Reading & Writing", desc: "Build strong literacy skills with focused work on reading comprehension, essay structure, grammar, vocabulary, and critical thinking.", tags: ["Comprehension","Essay Writing","Grammar","Vocabulary"] },
+      { icon: "🎯", title: "SAT / ACT Prep", desc: "Targeted test strategies, timed practice, and personalized coaching to help students achieve their best scores and open doors for college.", tags: ["SAT Math","SAT Reading","ACT Prep","Test Strategy"] }
+    ]
+  },
+  features: {
+    label: "Why Chromathic",
+    title: "Results That Speak for Themselves",
+    subtitle: "We're committed to every student's success with personal attention, proven methods, and a track record parents trust.",
+    items: [
+      { num: "5.0", label: "Star Rating", desc: "Consistently 5-star rated on Google with 69+ verified parent and student reviews" },
+      { num: "1:1", label: "Personal Sessions", desc: "Full individual attention — every session built around your student's specific needs" },
+      { num: "K–12", label: "All Grade Levels", desc: "From kindergarten through senior year, we support students at every stage" },
+      { num: "TX", label: "Sugar Land Based", desc: "Conveniently located at 4610 Sweetwater Blvd, serving the greater Houston area" }
+    ]
+  },
+  reviews: {
+    label: "Student Reviews",
+    title: "Loved by Families Across Sugar Land",
+    rating: "5.0",
+    count: "from 69+ Google reviews",
+    viewAllUrl: "https://www.google.com/maps/search/Chromathic+Sugar+Land+TX",
+    items: [
+      { text: "My kids struggled with math, but Chromathic made it fun with 1:1 tutoring. They quickly grasped the concepts and their grades have improved significantly.", name: "Andrew Mig", meta: "Google Review · November 2025" },
+      { text: "Excellent experience from start to finish. Our son went from barely passing to earning A's in science. The personalized attention made all the difference.", name: "Sarah Johnson", meta: "Google Review · October 2025" },
+      { text: "We saw huge improvement in our daughter's SAT scores after just a few sessions. Highly recommend for any student preparing for college admissions.", name: "Raj Patel", meta: "Google Review · September 2025" }
+    ]
+  },
+  resources: {
+    label: "Free Resources",
+    title: "Study Tools & Printable Sheets",
+    subtitle: "Download free educational materials to support learning at home — no sign-up needed.",
+    blocks: [
+      { icon: "📐", iconClass: "ri-blue", title: "Charts and Graphs", items: [
+        { name: "3 Coordinate Graphs with Tables", url: "#" },
+        { name: "6 Coordinate Graphs (−10 to 10)", url: "#" },
+        { name: "6 Coordinate Graphs (−20 to 20)", url: "#" },
+        { name: "Periodic Table (Color)", url: "#" },
+        { name: "Periodic Table (Black & White)", url: "#" },
+        { name: "Week Planner", url: "#" }
+      ]},
+      { icon: "✖️", iconClass: "ri-orange", title: "Multiplication Facts", items: [
+        { name: "Multiplying by 2", url: "#" },
+        { name: "Multiplying by 3", url: "#" },
+        { name: "Multiplying by 4", url: "#" },
+        { name: "Multiplying by 5", url: "#" },
+        { name: "Multiplying by 6–9", url: "#" },
+        { name: "Mixed Multiplication", url: "#" }
+      ]},
+      { icon: "➗", iconClass: "ri-teal", title: "Division Facts", items: [
+        { name: "Dividing by 2", url: "#" },
+        { name: "Dividing by 3", url: "#" },
+        { name: "Dividing by 4", url: "#" },
+        { name: "Dividing by 5", url: "#" },
+        { name: "Dividing by 6", url: "#" },
+        { name: "Dividing by 7", url: "#" },
+        { name: "Dividing by 8", url: "#" },
+        { name: "Dividing by 9", url: "#" },
+        { name: "Dividing by 10", url: "#" },
+        { name: "Dividing by 11", url: "#" },
+        { name: "Dividing by 12", url: "#" },
+        { name: "Mixed Division", url: "#" }
+      ]}
+    ]
+  },
+  location: {
+    label: "Find Us",
+    title: "Visit Our Tutoring Center",
+    blurb: "Located in Sugar Land, TX — easy access for families across the greater Houston area.",
+    address1: "4610 Sweetwater Blvd, Suite #120",
+    address2: "Sugar Land, TX 77479",
+    mapQuery: "4610 Sweetwater Blvd Suite 120 Sugar Land TX 77479",
+    contactName: "Andrew Chan",
+    contactPhone: "281-387-5857"
+  },
+  contact: {
+    label: "Get in Touch",
+    title: "Contact Us",
+    blurb: "Every student has unique needs for support. Tell us more about what you are hoping a tutor can do for you, and we will start on a plan to help you get what you need.",
+    hoursDays: "Sunday – Saturday",
+    hoursTime: "10:00 am – 8:00 pm"
+  },
+  cta: {
+    title: "Ready to Get Started?",
+    text: "Text Andrew today to schedule your first session — spots fill up fast.",
+    btn: "📱 Text 281-387-5857"
+  },
+  footer: {
+    desc: "Expert K-12 tutoring in Sugar Land, TX. One-on-one sessions that build confidence, raise grades, and prepare students for the future.",
+    copyright: "© 2025 Chromathic. All rights reserved."
+  }
+};
+
+function loadData(){
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(CMS_KEY)) || {}; } catch(e) { stored = {}; }
+  const d = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  for (const key in stored) { if (stored[key] != null) d[key] = stored[key]; }
+  return d;
+}
+
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function setText(id, val){ const el = document.getElementById(id); if (el) el.textContent = val; }
+function initials(name){
+  return String(name||'').trim().split(/\s+/).map(w=>w[0]||'').slice(0,2).join('').toUpperCase() || '★';
+}
+const telHref = p => 'sms:' + String(p||'').replace(/[^\d+]/g,'');
+
+function render(){
+  const d = loadData();
+
+  /* Brand */
+  setText('nav-logo', d.brand);
+  setText('foot-brand', d.brand);
+
+  /* Hero */
+  setText('hero-badge', d.hero.badge);
+  setText('hero-title-top', d.hero.titleTop);
+  setText('hero-title-grad', d.hero.titleGrad);
+  setText('hero-sub', d.hero.subtitle);
+  const hp = document.getElementById('hero-primary');
+  hp.textContent = d.hero.primaryBtn; hp.href = telHref(d.phone);
+  document.getElementById('hero-stats').innerHTML = (d.hero.stats||[]).map(s =>
+    `<div><div class="stat-num">${esc(s.num)}</div><div class="stat-lbl">${esc(s.label)}</div></div>`
+  ).join('');
+
+  /* Services */
+  setText('svc-label', d.services.label);
+  setText('svc-title', d.services.title);
+  setText('svc-sub', d.services.subtitle);
+  document.getElementById('services-grid').innerHTML = (d.services.items||[]).map((s,i) =>
+    `<div class="svc-card reveal d${(i%3)+1}">
+       <div class="svc-icon">${esc(s.icon)}</div>
+       <h3>${esc(s.title)}</h3>
+       <p>${esc(s.desc)}</p>
+       <div class="tags">${(s.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+     </div>`
+  ).join('');
+
+  /* Features */
+  setText('feat-label', d.features.label);
+  setText('feat-title', d.features.title);
+  setText('feat-sub', d.features.subtitle);
+  document.getElementById('feat-grid').innerHTML = (d.features.items||[]).map((f,i) =>
+    `<div class="feat-card reveal d${(i%3)+1}">
+       <div class="feat-num">${esc(f.num)}</div>
+       <div class="feat-lbl">${esc(f.label)}</div>
+       <div class="feat-desc">${esc(f.desc)}</div>
+     </div>`
+  ).join('');
+
+  /* Reviews */
+  setText('rev-label', d.reviews.label);
+  setText('rev-title', d.reviews.title);
+  setText('rev-rating', d.reviews.rating);
+  setText('rev-count', d.reviews.count);
+  document.getElementById('rev-viewall').href = d.reviews.viewAllUrl || '#';
+  document.getElementById('reviews-grid').innerHTML = (d.reviews.items||[]).map((r,i) =>
+    `<div class="rev-card reveal d${(i%3)+1}">
+       <div class="rev-stars">★★★★★</div>
+       <p class="rev-text">"${esc(r.text)}"</p>
+       <div class="rev-author">
+         <div class="rev-avatar">${esc(initials(r.name))}</div>
+         <div>
+           <div class="rev-name">${esc(r.name)}</div>
+           <div class="rev-meta">${esc(r.meta)}</div>
+         </div>
+       </div>
+     </div>`
+  ).join('');
+
+  /* Resources */
+  setText('res-label', d.resources.label);
+  setText('res-title', d.resources.title);
+  setText('res-sub', d.resources.subtitle);
+  document.getElementById('res-grid').innerHTML = (d.resources.blocks||[]).map((b,i) =>
+    `<div class="res-block reveal d${(i%2)+1}">
+       <div class="res-block-head">
+         <div class="res-icon ${esc(b.iconClass||'ri-blue')}">${esc(b.icon)}</div>
+         <div class="res-block-title">${esc(b.title)}</div>
+       </div>
+       <ul class="res-list">
+         ${(b.items||[]).map(it =>
+           `<li class="res-item">
+              <div class="res-item-l"><div class="res-pdf">📄</div><div><div class="res-name">${esc(it.name)}</div><span class="res-badge">PDF</span></div></div>
+              <a href="${esc(it.url||'#')}" class="res-dl" title="Download" ${it.url && it.url!=='#' ? 'target="_blank" rel="noopener"' : ''}>↓</a>
+            </li>`
+         ).join('')}
+       </ul>
+     </div>`
+  ).join('');
+
+  /* Location */
+  setText('loc-label', d.location.label);
+  setText('loc-title', d.location.title);
+  setText('loc-blurb', d.location.blurb);
+  setText('loc-addr1', d.location.address1);
+  setText('loc-addr2', d.location.address2);
+  setText('loc-cname', d.location.contactName);
+  setText('loc-cphone', d.location.contactPhone);
+  document.getElementById('loc-contact').href = telHref(d.phone);
+  document.getElementById('loc-map').src =
+    'https://maps.google.com/maps?q=' + encodeURIComponent(d.location.mapQuery || d.location.address1) +
+    '&t=&z=15&ie=UTF8&iwloc=&output=embed';
+
+  /* Contact */
+  setText('con-label', d.contact.label);
+  setText('con-title', d.contact.title);
+  setText('con-blurb', d.contact.blurb);
+  setText('con-days', d.contact.hoursDays);
+  setText('con-time', d.contact.hoursTime);
+
+  /* CTA */
+  setText('cta-title', d.cta.title);
+  setText('cta-text', d.cta.text);
+  const cb = document.getElementById('cta-btn');
+  cb.textContent = d.cta.btn; cb.href = telHref(d.phone);
+
+  /* Footer */
+  setText('foot-desc', d.footer.desc);
+  setText('foot-copy', d.footer.copyright);
+  setText('foot-hours', d.contact.hoursDays + ' · ' + d.contact.hoursTime);
+  const fp = document.getElementById('foot-phone');
+  fp.textContent = d.location.contactPhone; fp.href = telHref(d.phone);
+  setText('foot-addr1', d.location.address1);
+  setText('foot-addr2', d.location.address2);
+
+  /* Re-bind reveal animations to freshly rendered nodes */
+  bindReveal();
+}
+
+/* ── INTERACTIONS ── */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60), {passive:true});
 
@@ -954,10 +1002,15 @@ function closeMob(){
   document.body.style.overflow = '';
 }
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
-}, {threshold:0.1, rootMargin:'0px 0px -36px 0px'});
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+let revealObserver;
+function bindReveal(){
+  if (!revealObserver){
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); revealObserver.unobserve(e.target); } });
+    }, {threshold:0.1, rootMargin:'0px 0px -36px 0px'});
+  }
+  document.querySelectorAll('.reveal:not(.in)').forEach(el => revealObserver.observe(el));
+}
 
 function handleForm(e){
   e.preventDefault();
@@ -972,6 +1025,11 @@ function handleForm(e){
     e.target.reset();
   }, 3000);
 }
+
+/* Live-update when the admin panel saves in another tab */
+window.addEventListener('storage', e => { if (e.key === CMS_KEY) render(); });
+
+render();
 </script>
 </body>
 </html>
