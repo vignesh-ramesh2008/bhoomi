@@ -650,6 +650,68 @@
     .leaf-decor { animation: none !important; }
   }
 
+  /* ─── SALE BANNER ─── */
+  .sale-banner {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 101;
+    background: linear-gradient(90deg, var(--deep-red), var(--crimson) 35%, #D4541E 70%, var(--deep-red));
+    background-size: 200% 100%;
+    animation: saleShimmer 8s linear infinite;
+    color: white; text-align: center;
+    padding: 0.5rem 2.8rem;
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em;
+  }
+  @keyframes saleShimmer { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
+  .sale-banner .sale-close {
+    position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);
+    background: rgba(255,255,255,0.15); border: none; color: white;
+    width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
+    font-size: 0.75rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .sale-banner .sale-close:hover { background: rgba(255,255,255,0.35); }
+  body.has-banner nav { top: var(--banner-h, 33px); }
+  body.has-banner .hero { padding-top: calc(7rem + var(--banner-h, 33px)); }
+
+  /* ─── MODERN POLISH ─── */
+  .btn-primary, .nav-cta, .btn-outline { border-radius: 40px; }
+  .btn-primary, .nav-cta {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    box-shadow: 0 4px 14px rgba(212,172,13,0.35);
+  }
+  .btn-primary:hover, .nav-cta:hover { box-shadow: 0 6px 20px rgba(212,172,13,0.5); background: linear-gradient(135deg, #F8D435, var(--gold)); }
+  .product-card { border-radius: 14px; border-color: rgba(0,0,0,0.05); box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+  .product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(0,0,0,0.13); }
+  .card-price { border-radius: 20px; padding: 0.3rem 0.75rem; }
+  .add-to-cart { border-radius: 24px; }
+  .why-card { border-radius: 12px; }
+  .event-card { border-radius: 14px; backdrop-filter: blur(4px); }
+  .order-box { border-radius: 18px; box-shadow: 0 16px 40px rgba(139,26,26,0.3); }
+  .order-btn { border-radius: 40px; }
+  .step-card { border-radius: 14px; }
+  .faq-item { border-radius: 12px; }
+  .cart-drawer { border-radius: 16px 0 0 16px; overflow: hidden; }
+  .cart-whatsapp, .cart-call { border-radius: 40px; }
+  .section-title { position: relative; padding-bottom: 0.9rem; }
+  .section-title::after {
+    content: ''; position: absolute; left: 0; bottom: 0;
+    width: 56px; height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  #events .section-title::after { background: linear-gradient(90deg, var(--gold-light), transparent); }
+  .tab { border-radius: 40px; padding: 0.55rem 1.3rem; }
+  .tab.active { background: linear-gradient(135deg, var(--forest), var(--leaf)); border-color: transparent; box-shadow: 0 4px 12px rgba(45,106,45,0.35); }
+  .contact-icon { box-shadow: 0 4px 12px rgba(45,106,45,0.25); }
+  .hero {
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(212,172,13,0.22) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(45,106,45,0.3) 0%, transparent 50%),
+      linear-gradient(160deg, #140600 0%, #5C1010 38%, #8B1A1A 68%, #2D1A00 100%);
+  }
+  .hero-badge { backdrop-filter: blur(6px); }
+  .pill { backdrop-filter: blur(6px); border-radius: 40px; transition: background 0.2s, transform 0.2s; }
+  .pill:hover { background: rgba(255,255,255,0.16); transform: translateY(-2px); }
+
   /* ─── GLOBAL POLISH ─── */
   ::selection { background: var(--gold); color: #1A0A00; }
   body::-webkit-scrollbar { width: 10px; }
@@ -696,6 +758,10 @@
   .product-card:hover .card-photo { transform: scale(1.06); }
   .card-photo-wrap .card-price { position: absolute; top: 0.8rem; right: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
   .card-desc { font-size: 0.82rem; color: var(--text-mid); line-height: 1.5; margin-top: 0.45rem; font-weight: 300; }
+  /* photo failed to load → show the icon header instead */
+  .card-header-fallback { display: none; }
+  .img-failed .card-photo-wrap { display: none; }
+  .img-failed .card-header-fallback { display: flex; }
 
   /* ─── DISCOUNT / TOTALS in cart ─── */
   .discount-row { display: flex; gap: 0.5rem; margin-bottom: 0.9rem; }
@@ -808,6 +874,12 @@
 </style>
 </head>
 <body>
+
+<!-- SALE BANNER -->
+<div class="sale-banner" id="saleBanner" style="display:none;">
+  <span id="saleBannerText"></span>
+  <button class="sale-close" onclick="dismissSaleBanner()" aria-label="Dismiss">✕</button>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -1120,6 +1192,10 @@ const defaultData = {
     { code: "BHOOMI10", percent: 10 }
   ],
   freeShippingThreshold: 50,
+  sale: {
+    enabled: true,
+    text: "🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off · Free shipping on orders over $50!"
+  },
   events: [
     {
       day: "SAT",
@@ -1170,6 +1246,52 @@ function getProductId(p) {
   return p.name.replace(/\s+/g, '-').toLowerCase();
 }
 
+// Representative stock photos (Unsplash). Used only when a product has no
+// CMS-uploaded image; if a URL fails to load, the card falls back to its icon.
+const UQ = '?auto=format&fit=crop&w=600&q=60';
+const stockPhotos = {
+  "barnyard-millet-biscuits": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e" + UQ,
+  "finger-millet-biscuits": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35" + UQ,
+  "multi-grain-biscuits": "https://images.unsplash.com/photo-1590080874088-eec64895b423" + UQ,
+  "pearl-millet-biscuits": "https://images.unsplash.com/photo-1568051243851-f9b136146e97" + UQ,
+  "baked-beetroot-urad-dhal-chips": "https://images.unsplash.com/photo-1566478989037-eec170784d0b" + UQ,
+  "vacuum-fried-beetroot-chips": "https://images.unsplash.com/photo-1576642589592-7d9778a1c9e4" + UQ,
+  "millet-cookies": "https://images.unsplash.com/photo-1485745098381-1d4b0d1e4abd" + UQ,
+  "farm-fresh-gulkand": "https://images.unsplash.com/photo-1474722883778-792e7990302f" + UQ,
+  "blue-butterfly-pea-dip-tea": "https://images.unsplash.com/photo-1576092768241-dec231879fc3" + UQ,
+  "hibiscus-dip-tea": "https://images.unsplash.com/photo-1597481499750-3e6b22637e12" + UQ,
+  "tulsi-masala-dip-tea": "https://images.unsplash.com/photo-1544787219-7f47ccb76574" + UQ,
+  "abc-malt": "https://images.unsplash.com/photo-1542990253-a781e04c0082" + UQ,
+  "irumal-chooranam-powder": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d" + UQ,
+  "murunga-elai-powder": "https://images.unsplash.com/photo-1515823064-d6e0c04616a7" + UQ,
+  "pirandai-powder": "https://images.unsplash.com/photo-1509358271058-acd22cc93898" + UQ,
+  "vallarai-powder": "https://images.unsplash.com/photo-1471193945509-9ad0617afabf" + UQ,
+  "instant-idiyappam---mappillai-samba": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc" + UQ,
+  "instant-idiyappam---ragi": "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841" + UQ,
+  "instant-idiyappam---thooyamalli": "https://images.unsplash.com/photo-1516684732162-798a0062be99" + UQ,
+  "ancient-rice-porridge-mix-(15-in-1)": "https://images.unsplash.com/photo-1586201375761-83865001e31c" + UQ,
+  "sprouted-multigrain-health-mix": "https://images.unsplash.com/photo-1610970881699-44a5587cabec" + UQ,
+  "ragi-appalam": "https://images.unsplash.com/photo-1606491956689-2ea866880c84" + UQ,
+  "just-herbs-anti-hairfall-shampoo": "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d" + UQ,
+  "keratin-shampoo": "https://images.unsplash.com/photo-1556228578-8c89e6adf883" + UQ,
+  "protein-shampoo": "https://images.unsplash.com/photo-1571781926291-c477ebfd024b" + UQ,
+  "shikakai-shampoo": "https://images.unsplash.com/photo-1526947425960-945c6e72858f" + UQ,
+  "abc-soap": "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec" + UQ,
+  "kuppaimeni-soap": "https://images.unsplash.com/photo-1607006344380-b6775a0824a7" + UQ,
+  "nalangu-mavu-soap": "https://images.unsplash.com/photo-1547793548-7a0e7dfdb24f" + UQ,
+  "herbal-shikakai-powder": "https://images.unsplash.com/photo-1599909533730-f9d7a13ef82d" + UQ,
+  "nalangu-mavu-for-women": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108" + UQ,
+  "50-herbal-oil": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5" + UQ
+};
+products.forEach(p => {
+  if (!p.image) p.image = stockPhotos[getProductId(p)] || '';
+});
+
+function photoFallback(img) {
+  const card = img.closest('.product-card');
+  if (card) card.classList.add('img-failed');
+}
+
 let searchQuery = '';
 
 function formatPrice(price) {
@@ -1200,15 +1322,16 @@ function renderProducts(filter) {
     const inCart = cart.find(c => c.id === pid);
     const icon = productIcons[pid] || productIcons['millet-cookies'] || '';
     const outOfStock = p.inStock === false;
-    const header = p.image
-      ? `<div class="card-photo-wrap">
-          <img class="card-photo" src="${p.image.replace(/"/g, '&quot;')}" alt="${escapeHtml(p.name)}" loading="lazy" />
-          <span class="card-price">${formatPrice(p.price)}</span>
-        </div>`
-      : `<div class="card-header" style="background:${catGradients[p.cat] || catGradients.snacks}">
+    const iconHeader = `<div class="card-header card-header-fallback" style="background:${catGradients[p.cat] || catGradients.snacks}">
           <div class="card-icon">${icon}</div>
           <span class="card-price">${formatPrice(p.price)}</span>
         </div>`;
+    const header = p.image
+      ? `<div class="card-photo-wrap">
+          <img class="card-photo" src="${p.image.replace(/"/g, '&quot;')}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="photoFallback(this)" />
+          <span class="card-price">${formatPrice(p.price)}</span>
+        </div>${iconHeader}`
+      : iconHeader.replace(' card-header-fallback', '');
     return `
     <div class="product-card${outOfStock ? ' out-of-stock' : ''}">
       ${header}
@@ -1596,6 +1719,35 @@ function initScrollReveal() {
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 }
 
+// ── SALE BANNER ──
+function renderSaleBanner() {
+  const banner = document.getElementById('saleBanner');
+  if (!banner) return;
+  const sale = DATA.sale || {};
+  let dismissed = false;
+  try { dismissed = sessionStorage.getItem('bhoomi_sale_dismissed') === '1'; } catch (e) {}
+  if (sale.enabled && sale.text && !dismissed) {
+    document.getElementById('saleBannerText').textContent = sale.text;
+    banner.style.display = 'block';
+    document.body.classList.add('has-banner');
+    document.documentElement.style.setProperty('--banner-h', banner.offsetHeight + 'px');
+  } else {
+    banner.style.display = 'none';
+    document.body.classList.remove('has-banner');
+  }
+}
+
+function dismissSaleBanner() {
+  try { sessionStorage.setItem('bhoomi_sale_dismissed', '1'); } catch (e) {}
+  renderSaleBanner();
+}
+window.addEventListener('resize', () => {
+  const banner = document.getElementById('saleBanner');
+  if (banner && banner.style.display !== 'none') {
+    document.documentElement.style.setProperty('--banner-h', banner.offsetHeight + 'px');
+  }
+});
+
 // ── FAQ ──
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
@@ -1624,6 +1776,7 @@ window.addEventListener('scroll', () => {
 
 // ── INIT ──
 loadCart();
+renderSaleBanner();
 renderHeroContent();
 renderMarquee();
 renderWhySection();

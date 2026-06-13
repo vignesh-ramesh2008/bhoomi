@@ -403,6 +403,10 @@ const DEFAULT_DATA = {
     btn1: "Browse Products",
     btn2: "Place an Order"
   },
+  sale: {
+    enabled: true,
+    text: "🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off · Free shipping on orders over $50!"
+  },
   marquee: ["100% Natural", "No Preservatives", "Tamil Nadu Sourced", "Traditional Recipes", "Chemical-Free", "Farmer-Sourced", "Limited Stock Available", "Free Shipping Over $50"],
   why: {
     sectionLabel: "Our Promise",
@@ -539,6 +543,16 @@ function migrateData() {
   }
   if (typeof cmsData.freeShippingThreshold !== 'number') {
     cmsData.freeShippingThreshold = 50;
+  }
+  if (!cmsData.sale || typeof cmsData.sale !== 'object') {
+    cmsData.sale = {
+      enabled: true,
+      text: "🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off · Free shipping on orders over $50!"
+    };
+  }
+  if (typeof cmsData.sale.enabled !== 'boolean') cmsData.sale.enabled = true;
+  if (typeof cmsData.sale.text !== 'string') {
+    cmsData.sale.text = "🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off · Free shipping on orders over $50!";
   }
   cmsData.products.forEach(p => {
     if (typeof p.image !== 'string') p.image = '';
@@ -1105,6 +1119,7 @@ function renderContent() {
     <div class="pill-tab" data-tab="why" onclick="activateContentTab('why')">Why Us</div>
     <div class="pill-tab" data-tab="marquee" onclick="activateContentTab('marquee')">Marquee</div>
     <div class="pill-tab" data-tab="contact" onclick="activateContentTab('contact')">Contact</div>
+    <div class="pill-tab" data-tab="sale" onclick="activateContentTab('sale')">Sale Banner</div>
   </div>
 
   <div id="tab-hero" class="tab-content">
@@ -1118,6 +1133,9 @@ function renderContent() {
   </div>
   <div id="tab-contact" class="tab-content">
     ${renderContactTab()}
+  </div>
+  <div id="tab-sale" class="tab-content">
+    ${renderSaleTab()}
   </div>
   `;
 }
@@ -1386,6 +1404,32 @@ function renderContactTab() {
       <div class="form-group form-full">
         <label>Order Box Description</label>
         <textarea oninput="updateField('contact.orderDesc', this.value)">${esc(c.orderDesc)}</textarea>
+      </div>
+    </div>
+  </div>`;
+}
+
+// Sale Banner Tab
+function renderSaleTab() {
+  const s = cmsData.sale;
+  return `
+  <div class="form-section">
+    <h3>Sale Announcement Banner</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">This banner appears at the very top of the website, above everything else. Visitors can dismiss it with the ✕ button.</p>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label>Show sale banner on website</label>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+          <label class="toggle">
+            <input type="checkbox" ${s.enabled?'checked':''} onchange="updateField('sale.enabled', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+          <span style="font-size:13px;color:var(--text-muted)">Show sale banner on website</span>
+        </div>
+      </div>
+      <div class="form-group form-full">
+        <label>Banner text</label>
+        <textarea rows="2" oninput="updateField('sale.text', this.value)" placeholder="e.g. 🎉 GRAND OPENING SALE — Use code BHOOMI10 for 10% off!">${esc(s.text)}</textarea>
       </div>
     </div>
   </div>`;
