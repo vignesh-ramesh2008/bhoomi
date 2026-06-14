@@ -145,6 +145,20 @@
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: #f8fff8; }
   tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
+  /* drag handle */
+  .drag-handle { cursor: grab; color: #ccc; font-size: 18px; user-select: none; padding: 0 4px; }
+  .drag-handle:active { cursor: grabbing; }
+  tr.drag-over td { background: #e8f5e8 !important; }
+  tr.dragging { opacity: 0.4; }
+  /* stock pill */
+  .stock-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  }
+  .stock-pill.high { background: #e8f5e9; color: #2e7d32; }
+  .stock-pill.mid  { background: #fff8e1; color: #f57f17; }
+  .stock-pill.low  { background: #fce4ec; color: #c62828; }
+  .stock-pill.zero { background: #f5f5f5; color: #999; }
 
   /* ── BADGES ── */
   .badge {
@@ -574,6 +588,8 @@ function migrateData() {
   cmsData.products.forEach(p => {
     if (typeof p.image !== 'string') p.image = '';
     if (typeof p.desc !== 'string') p.desc = '';
+    if (typeof p.stockQty !== 'number') p.stockQty = 0;
+    if (typeof p.stockTotal !== 'number') p.stockTotal = 0;
   });
 }
 
@@ -724,14 +740,34 @@ function renderProducts() {
     </div>
   `).join('');
 
-  const rowsHtml = filtered.map((p, idx) => {
+  const rowsHtml = filtered.map((p, filteredIdx) => {
     const realIdx = cmsData.products.indexOf(p);
     const descPreview = p.desc ? esc(p.desc.length > 50 ? p.desc.slice(0, 50) + '…' : p.desc) : '';
     const thumb = p.image
       ? `<img src="${esc(p.image)}" alt="" style="width:36px;height:36px;object-fit:cover;border-radius:6px;border:1px solid var(--border);flex-shrink:0">`
       : `<span style="font-size:24px;width:36px;text-align:center;flex-shrink:0">📦</span>`;
+
+    // Stock pill
+    const qty = typeof p.stockQty === 'number' ? p.stockQty : 0;
+    const total = typeof p.stockTotal === 'number' ? p.stockTotal : 0;
+    let pillClass = 'zero', pillLabel = qty + ' units';
+    if (total > 0) {
+      const pct = qty / total;
+      pillClass = pct > 0.5 ? 'high' : pct > 0.25 ? 'mid' : qty > 0 ? 'low' : 'zero';
+      pillLabel = qty + ' / ' + total;
+    } else if (qty > 0) {
+      pillClass = 'high';
+    }
+
     return `
-    <tr>
+    <tr draggable="true" data-idx="${realIdx}"
+        ondragstart="onDragStart(event,${realIdx})"
+        ondragover="onDragOver(event)"
+        ondragleave="onDragLeave(event)"
+        ondrop="onDrop(event,${realIdx})">
+      <td style="width:28px;padding-right:0">
+        <span class="drag-handle" title="Drag to reorder">⠿</span>
+      </td>
       <td>
         <div style="display:flex;align-items:center;gap:10px">
           ${thumb}
@@ -751,15 +787,19 @@ function renderProducts() {
         </label>
       </td>
       <td>
+        <span class="stock-pill ${pillClass}">${pillLabel}</span>
+      </td>
+      <td>
         <button class="btn btn-outline btn-sm" onclick="openEditProduct(${realIdx})" title="Edit">✏️</button>
         <button class="btn btn-danger btn-sm" onclick="deleteProduct(${realIdx})" title="Delete">🗑️</button>
       </td>
     </tr>`;
   }).join('');
 
+  const isDraggable = currentProductFilter === 'all';
   return `
   <div class="page-title">Products</div>
-  <div class="page-sub">Manage your product catalog. ${cmsData.products.length} products total.</div>
+  <div class="page-sub">Manage your product catalog. ${cmsData.products.length} products total.${isDraggable ? ' <span style="color:var(--text-muted);font-size:13px">Drag ⠿ to reorder.</span>' : ' <span style="color:var(--text-muted);font-size:13px">Switch to "All" to reorder.</span>'}</div>
 
   <div class="filter-tabs">${filterTabsHtml}</div>
 
@@ -773,14 +813,16 @@ function renderProducts() {
     <table>
       <thead>
         <tr>
+          <th style="width:28px"></th>
           <th>Name / Description</th>
           <th>Price</th>
           <th>Category</th>
           <th>In Stock</th>
+          <th>Stock Count</th>
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody>${rowsHtml.length ? rowsHtml : '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:40px">No products found.</td></tr>'}</tbody>
+      <tbody id="productsTbody">${rowsHtml.length ? rowsHtml : '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:40px">No products found.</td></tr>'}</tbody>
     </table>
   </div>`;
 }
@@ -795,9 +837,40 @@ function toggleStock(idx, checked) {
   scheduleSave();
 }
 
+// ─── DRAG TO REORDER ────────────────────────────────────────────────────────
+let _dragSrcIdx = -1;
+
+function onDragStart(e, idx) {
+  _dragSrcIdx = idx;
+  e.dataTransfer.effectAllowed = 'move';
+  e.currentTarget.classList.add('dragging');
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e, targetIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (_dragSrcIdx === -1 || _dragSrcIdx === targetIdx) return;
+  // Reorder the products array
+  const arr = cmsData.products;
+  const [moved] = arr.splice(_dragSrcIdx, 1);
+  arr.splice(targetIdx, 0, moved);
+  _dragSrcIdx = -1;
+  saveData().then(() => navigate('products'));
+}
+
 function openAddProduct() {
   editingProductIdx = -1;
-  const p = { name: '', sub: '', price: '', cat: 'snacks', inStock: true, image: '', desc: '' };
+  const p = { name: '', sub: '', price: '', cat: 'snacks', inStock: true, image: '', desc: '', stockQty: 0, stockTotal: 0 };
   showProductModal(p);
 }
 
@@ -853,6 +926,16 @@ function showProductModal(p) {
           <span style="font-size:13px;color:var(--text-muted)">Mark as available</span>
         </div>
       </div>
+      <div class="form-group">
+        <label>Current Stock Qty</label>
+        <input type="number" id="pm-stock-qty" value="${p.stockQty||0}" min="0" step="1" placeholder="e.g. 12">
+        <small style="color:var(--text-muted);font-size:12px">How many units do you have right now?</small>
+      </div>
+      <div class="form-group">
+        <label>Original Stock Total</label>
+        <input type="number" id="pm-stock-total" value="${p.stockTotal||0}" min="0" step="1" placeholder="e.g. 25">
+        <small style="color:var(--text-muted);font-size:12px">How many did you start with? Used to show the stock bar.</small>
+      </div>
     </div>
   `;
   document.getElementById('modal-footer').innerHTML = `
@@ -902,7 +985,9 @@ function saveProduct() {
 
   if (!name) { alert('Product name is required.'); return; }
 
-  const prod = { name, sub, price, cat, inStock, image, desc };
+  const stockQty = parseInt(document.getElementById('pm-stock-qty').value) || 0;
+  const stockTotal = parseInt(document.getElementById('pm-stock-total').value) || 0;
+  const prod = { name, sub, price, cat, inStock, image, desc, stockQty, stockTotal };
   if (editingProductIdx === -1) {
     cmsData.products.push(prod);
   } else {
