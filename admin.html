@@ -318,6 +318,10 @@
   .danger-zone h4 { color: var(--danger); margin-bottom: 8px; }
   .danger-zone p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
 </style>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -327,8 +331,9 @@
     <div class="login-logo">🌱</div>
     <div class="login-title">Bhoomi CMS</div>
     <div class="login-sub">FarmFresh Organics Admin Panel</div>
-    <input type="password" id="login-pw" placeholder="Enter admin password" autocomplete="current-password">
-    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <input type="email" id="login-email" placeholder="Email address" autocomplete="email" style="margin-bottom:10px;">
+    <input type="password" id="login-pw" placeholder="Password" autocomplete="current-password">
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Sign In</button>
     <div class="login-error" id="login-error"></div>
   </div>
 </div>
@@ -489,51 +494,63 @@ let editingProductIdx = -1;
 let editingEventIdx = -1;
 let editingDiscountIdx = -1;
 
-// ─── AUTH ──────────────────────────────────────────────────────────────────
-function getStoredPw() {
-  const stored = localStorage.getItem('bhoomi_admin_pw');
-  if (!stored) return btoa('bhoomi2024');
-  return stored;
-}
+// ─── FIREBASE ──────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyC8bvpv2Fk0ANyEp65zCMnXekXSOaEWNFY",
+  authDomain: "bhoomi-6c434.firebaseapp.com",
+  projectId: "bhoomi-6c434",
+  storageBucket: "bhoomi-6c434.firebasestorage.app",
+  messagingSenderId: "951570972920",
+  appId: "1:951570972920:web:f19e30684ba263e2fd7b0d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
 
-function doLogin() {
+// ─── AUTH ──────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const email = (document.getElementById('login-email').value || '').trim();
   const pw = document.getElementById('login-pw').value;
-  const stored = getStoredPw();
-  if (btoa(pw) === stored) {
-    sessionStorage.setItem('bhoomi_admin_auth', '1');
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    loadData();
-    navigate('dashboard');
-  } else {
-    document.getElementById('login-error').textContent = 'Incorrect password. Please try again.';
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  if (!email || !pw) { errEl.textContent = 'Please enter your email and password.'; return; }
+  btn.textContent = 'Signing in…'; btn.disabled = true; errEl.textContent = '';
+  try {
+    await auth.signInWithEmailAndPassword(email, pw);
+    // onAuthStateChanged handles the rest
+  } catch (e) {
+    errEl.textContent = 'Incorrect email or password. Please try again.';
     document.getElementById('login-pw').value = '';
     document.getElementById('login-pw').focus();
+    btn.textContent = 'Sign In'; btn.disabled = false;
   }
 }
 
-function doLogout() {
-  sessionStorage.removeItem('bhoomi_admin_auth');
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('login-pw').value = '';
-  document.getElementById('login-error').textContent = '';
+async function doLogout() {
+  await auth.signOut();
+  // onAuthStateChanged handles UI
 }
 
-document.getElementById('login-pw').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
+document.getElementById('login-pw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('login-email').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('login-pw').focus(); });
 
 // ─── DATA ──────────────────────────────────────────────────────────────────
-function loadData() {
-  const raw = localStorage.getItem('bhoomi_cms');
-  if (raw) {
-    try { cmsData = JSON.parse(raw); } catch { cmsData = deepClone(DEFAULT_DATA); }
-    // Merge any missing keys from defaults
-    cmsData = deepMerge(deepClone(DEFAULT_DATA), cmsData);
-  } else {
-    cmsData = deepClone(DEFAULT_DATA);
+async function loadData() {
+  try {
+    const snap = await db.collection('site').doc('content').get();
+    if (snap.exists) {
+      cmsData = snap.data();
+    } else {
+      // Nothing in Firestore yet — try localStorage fallback
+      const raw = localStorage.getItem('bhoomi_cms');
+      cmsData = raw ? JSON.parse(raw) : deepClone(DEFAULT_DATA);
+    }
+  } catch (e) {
+    console.warn('Firebase load failed, using localStorage fallback:', e);
+    const raw = localStorage.getItem('bhoomi_cms');
+    cmsData = raw ? JSON.parse(raw) : deepClone(DEFAULT_DATA);
   }
+  cmsData = deepMerge(deepClone(DEFAULT_DATA), cmsData);
   migrateData();
 }
 
@@ -560,9 +577,21 @@ function migrateData() {
   });
 }
 
-function saveData() {
-  localStorage.setItem('bhoomi_cms', JSON.stringify(cmsData));
-  showSaveStatus();
+async function saveData() {
+  try {
+    await db.collection('site').doc('content').set(cmsData);
+    // Cache locally for fast fallback
+    localStorage.setItem('bhoomi_cms', JSON.stringify(cmsData));
+    showSaveStatus();
+  } catch (e) {
+    console.error('Save failed:', e);
+    const el = document.getElementById('save-status');
+    el.classList.remove('hidden');
+    el.style.color = 'var(--danger)';
+    el.textContent = 'Save failed ✗';
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => { el.classList.add('hidden'); el.style.color = ''; }, 3500);
+  }
 }
 
 function scheduleSave() {
@@ -593,10 +622,7 @@ function deepMerge(target, source) {
 }
 
 function getLastSaved() {
-  const raw = localStorage.getItem('bhoomi_cms');
-  if (!raw) return 'Never';
-  // We can't store timestamp without modifying the schema, so just say "data exists"
-  return 'Data loaded from localStorage';
+  return 'Synced with Firebase ☁️';
 }
 
 // ─── NAVIGATION ────────────────────────────────────────────────────────────
@@ -1470,24 +1496,13 @@ function renderSettings() {
 
   <div class="settings-panel">
     <h3>🔑 Change Password</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Current Password</label>
-        <input type="password" id="pw-current" placeholder="Current password">
-      </div>
-      <div class="form-group">
-        <label>New Password</label>
-        <input type="password" id="pw-new" placeholder="New password">
-      </div>
-      <div class="form-group">
-        <label>Confirm New Password</label>
-        <input type="password" id="pw-confirm" placeholder="Confirm new password">
-      </div>
-    </div>
-    <div style="margin-top:16px">
-      <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
-    </div>
-    <div id="pw-msg" style="margin-top:10px;font-size:13px;"></div>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.6;">Your admin login is now managed by <strong>Firebase Authentication</strong>. To change your password:</p>
+    <ol style="font-size:14px;color:var(--text-muted);margin:12px 0 16px 18px;line-height:2;">
+      <li>Go to <strong>console.firebase.google.com</strong></li>
+      <li>Open your <strong>bhoomi</strong> project</li>
+      <li>Click <strong>Authentication → Users</strong></li>
+      <li>Click the three-dot menu next to your email → <strong>Reset password</strong></li>
+    </ol>
   </div>
 
   <div class="settings-panel">
@@ -1517,8 +1532,8 @@ function renderSettings() {
       <h4>Getting Started</h4>
       <ol>
         <li>Use the sidebar to navigate between sections.</li>
-        <li>Changes auto-save to localStorage within 0.5 seconds.</li>
-        <li>The main site (index.html) reads from the same localStorage key: <code>bhoomi_cms</code>.</li>
+        <li>Changes auto-save to <strong>Firebase Firestore</strong> within 0.5 seconds — visible to all visitors instantly.</li>
+        <li>The main site (index.html) fetches from Firebase on every page load.</li>
         <li>If the main site doesn't reflect changes, do a hard refresh (Ctrl+Shift+R).</li>
       </ol>
       <br>
@@ -1534,7 +1549,7 @@ function renderSettings() {
       <br>
       <h4>Data Storage</h4>
       <ul>
-        <li>All data is stored in your browser's localStorage under key <code>bhoomi_cms</code>.</li>
+        <li>All data is stored in <strong>Firebase Firestore</strong> (project: bhoomi-6c434). localStorage is used as a fast-load cache only.</li>
         <li>Use Export to back up data before clearing browser storage.</li>
         <li>Use Import to restore from a backup.</li>
       </ul>
@@ -1655,16 +1670,18 @@ function esc(str) {
 }
 
 // ─── INIT ──────────────────────────────────────────────────────────────────
-(function init() {
-  if (sessionStorage.getItem('bhoomi_admin_auth') === '1') {
+auth.onAuthStateChanged(async user => {
+  if (user) {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
-    loadData();
+    await loadData();
     navigate('dashboard');
   } else {
-    setTimeout(() => document.getElementById('login-pw').focus(), 100);
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+    setTimeout(() => { const em = document.getElementById('login-email'); if (em) em.focus(); }, 100);
   }
-})();
+});
 </script>
 </body>
 </html>

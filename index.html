@@ -5,6 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Bhoomi FarmFresh Organics</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyC8bvpv2Fk0ANyEp65zCMnXekXSOaEWNFY",
+    authDomain: "bhoomi-6c434.firebaseapp.com",
+    projectId: "bhoomi-6c434",
+    storageBucket: "bhoomi-6c434.firebasestorage.app",
+    messagingSenderId: "951570972920",
+    appId: "1:951570972920:web:f19e30684ba263e2fd7b0d"
+  });
+  const _db = firebase.firestore();
+</script>
 <style>
   :root {
     --crimson: #C0392B;
@@ -1229,7 +1242,7 @@ for (const key of Object.keys(defaultData)) {
   if (!DATA[key]) DATA[key] = defaultData[key];
 }
 
-const products = DATA.products;
+let products = DATA.products;
 
 const catLabel = {
   snacks: "Snacks",
@@ -1775,16 +1788,41 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // ── INIT ──
+function renderAll(cat) {
+  const activeCat = cat || document.querySelector('.tab.active')?.dataset?.cat || 'all';
+  renderSaleBanner();
+  renderHeroContent();
+  renderMarquee();
+  renderWhySection();
+  renderEvents();
+  renderContactSection();
+  renderProducts(activeCat);
+  updateCartUI();
+  initScrollReveal();
+}
+
 loadCart();
-renderSaleBanner();
-renderHeroContent();
-renderMarquee();
-renderWhySection();
-renderEvents();
-renderContactSection();
-renderProducts('all');
-updateCartUI();
-initScrollReveal();
+renderAll('all');
+
+// Fetch latest data from Firebase and re-render — visitors always see live CMS changes
+(async function syncFromFirebase() {
+  try {
+    const snap = await _db.collection('site').doc('content').get();
+    if (!snap.exists) return;
+    const fbData = snap.data();
+    // Cache locally for fast next load
+    try { localStorage.setItem('bhoomi_cms', JSON.stringify(fbData)); } catch (e) {}
+    // Re-hydrate DATA and products
+    for (const key of Object.keys(defaultData)) {
+      if (fbData[key] !== undefined) DATA[key] = fbData[key];
+    }
+    products = DATA.products;
+    products.forEach(p => { if (!p.image) p.image = stockPhotos[getProductId(p)] || ''; });
+    renderAll();
+  } catch (e) {
+    // Firebase unavailable — keep rendering from local defaults
+  }
+})();
 </script>
 
 <!-- CART OVERLAY -->
