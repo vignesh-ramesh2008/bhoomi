@@ -1322,16 +1322,16 @@ function renderProducts(filter) {
     const inCart = cart.find(c => c.id === pid);
     const icon = productIcons[pid] || productIcons['millet-cookies'] || '';
     const outOfStock = p.inStock === false;
-    const iconHeader = `<div class="card-header card-header-fallback" style="background:${catGradients[p.cat] || catGradients.snacks}">
+    const iconHeader = `<div class="card-header" style="background:${catGradients[p.cat] || catGradients.snacks}">
           <div class="card-icon">${icon}</div>
           <span class="card-price">${formatPrice(p.price)}</span>
         </div>`;
-    const header = p.image
+    const header = (p.image && !stockPhotos[getProductId(p)])
       ? `<div class="card-photo-wrap">
           <img class="card-photo" src="${p.image.replace(/"/g, '&quot;')}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="photoFallback(this)" />
           <span class="card-price">${formatPrice(p.price)}</span>
-        </div>${iconHeader}`
-      : iconHeader.replace(' card-header-fallback', '');
+        </div>`
+      : iconHeader;
     return `
     <div class="product-card${outOfStock ? ' out-of-stock' : ''}">
       ${header}
