@@ -1558,6 +1558,31 @@ function sendWhatsApp() {
     '%0A%0A' + totalsBlock +
     '%0A%0APlease confirm availability and delivery/pickup details. Thank you!';
   window.open('https://wa.me/' + (DATA.contact.whatsapp || '19722158262') + '?text=' + msg, '_blank');
+  deductStock(cart);
+}
+
+async function deductStock(orderCart) {
+  try {
+    const ref = _db.collection('site').doc('content');
+    const snap = await ref.get();
+    if (!snap.exists) return;
+    const data = snap.data();
+    let changed = false;
+    orderCart.forEach(item => {
+      const prod = (data.products || []).find(p => p.name === item.name && p.sub === item.sub);
+      if (prod && typeof prod.stockQty === 'number') {
+        prod.stockQty = Math.max(0, prod.stockQty - item.qty);
+        changed = true;
+      }
+    });
+    if (!changed) return;
+    await ref.set(data);
+    DATA.products = data.products;
+    products = DATA.products;
+    localStorage.setItem('bhoomiCMS', JSON.stringify(data));
+  } catch(e) {
+    console.warn('Stock deduction failed:', e);
+  }
 }
 
 function filterTab(el, cat) {
