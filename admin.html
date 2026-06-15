@@ -791,6 +791,7 @@ function renderProducts() {
       </td>
       <td>
         <button class="btn btn-outline btn-sm" onclick="openEditProduct(${realIdx})" title="Edit">✏️</button>
+        <button class="btn btn-outline btn-sm" onclick="restockProduct(${realIdx})" title="Reset stock to initial amount" style="color:#2e7d32;border-color:#2e7d32">🔄</button>
         <button class="btn btn-danger btn-sm" onclick="deleteProduct(${realIdx})" title="Delete">🗑️</button>
       </td>
     </tr>`;
@@ -927,14 +928,9 @@ function showProductModal(p) {
         </div>
       </div>
       <div class="form-group">
-        <label>Current Stock Qty</label>
-        <input type="number" id="pm-stock-qty" value="${p.stockQty||0}" min="0" step="1" placeholder="e.g. 12">
-        <small style="color:var(--text-muted);font-size:12px">How many units do you have right now?</small>
-      </div>
-      <div class="form-group">
-        <label>Original Stock Total</label>
+        <label>Initial Stock Amount</label>
         <input type="number" id="pm-stock-total" value="${p.stockTotal||0}" min="0" step="1" placeholder="e.g. 25">
-        <small style="color:var(--text-muted);font-size:12px">How many did you start with? Used to show the stock bar.</small>
+        <small style="color:var(--text-muted);font-size:12px">Enter how many units you started with. Stock reduces automatically as orders come in.</small>
       </div>
     </div>
   `;
@@ -985,8 +981,16 @@ function saveProduct() {
 
   if (!name) { alert('Product name is required.'); return; }
 
-  const stockQty = parseInt(document.getElementById('pm-stock-qty').value) || 0;
   const stockTotal = parseInt(document.getElementById('pm-stock-total').value) || 0;
+  let stockQty;
+  if (editingProductIdx === -1) {
+    // New product: start qty at full total
+    stockQty = stockTotal;
+  } else {
+    // Edit: preserve existing qty, cap at new total
+    const existing = cmsData.products[editingProductIdx].stockQty;
+    stockQty = typeof existing === 'number' ? Math.min(existing, stockTotal) : stockTotal;
+  }
   const prod = { name, sub, price, cat, inStock, image, desc, stockQty, stockTotal };
   if (editingProductIdx === -1) {
     cmsData.products.push(prod);
@@ -996,6 +1000,14 @@ function saveProduct() {
   saveData();
   closeModal();
   navigate('products');
+}
+
+function restockProduct(idx) {
+  const p = cmsData.products[idx];
+  if (!p.stockTotal) { alert('Set an initial stock amount first by editing this product.'); return; }
+  if (!confirm(`Restock "${p.name}" back to ${p.stockTotal} units?`)) return;
+  p.stockQty = p.stockTotal;
+  saveData().then(() => navigate('products'));
 }
 
 function deleteProduct(idx) {
